@@ -1,0 +1,44 @@
+<!-- <mat-toolbar class="navbar">
+  <span class="spacer"></span>
+  <section>
+    <ng-container *ngIf="this.auth.isAuthenticated();then authenticated;else notAuthenticated">
+
+    </ng-container>
+    <ng-template #notAuthenticated>
+      <div class="example-button-row">
+        <button class="login-button" mat-raised-button routerLink="/login" routerLinkActive="active">Login</button>
+      </div>
+    </ng-template>
+
+    <ng-template #authenticated>
+      <div class="example-button-row">
+        <button class="logout-button" mat-raised-button (click)="logout()">Logout</button>
+      </div>
+    </ng-template>
+
+  </section>
+</mat-toolbar> -->
+
+
+
+<div *ngIf="!isLoggedIn">
+  <mat-toolbar class="navbar">
+    <span class="spacer"></span>
+    <section>
+      <div class="example-button-row">
+        <button class="login-button" mat-raised-button routerLink="/login" routerLinkActive="active">Login</button>
+      </div>
+    </section>
+  </mat-toolbar>
+</div>
+
+<div *ngIf="isLoggedIn">
+  <mat-toolbar class="navbar">
+    <span class="spacer"></span>
+    <section>
+      <div class="example-button-row">
+        <button class="login-button" mat-raised-button (click)="logout()">Logout</button>
+      </div>
+    </section>
+  </mat-toolbar>
+</div>

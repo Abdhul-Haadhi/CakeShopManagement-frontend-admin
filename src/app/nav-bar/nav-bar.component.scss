@@ -1,0 +1,75 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.nav-bar-content{
+  align-items:flex-end;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: #012a5b;
+
+
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+.navbar-brand {
+  font-size: 20px;
+  font-weight: 600;
+  margin-right: 16px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+button{
+  
+}
+
+button.active {
+  font-weight: 600;
+}
+
+
+
+// for navbar buttons
+section {
+  display: flex;
+  align-items: center;
+}
+
+.example-label {
+  font-size: 14px;
+  margin: 0 16px 0 8px;
+  min-width: 120px;
+}
+
+.example-button-row {
+  max-width: 600px;
+  border-radius: 30px;
+}
+
+button{
+  border-radius: 30px;
+  color: white;
+  text-transform: uppercase;
+  margin-left: 8px;
+}
+
+.example-button-row .mat-mdc-button-base {
+  margin: 8px 8px 8px 0;
+}
+
+.example-flex-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+// 
