@@ -11,6 +11,7 @@ import { SideBarComponent } from './side-bar/side-bar.component';
 import { MainComponent } from './main/main.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { NavBarComponent } from "./nav-bar/nav-bar.component";
+import { ProductRegistrationComponent } from './pages/product-registration/product-registration.component';
 
 
 
@@ -18,7 +19,8 @@ import { NavBarComponent } from "./nav-bar/nav-bar.component";
   selector: 'app-root',
   standalone: true,
   imports: [SideBarComponent, MainComponent, RouterOutlet, RouterLink, MatToolbarModule,
-    MatButtonModule, MatIconModule, MatDividerModule, FormsModule, ReactiveFormsModule, HttpClientModule, NgIf, RouterLinkActive, NavBarComponent],
+    MatButtonModule, MatIconModule, MatDividerModule, FormsModule, ReactiveFormsModule, 
+    HttpClientModule, NgIf, RouterLinkActive, NavBarComponent, ProductRegistrationComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

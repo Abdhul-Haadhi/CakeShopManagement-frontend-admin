@@ -1,17 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatToolbar } from '@angular/material/toolbar';
 import { AngularMaterailModules } from '../../AngularMeterialModules';
 import { MatCard } from '@angular/material/card';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
 
-
-
-interface Colors {
-  value: string;
-  viewValue: string;
-}
 
 
 
@@ -25,35 +19,54 @@ interface Colors {
 
 
 
-export class ProductRegistrationComponent {
+export class ProductRegistrationComponent implements OnInit {
 
   ProdRegForm: FormGroup;
 
-  colors: Colors[] = [
-    { value: 'White', viewValue: 'White' },
-    { value: 'Yellow', viewValue: 'Yellow' },
-    { value: 'Orange', viewValue: 'Orange' },
-    { value: 'Green', viewValue: 'Green' },
-    { value: 'Blue', viewValue: 'Blue' },
-    { value: 'Purple', viewValue: 'Purple' },
-    { value: 'Pink', viewValue: 'Pink' },
-    { value: 'Red', viewValue: 'Red' },
-    { value: 'black', viewValue: 'Black' },
-    { value: 'No colors', viewValue: 'No colors' },
-  ];
+  showForm = false;
+  submitted = false;
+  saveButtonLabel: string = 'Save'
+
+  constructor(private fb: FormBuilder) {
+    this.ProdRegForm = this.fb.group({
+      productId: new FormControl('', [Validators.required, Validators.pattern('^PRD[0-9]+$')]),
+      productName: new FormControl('', [Validators.required, Validators.maxLength(25)]),
+      description: new FormControl('', [Validators.required, Validators.maxLength(25)]),
+      price: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
+      size: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
+      quantity: new FormControl([], [Validators.required]),
+      image: new FormControl('', [Validators.required]),
+      imageName: new FormControl('', []),
+      imageType: new FormControl('', []),
+      createdAt: new FormControl('', [Validators.required]),
+    });
+  }
 
 
-  displayedColumns: string[] = [
-    'productId',
-    'image',
-    'product',
-    'description',
-    'colors',
-    'initialWeight',
-    'finalPrice',
-    'actions',
-  ];
 
+
+  ngOnInit(): void {
+
+  }
+
+
+  onSubmit() {
+
+  }
+
+
+  public resetData(): void {
+    this.ProdRegForm.reset();
+    this.ProdRegForm.updateValueAndValidity();
+    this.ProdRegForm.enable();
+    this.submitted = false;
+  }
+
+  closeForm() {
+    this.showForm = false;
+    this.ProdRegForm.reset();
+    this.submitted = false;
+  }
 
 
 }
