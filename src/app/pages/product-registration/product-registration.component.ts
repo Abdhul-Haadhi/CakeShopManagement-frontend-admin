@@ -5,6 +5,7 @@ import { AngularMaterailModules } from '../../AngularMeterialModules';
 import { MatCard } from '@angular/material/card';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
+import { ProductRegistrationService } from '../../services/productRegistration/product-registration.service';
 
 
 
@@ -23,18 +24,22 @@ export class ProductRegistrationComponent implements OnInit {
 
   ProdRegForm: FormGroup;
 
+  selectedFile: File | null = null;
+
   showForm = false;
   submitted = false;
   saveButtonLabel: string = 'Save'
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private prodService: ProductRegistrationService,
+  ) {
     this.ProdRegForm = this.fb.group({
       productId: new FormControl('', [Validators.required, Validators.pattern('^PRD[0-9]+$')]),
       productName: new FormControl('', [Validators.required, Validators.maxLength(25)]),
-      description: new FormControl('', [Validators.required, Validators.maxLength(25)]),
-      price: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
+      description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
       size: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
       quantity: new FormControl([], [Validators.required]),
+      price: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
       image: new FormControl('', [Validators.required]),
       imageName: new FormControl('', []),
       imageType: new FormControl('', []),
@@ -51,7 +56,17 @@ export class ProductRegistrationComponent implements OnInit {
 
 
   onSubmit() {
+    try{
+      this.submitted=true;
+      if(this.ProdRegForm.invalid){
+        return;
+      }
+      this.prodService.serviceCall(this)
+      
+    }
+    catch(error){
 
+    }
   }
 
 

@@ -1,6 +1,6 @@
 <div class="container">
-  <mat-toolbar color="primary">
-    <span>Product registration</span>
+  <mat-toolbar class="heading-bar">
+    <span class="heading-text">Product registration</span>
     <span class="example-spacer"></span>
     <button class="form-button" mat-raised-button color="warn" (click)="showForm = true" *ngIf="!showForm">
       +Add Product
@@ -8,16 +8,20 @@
   </mat-toolbar>
 </div>
 
+<!-- Form Section -->
+
 <div class="form-section" *ngIf="showForm">
   <form [formGroup]="ProdRegForm" (ngSubmit)="onSubmit()" class="example-form">
     <div class="example-form-div">
       <mat-form-field class="full-width">
         <mat-label>Product Id</mat-label>
         <input matInput placeholder="Enter product Id: PRD_ _ _" formControlName="productId">
-        <span class="text-danger" *ngIf="(ProdRegForm.get('productId')?.touched || submitted) && ProdRegForm.get('productId')?.errors && ProdRegForm.get('productId')?.errors!['required']">
+        <span class="text-danger"
+          *ngIf="(ProdRegForm.get('productId')?.touched || submitted) && ProdRegForm.get('productId')?.errors && ProdRegForm.get('productId')?.errors!['required']">
           Product Id is required
         </span>
-        <span class="text-danger" *ngIf="ProdRegForm.get('productId')?.errors && ProdRegForm.get('productId')?.errors!['pattern']">
+        <span class="text-danger"
+          *ngIf="ProdRegForm.get('productId')?.errors && ProdRegForm.get('productId')?.errors!['pattern']">
           Product code is invalid
         </span>
       </mat-form-field>
@@ -25,76 +29,83 @@
       <mat-form-field class="full-width">
         <mat-label>Product Name</mat-label>
         <input matInput placeholder="Enter product Name" formControlName="productName">
-        <span class="text-danger">
-
+        <span class="text-danger"
+          *ngIf="(ProdRegForm.get('productName')?.touched || submitted) && ProdRegForm.get('productName')?.errors && ProdRegForm.get('productName')?.errors!['required']">
+          Product Name is required
         </span>
-        <span class="text-danger">
-
+        <span class="text-danger"
+          *ngIf="ProdRegForm.get('productName')?.errors && ProdRegForm.get('productName')?.errors!['maxlength']">
+          Maximum 25 letters.
         </span>
       </mat-form-field>
       <mat-form-field class="full-width">
         <mat-label>Description</mat-label>
         <input matInput placeholder="Enter product Description" formControlName="description">
-        <span class="text-danger">
-
+        <span class="text-danger"
+          *ngIf="(ProdRegForm.get('description')?.touched || submitted) && ProdRegForm.get('description')?.errors && ProdRegForm.get('description')?.errors!['required']">
+          Description is required
         </span>
-        <span class="text-danger">
-
-        </span>
-      </mat-form-field>
-      <mat-form-field class="full-width">
-        <mat-label>Price</mat-label>
-        <input matInput placeholder="Enter price of the product" formControlName="price">
-        <span class="text-danger">
-
-        </span>
-        <span class="text-danger">
-
+        <span class="text-danger"
+          *ngIf="ProdRegForm.get('description')?.errors && ProdRegForm.get('description')?.errors!['maxlength']">
+          Maximum 500 letters.
         </span>
       </mat-form-field>
+
       <mat-form-field class="full-width">
         <mat-label>Size</mat-label>
-        <input matInput placeholder="Select size of the product" formControlName="size">
-        <span class="text-danger">
-
+        <input matInput placeholder="Enter size of the product in grams (g)" formControlName="size">
+        <span class="text-danger"
+          *ngIf="(ProdRegForm.get('size')?.touched || submitted) && ProdRegForm.get('size')?.errors && ProdRegForm.get('size')?.errors!['required']">
+          size is required
         </span>
-        <span class="text-danger">
-
+        <span class="text-danger"
+          *ngIf="ProdRegForm.get('size')?.errors && ProdRegForm.get('size')?.errors!['pattern']">
+          Enter valid size
         </span>
       </mat-form-field>
+
       <mat-form-field class="full-width">
         <mat-label>Quantity</mat-label>
         <input matInput placeholder="Enter Quantity" formControlName="quantity">
-        <span class="text-danger">
-
-        </span>
-        <span class="text-danger">
-
+        <span class="text-danger" *ngIf="(ProdRegForm.get('quantity')?.touched || submitted) && ProdRegForm.get('quantity')?.errors && ProdRegForm.get('quantity')?.errors!['required']">
+          Quantity is required
         </span>
       </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Price</mat-label>
+        <input matInput placeholder="Enter price of the product" formControlName="price">
+        <span class="text-danger"
+          *ngIf="(ProdRegForm.get('price')?.touched || submitted) && ProdRegForm.get('price')?.errors && ProdRegForm.get('price')?.errors!['required']">
+          Price is required
+        </span>
+        <span class="text-danger"
+          *ngIf="ProdRegForm.get('price')?.errors && ProdRegForm.get('price')?.errors!['pattern']">
+          Enter a valid price
+        </span>
+      </mat-form-field>
+
       <mat-form-field class="full-width">
         <mat-label>Insert Image</mat-label>
         <input matInput placeholder="Insert the image of the product" formControlName="image">
-        <span class="text-danger">
-
-        </span>
-        <span class="text-danger">
-
+        <span class="text-danger" *ngIf="(ProdRegForm.get('image')?.touched || submitted) && ProdRegForm.get('image')?.errors && ProdRegForm.get('image')?.errors!['required']">
+          Image is required
         </span>
       </mat-form-field>
+
       <mat-form-field class="full-width">
         <mat-label>Created at</mat-label>
         <input matInput placeholder="Enter the date " formControlName="createdAt">
-        <span class="text-danger">
-
-        </span>
-        <span class="text-danger">
-
+        <span class="text-danger" *ngIf="(ProdRegForm.get('createdAt')?.touched || submitted) && ProdRegForm.get('createdAt')?.errors && ProdRegForm.get('createdAt')?.errors!['required']">
+          Added date is required
         </span>
       </mat-form-field>
+
     </div>
     <button type="submit" color="primary" class="form-button" mat-raised-button>{{saveButtonLabel}}</button>
     <button type="reset" color="secondary" class="form-button" mat-raised-button (click)="resetData()">Reset</button>
     <button mat-raised-button type="button" class="form-button" color="warn" (click)="closeForm()">Cancel</button>
   </form>
 </div>
+
+<!-- Table Section -->
