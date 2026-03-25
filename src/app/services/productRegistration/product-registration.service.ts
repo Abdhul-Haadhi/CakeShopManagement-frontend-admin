@@ -14,6 +14,10 @@ export class ProductRegistrationService {
 
   serviceCall(formDetails: any){
     console.log('In the service');
+    console.log(formDetails);
+
+
+    console.log("TOKEN:", this.httpService.getAuthToken());
 
     const requestUrl = environment.baseUrl + '/product-registration';
 
@@ -24,8 +28,14 @@ export class ProductRegistrationService {
         Authorization: 'Bearer ' + this.httpService.getAuthToken(),
       };
     }
+
+    return this.http.post(requestUrl, formDetails, {headers:headers});
     
   }
+
+
+
+
 
 
 }

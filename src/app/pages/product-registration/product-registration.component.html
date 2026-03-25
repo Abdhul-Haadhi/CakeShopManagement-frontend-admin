@@ -85,21 +85,21 @@
         </span>
       </mat-form-field>
 
-      <mat-form-field class="full-width">
+      <!-- <mat-form-field class="full-width">
         <mat-label>Insert Image</mat-label>
         <input matInput placeholder="Insert the image of the product" formControlName="image">
         <span class="text-danger" *ngIf="(ProdRegForm.get('image')?.touched || submitted) && ProdRegForm.get('image')?.errors && ProdRegForm.get('image')?.errors!['required']">
           Image is required
         </span>
-      </mat-form-field>
+      </mat-form-field> -->
 
-      <mat-form-field class="full-width">
+      <!-- <mat-form-field class="full-width">
         <mat-label>Created at</mat-label>
         <input matInput placeholder="Enter the date " formControlName="createdAt">
         <span class="text-danger" *ngIf="(ProdRegForm.get('createdAt')?.touched || submitted) && ProdRegForm.get('createdAt')?.errors && ProdRegForm.get('createdAt')?.errors!['required']">
           Added date is required
         </span>
-      </mat-form-field>
+      </mat-form-field> -->
 
     </div>
     <button type="submit" color="primary" class="form-button" mat-raised-button>{{saveButtonLabel}}</button>

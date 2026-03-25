@@ -9,10 +9,14 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class HttpService {
   public userNameBehaviorSubject: BehaviorSubject<string> =
     new BehaviorSubject<string>('');
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
+
+  // getAuthToken(): string | null {
+  //   return JSON.parse(window.localStorage.getItem('auth_token') as string);
+  // }
 
   getAuthToken(): string | null {
-    return JSON.parse(window.localStorage.getItem('auth_token') as string);
+    return localStorage.getItem('cakeShop-token');
   }
 
   setAuthToken(token: string | null): void {
@@ -22,6 +26,8 @@ export class HttpService {
       window.localStorage.removeItem('auth_token');
     }
   }
+
+
 
   setUserId(id: number) {
     window.localStorage.setItem('user_id', id.toString());
