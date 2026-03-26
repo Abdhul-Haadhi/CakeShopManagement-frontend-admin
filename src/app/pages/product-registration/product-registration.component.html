@@ -13,18 +13,18 @@
 <div class="form-section" *ngIf="showForm">
   <form [formGroup]="ProdRegForm" (ngSubmit)="onSubmit()" class="example-form">
     <div class="example-form-div">
-      <mat-form-field class="full-width">
+      <!-- <mat-form-field class="full-width">
         <mat-label>Product Id</mat-label>
-        <input matInput placeholder="Enter product Id: PRD_ _ _" formControlName="productId">
-        <span class="text-danger"
+        <input matInput placeholder="Enter product Id: PRD_ _ _" formControlName="productId"> -->
+        <!-- <span class="text-danger"
           *ngIf="(ProdRegForm.get('productId')?.touched || submitted) && ProdRegForm.get('productId')?.errors && ProdRegForm.get('productId')?.errors!['required']">
           Product Id is required
         </span>
         <span class="text-danger"
           *ngIf="ProdRegForm.get('productId')?.errors && ProdRegForm.get('productId')?.errors!['pattern']">
           Product code is invalid
-        </span>
-      </mat-form-field>
+        </span> -->
+      <!-- </mat-form-field> -->
 
       <mat-form-field class="full-width">
         <mat-label>Product Name</mat-label>

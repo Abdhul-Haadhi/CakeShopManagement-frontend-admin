@@ -1,8 +1,13 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpService } from '../http.service';
+import { Observable } from 'rxjs';
+import { UserStorageService } from '../storage/user-storage.service';
+
+
+// const BASIC_URL = "http://localhost:8080/"
 
 @Injectable({
   providedIn: 'root'
@@ -13,13 +18,13 @@ export class ProductRegistrationService {
 
 
   serviceCall(formDetails: any){
-    console.log('In the service');
-    console.log(formDetails);
+    // console.log('In the service');
+    // console.log(formDetails);
 
 
-    console.log("TOKEN:", this.httpService.getAuthToken());
+    // console.log("TOKEN:", this.httpService.getAuthToken());
 
-    const requestUrl = environment.baseUrl + '/product-registration';
+    const requestUrl = environment.baseUrl + 'api/admin/product-registration';
 
     let headers = {};
 
@@ -33,6 +38,15 @@ export class ProductRegistrationService {
     
   }
 
+  // serviceCall(productsDto:any): Observable<any>{
+  //   return this.http.post(BASIC_URL + 'api/admin/product-registration', productsDto, {
+  //     headers: this.createAuthorizationHeader(),
+  //   })
+  // }
+
+  // private createAuthorizationHeader(): HttpHeaders{
+  //   return new HttpHeaders().set('Authorization', 'Bearer ' + UserStorageService.getToken())
+  // }
 
 
 

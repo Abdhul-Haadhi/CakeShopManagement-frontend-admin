@@ -39,7 +39,8 @@ export class ProductRegistrationComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.ProdRegForm = this.fb.group({
-      productId: new FormControl('', [Validators.required, Validators.pattern('^PRD[0-9]+$')]),
+      // productId: new FormControl('', [Validators.required, Validators.pattern('^PRD[0-9]+$')]),
+      // productId: new FormControl('', [Validators.required]),
       productName: new FormControl('', [Validators.required, Validators.maxLength(25)]),
       description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
       size: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),

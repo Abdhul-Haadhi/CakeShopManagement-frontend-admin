@@ -37,14 +37,14 @@ export class PostCategoryComponent implements OnInit{
       this.adminService.addCategory(this.categoryForm.value).subscribe({
         next: (response) => {
           if(response.id != null){
-            this.snackBar.open('Category posted successfully', 'Close', {duration: 5000});
+            this.snackBar.open('Category posted successfully', 'Ok', {duration: 5000});
             this.router.navigateByUrl('dashboard');
           }
           else{
             this.snackBar.open(response.message, 'Close', {duration: 5000, panelClass: 'error-snackbar'});
           }
         }
-      })
+      });
     }
     else{
       this.categoryForm.markAllAsTouched();
