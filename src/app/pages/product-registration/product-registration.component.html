@@ -16,7 +16,7 @@
       <!-- <mat-form-field class="full-width">
         <mat-label>Product Id</mat-label>
         <input matInput placeholder="Enter product Id: PRD_ _ _" formControlName="productId"> -->
-        <!-- <span class="text-danger"
+      <!-- <span class="text-danger"
           *ngIf="(ProdRegForm.get('productId')?.touched || submitted) && ProdRegForm.get('productId')?.errors && ProdRegForm.get('productId')?.errors!['required']">
           Product Id is required
         </span>
@@ -25,6 +25,16 @@
           Product code is invalid
         </span> -->
       <!-- </mat-form-field> -->
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Select a category</mat-label>
+        <mat-select formControlName="categoryId" name="categoryId">
+          <mat-option *ngFor="let category of listOfCategories" [value]="category.categoryId">
+            {{ category.categoryName }}
+          </mat-option>
+        </mat-select>
+        <mat-error>This input is required</mat-error>
+      </mat-form-field>
 
       <mat-form-field class="full-width">
         <mat-label>Product Name</mat-label>
@@ -67,7 +77,8 @@
       <mat-form-field class="full-width">
         <mat-label>Quantity</mat-label>
         <input matInput placeholder="Enter Quantity" formControlName="quantity">
-        <span class="text-danger" *ngIf="(ProdRegForm.get('quantity')?.touched || submitted) && ProdRegForm.get('quantity')?.errors && ProdRegForm.get('quantity')?.errors!['required']">
+        <span class="text-danger"
+          *ngIf="(ProdRegForm.get('quantity')?.touched || submitted) && ProdRegForm.get('quantity')?.errors && ProdRegForm.get('quantity')?.errors!['required']">
           Quantity is required
         </span>
       </mat-form-field>
@@ -85,13 +96,22 @@
         </span>
       </mat-form-field>
 
-      <!-- <mat-form-field class="full-width">
-        <mat-label>Insert Image</mat-label>
-        <input matInput placeholder="Insert the image of the product" formControlName="image">
-        <span class="text-danger" *ngIf="(ProdRegForm.get('image')?.touched || submitted) && ProdRegForm.get('image')?.errors && ProdRegForm.get('image')?.errors!['required']">
-          Image is required
-        </span>
-      </mat-form-field> -->
+
+      <div class="file-uplaod-container">
+        <label class="file-uplaod-label">
+          <span>Select an image</span>
+          <input type="file" id="fileInput" (change)="onFileSelected($event)" hidden>
+          <mat-icon>attach_file</mat-icon>
+        </label>
+
+        <div *ngIf="selectedFile" class="image-preview">
+          <div class="circle-image">
+            <img [src]="imagePreview" alt="Selected Image" class="preview-image">
+          </div>
+        </div>
+      </div>
+
+
 
       <!-- <mat-form-field class="full-width">
         <mat-label>Created at</mat-label>
