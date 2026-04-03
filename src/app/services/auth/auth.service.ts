@@ -47,12 +47,25 @@ export class AuthService {
         if(token && user){
           this.userStorageService.saveToken(token);
           this.userStorageService.saveUser(user);
+
+          this.startAutoLogoutTimer();
           return true;
         }
         return false;
       })
     )
   }
+
+  startAutoLogoutTimer() {
+  const expiryTime = 1000 * 60 * 60 * 5; // 5hrs
+
+  setTimeout(() => {
+    UserStorageService.signOut();
+    alert("Session expired. Please login again");
+    window.location.href = '/login';
+  }, expiryTime);
+}
+
 
 
   isLoggedin(){

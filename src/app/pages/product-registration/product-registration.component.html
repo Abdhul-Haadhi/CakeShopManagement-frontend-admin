@@ -6,17 +6,17 @@
       +Add Product
     </button>
   </mat-toolbar>
-</div>
 
-<!-- Form Section -->
 
-<div class="form-section" *ngIf="showForm">
-  <form [formGroup]="ProdRegForm" (ngSubmit)="onSubmit()" class="example-form">
-    <div class="example-form-div">
-      <!-- <mat-form-field class="full-width">
+  <!-- Form Section -->
+
+  <div class="form-section" *ngIf="showForm">
+    <form [formGroup]="ProdRegForm" (ngSubmit)="onSubmit()" class="example-form">
+      <div class="example-form-div">
+        <!-- <mat-form-field class="full-width">
         <mat-label>Product Id</mat-label>
         <input matInput placeholder="Enter product Id: PRD_ _ _" formControlName="productId"> -->
-      <!-- <span class="text-danger"
+        <!-- <span class="text-danger"
           *ngIf="(ProdRegForm.get('productId')?.touched || submitted) && ProdRegForm.get('productId')?.errors && ProdRegForm.get('productId')?.errors!['required']">
           Product Id is required
         </span>
@@ -24,96 +24,118 @@
           *ngIf="ProdRegForm.get('productId')?.errors && ProdRegForm.get('productId')?.errors!['pattern']">
           Product code is invalid
         </span> -->
-      <!-- </mat-form-field> -->
+        <!-- </mat-form-field> -->
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Select a category</mat-label>
-        <mat-select formControlName="categoryId" name="categoryId">
-          <mat-option *ngFor="let category of listOfCategories" [value]="category.categoryId">
-            {{ category.categoryName }}
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Select a category</mat-label>
+          <mat-select formControlName="categoryId" name="categoryId">
+            <mat-option *ngFor="let category of listOfCategories" [value]="category.categoryId">
+              {{ category.categoryName }}
+            </mat-option>
+          </mat-select>
+          <mat-error>This input is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Product Name</mat-label>
+          <input matInput placeholder="Enter product Name" formControlName="productName">
+          <span class="text-danger"
+            *ngIf="(ProdRegForm.get('productName')?.touched || submitted) && ProdRegForm.get('productName')?.errors && ProdRegForm.get('productName')?.errors!['required']">
+            Product Name is required
+          </span>
+          <span class="text-danger"
+            *ngIf="ProdRegForm.get('productName')?.errors && ProdRegForm.get('productName')?.errors!['maxlength']">
+            Maximum 25 letters.
+          </span>
+        </mat-form-field>
+        <mat-form-field class="full-width">
+          <mat-label>Description</mat-label>
+          <input matInput placeholder="Enter product Description" formControlName="description">
+          <span class="text-danger"
+            *ngIf="(ProdRegForm.get('description')?.touched || submitted) && ProdRegForm.get('description')?.errors && ProdRegForm.get('description')?.errors!['required']">
+            Description is required
+          </span>
+          <span class="text-danger"
+            *ngIf="ProdRegForm.get('description')?.errors && ProdRegForm.get('description')?.errors!['maxlength']">
+            Maximum 500 letters.
+          </span>
+        </mat-form-field>
+
+        <!-- <mat-form-field class="full-width">
+        <mat-label>Select Colors</mat-label>
+        <mat-select formControlName="colors" multiple>
+          <mat-option *ngFor="let color of colors" [value]="color.value">
+            {{ color.viewValue }}
           </mat-option>
         </mat-select>
-        <mat-error>This input is required</mat-error>
-      </mat-form-field>
+      </mat-form-field> -->
 
-      <mat-form-field class="full-width">
-        <mat-label>Product Name</mat-label>
-        <input matInput placeholder="Enter product Name" formControlName="productName">
-        <span class="text-danger"
-          *ngIf="(ProdRegForm.get('productName')?.touched || submitted) && ProdRegForm.get('productName')?.errors && ProdRegForm.get('productName')?.errors!['required']">
-          Product Name is required
-        </span>
-        <span class="text-danger"
-          *ngIf="ProdRegForm.get('productName')?.errors && ProdRegForm.get('productName')?.errors!['maxlength']">
-          Maximum 25 letters.
-        </span>
-      </mat-form-field>
-      <mat-form-field class="full-width">
-        <mat-label>Description</mat-label>
-        <input matInput placeholder="Enter product Description" formControlName="description">
-        <span class="text-danger"
-          *ngIf="(ProdRegForm.get('description')?.touched || submitted) && ProdRegForm.get('description')?.errors && ProdRegForm.get('description')?.errors!['required']">
-          Description is required
-        </span>
-        <span class="text-danger"
-          *ngIf="ProdRegForm.get('description')?.errors && ProdRegForm.get('description')?.errors!['maxlength']">
-          Maximum 500 letters.
-        </span>
-      </mat-form-field>
+        <mat-form-field class="full-width">
+          <mat-label>Size(g)</mat-label>
+          <input matInput placeholder="Enter size of the product in grams (g)" formControlName="size">
+          <span class="text-danger"
+            *ngIf="(ProdRegForm.get('size')?.touched || submitted) && ProdRegForm.get('size')?.errors && ProdRegForm.get('size')?.errors!['required']">
+            size is required
+          </span>
+          <span class="text-danger"
+            *ngIf="ProdRegForm.get('size')?.errors && ProdRegForm.get('size')?.errors!['pattern']">
+            Enter valid size
+          </span>
+        </mat-form-field>
 
-      <mat-form-field class="full-width">
-        <mat-label>Size</mat-label>
-        <input matInput placeholder="Enter size of the product in grams (g)" formControlName="size">
-        <span class="text-danger"
-          *ngIf="(ProdRegForm.get('size')?.touched || submitted) && ProdRegForm.get('size')?.errors && ProdRegForm.get('size')?.errors!['required']">
-          size is required
-        </span>
-        <span class="text-danger"
-          *ngIf="ProdRegForm.get('size')?.errors && ProdRegForm.get('size')?.errors!['pattern']">
-          Enter valid size
-        </span>
-      </mat-form-field>
-
-      <mat-form-field class="full-width">
+        <!-- <mat-form-field class="full-width">
         <mat-label>Quantity</mat-label>
         <input matInput placeholder="Enter Quantity" formControlName="quantity">
         <span class="text-danger"
           *ngIf="(ProdRegForm.get('quantity')?.touched || submitted) && ProdRegForm.get('quantity')?.errors && ProdRegForm.get('quantity')?.errors!['required']">
           Quantity is required
         </span>
-      </mat-form-field>
+      </mat-form-field> -->
 
-      <mat-form-field class="full-width">
-        <mat-label>Price</mat-label>
-        <input matInput placeholder="Enter price of the product" formControlName="price">
-        <span class="text-danger"
-          *ngIf="(ProdRegForm.get('price')?.touched || submitted) && ProdRegForm.get('price')?.errors && ProdRegForm.get('price')?.errors!['required']">
-          Price is required
-        </span>
-        <span class="text-danger"
-          *ngIf="ProdRegForm.get('price')?.errors && ProdRegForm.get('price')?.errors!['pattern']">
-          Enter a valid price
-        </span>
-      </mat-form-field>
+        <mat-form-field class="full-width">
+          <mat-label>Quantity</mat-label>
+          <input matInput type="number" formControlName="quantity" min="1">
+          <span class="text-danger"
+            *ngIf="(ProdRegForm.get('quantity')?.touched || submitted) && ProdRegForm.get('quantity')?.errors && ProdRegForm.get('quantity')?.errors!['required']">
+            Please enter a Quantity
+          </span>
+          <span class="text-danger"
+            *ngIf="(ProdRegForm.get('quantity')?.touched || submitted) && ProdRegForm.get('quantity')?.errors && ProdRegForm.get('quantity')?.errors!['min']">
+            Minimum order Qty. for the selected item is 1
+          </span>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Price</mat-label>
+          <input matInput placeholder="Enter price of the product" formControlName="price">
+          <span class="text-danger"
+            *ngIf="(ProdRegForm.get('price')?.touched || submitted) && ProdRegForm.get('price')?.errors && ProdRegForm.get('price')?.errors!['required']">
+            Price is required
+          </span>
+          <span class="text-danger"
+            *ngIf="ProdRegForm.get('price')?.errors && ProdRegForm.get('price')?.errors!['pattern']">
+            Enter a valid price
+          </span>
+        </mat-form-field>
 
 
-      <div class="file-uplaod-container">
-        <label class="file-uplaod-label">
-          <span>Select an image</span>
-          <input type="file" id="fileInput" (change)="onFileSelected($event)" hidden>
-          <mat-icon>attach_file</mat-icon>
-        </label>
+        <div class="file-uplaod-container">
+          <label class="file-uplaod-label">
+            <span>Select an image</span>
+            <input type="file" id="fileInput" (change)="onFileSelected($event)" hidden>
+            <mat-icon>attach_file</mat-icon>
+          </label>
 
-        <div *ngIf="selectedFile" class="image-preview">
-          <div class="circle-image">
-            <img [src]="imagePreview" alt="Selected Image" class="preview-image">
+          <div *ngIf="selectedFile" class="image-preview">
+            <div class="circle-image">
+              <img [src]="imagePreview" alt="Selected Image" class="preview-image">
+            </div>
           </div>
         </div>
-      </div>
 
 
 
-      <!-- <mat-form-field class="full-width">
+        <!-- <mat-form-field class="full-width">
         <mat-label>Created at</mat-label>
         <input matInput placeholder="Enter the date " formControlName="createdAt">
         <span class="text-danger" *ngIf="(ProdRegForm.get('createdAt')?.touched || submitted) && ProdRegForm.get('createdAt')?.errors && ProdRegForm.get('createdAt')?.errors!['required']">
@@ -121,11 +143,90 @@
         </span>
       </mat-form-field> -->
 
-    </div>
-    <button type="submit" color="primary" class="form-button" mat-raised-button>{{saveButtonLabel}}</button>
-    <button type="reset" color="secondary" class="form-button" mat-raised-button (click)="resetData()">Reset</button>
-    <button mat-raised-button type="button" class="form-button" color="warn" (click)="closeForm()">Cancel</button>
-  </form>
-</div>
+      </div>
+      <button type="submit" color="primary" class="form-button" mat-raised-button>{{saveButtonLabel}}</button>
+      <button type="reset" color="secondary" class="form-button" mat-raised-button (click)="resetData()">Reset</button>
+      <button mat-raised-button type="button" class="form-button" color="warn" (click)="closeForm()">Cancel</button>
+    </form>
+  </div>
 
-<!-- Table Section -->
+  <!-- Table Section -->
+
+  <div class="table-section">
+    <div class="refresh-filter-section">
+      <div class="refresh-button">
+        <button mat-icon-button color="primary" (click)="refreshData()">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+
+      <mat-form-field class="filter">
+        <mat-label>Search</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Seach here" #input>
+      </mat-form-field>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+      <!-- <ng-container matColumnDef="productId">
+        <th mat-header-cell *matHeaderCellDef> Product Id </th>
+        <td mat-cell *matCellDef="let element"> {{element.productId}} </td>
+      </ng-container> -->
+
+      <ng-container matColumnDef="productName">
+        <th mat-header-cell *matHeaderCellDef> Product </th>
+        <td mat-cell *matCellDef="let product"> {{product.productName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="byteImage">
+        <th mat-header-cell *matHeaderCellDef> Image </th>
+        <td mat-cell *matCellDef="let product"> <img [src]="'data:' + product.imageType + ';base64,' + product.byteImage"
+            [alt]="product.product" width="80" height="80" class="product-image m-2" /> </td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Description </th>
+        <td mat-cell *matCellDef="let product"> {{product.description}} </td>
+      </ng-container>
+
+      <!-- <ng-container matColumnDef="colors">
+        <th mat-header-cell *matHeaderCellDef> Colors </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngFor="let color of element.colors">
+            {{ color }}
+          </div>
+        </td>
+      </ng-container> -->
+
+      <ng-container matColumnDef="size">
+        <th mat-header-cell *matHeaderCellDef> Size </th>
+        <td mat-cell *matCellDef="let product"> {{product.size}}g </td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef> Price </th>
+        <td mat-cell *matCellDef="let product"> LKR {{product.price}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let product">
+          <button mat-icon-button color="warn" (click)="editData(product)" (click)="showForm = true" *ngIf="!showForm"
+            matTooltip="edit">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="black" (click)="deleteData(product.productId)" matTooltip="delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[10, 20, 25, 100]" aria-label="Select page of users"></mat-paginator>
+
+
+  </div>
+
+</div>

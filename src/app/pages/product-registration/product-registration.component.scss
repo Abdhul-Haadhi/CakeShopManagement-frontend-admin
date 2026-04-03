@@ -6,8 +6,8 @@
 }
 
 .heading-bar {
-   background: linear-gradient(to right, #034a9c, #012a5b);
-   border-radius: 10px;
+    background: linear-gradient(to right, #034a9c, #012a5b);
+    border-radius: 10px;
 }
 
 .heading-text {
@@ -48,6 +48,10 @@
     border-radius: 50px;
 }
 
+.filter {
+    width: 100%;
+}
+
 .table-section {
     width: 100%;
 }
@@ -69,11 +73,11 @@
         border-radius: 4px;
         transition: background-color 0.3s;
 
-        span{
+        span {
             margin-right: 8px;
         }
 
-        mat-icon{
+        mat-icon {
 
             font-size: 20px;
         }

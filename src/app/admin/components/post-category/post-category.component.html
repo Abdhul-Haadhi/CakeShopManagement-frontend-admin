@@ -1,20 +1,36 @@
-<div class="container">
-    <h2>Add category</h2>
-    <form [formGroup]="categoryForm" (ngSubmit)="addCategory()">
+<div class="container-bar">
+    <mat-toolbar class="heading-bar">
+        <span class="heading-text">Categories</span>
+        <span class="example-spacer"></span>
+        <button class="form-button" mat-raised-button color="warn" (click)="showForm = true" *ngIf="!showForm">
+            +Add Category
+        </button>
+    </mat-toolbar>
+</div>
 
-        <mat-form-field appearance="outline" class="form-field">
-            <mat-label>Name</mat-label>
-            <input matInput type="text" placeholder="Name" formControlName="categoryName" />
-            <mat-error *ngIf="categoryForm.get('categoryName')?.hasError('required')">This input is required</mat-error>
-        </mat-form-field>
+<div class="form-section" *ngIf="showForm">
+    <div class="container">
+        <h2>Add category</h2>
+        <form [formGroup]="categoryForm" (ngSubmit)="addCategory()">
 
-        <mat-form-field appearance="outline" class="form-field">
-            <mat-label>Description</mat-label>
-            <input matInput type="text" placeholder="Description" formControlName="description" />
-            <mat-error *ngIf="categoryForm.get('description')?.hasError('required')">This input is required</mat-error>
-        </mat-form-field>
+            <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Name</mat-label>
+                <input matInput type="text" placeholder="Name" formControlName="categoryName" />
+                <mat-error *ngIf="categoryForm.get('categoryName')?.hasError('required')">This input is
+                    required</mat-error>
+            </mat-form-field>
 
-        <button mat-raised-button color="primary" type="submit">Add category</button>
+            <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Description</mat-label>
+                <input matInput type="text" placeholder="Description" formControlName="description" />
+                <mat-error *ngIf="categoryForm.get('description')?.hasError('required')">This input is
+                    required</mat-error>
+            </mat-form-field>
 
-    </form>
+            <button mat-raised-button color="primary" type="submit">Add category</button>
+            <button type="reset" color="secondary" mat-raised-button (click)="resetData()">Reset</button>
+            <button mat-raised-button type="button" color="warn" (click)="closeForm()">Cancel</button>
+
+        </form>
+    </div>
 </div>

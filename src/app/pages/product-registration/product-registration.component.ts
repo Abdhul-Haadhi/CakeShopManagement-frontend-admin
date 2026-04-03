@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatToolbar } from '@angular/material/toolbar';
 import { AngularMaterailModules } from '../../AngularMeterialModules';
@@ -10,7 +10,15 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AdminService } from '../../admin/service/admin.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import Swal from 'sweetalert2';
 
+
+// interface Colors {
+//   value: string;
+//   viewValue: string;
+// }
 
 
 
@@ -26,16 +34,55 @@ import { AdminService } from '../../admin/service/admin.service';
 
 export class ProductRegistrationComponent implements OnInit {
 
+
+  // colors: Colors[] = [
+  //   { value: 'White', viewValue: 'White' },
+  //   { value: 'Yellow', viewValue: 'Yellow' },
+  //   { value: 'Orange', viewValue: 'Orange' },
+  //   { value: 'Green', viewValue: 'Green' },
+  //   { value: 'Blue', viewValue: 'Blue' },
+  //   { value: 'Purple', viewValue: 'Purple' },
+  //   { value: 'Pink', viewValue: 'Pink' },
+  //   { value: 'Red', viewValue: 'Red' },
+  //   { value: 'black', viewValue: 'Black' },
+  //   { value: 'No colors', viewValue: 'No colors' },
+  // ];
+
+
+
+
   ProdRegForm: FormGroup;
   listOfCategories: any = [];
   selectedFile: File | null = null;
   imagePreview: string | ArrayBuffer | null;
-
-  dataSource!: MatTableDataSource<any>;
-
   showForm = false;
   submitted = false;
-  saveButtonLabel: string = 'Save'
+  saveButtonLabel: string = 'Save';
+  isButtonDisabled = false;
+  mode = 'add';
+  selectedImage: any;
+  selectedData!: { id: any; };
+  products: any[] = [];
+
+
+  dataSource!: MatTableDataSource<any>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+
+  displayedColumns: string[] = [
+    // 'productId',
+    'productName',
+    'byteImage',
+    'description',
+    // 'colors',
+    'size',
+    'price',
+    'actions',
+  ];
+
+
+
 
   constructor(private fb: FormBuilder,
     private prodService: ProductRegistrationService,
@@ -43,20 +90,20 @@ export class ProductRegistrationComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router
   ) {
-    this.ProdRegForm = this.fb.group({
-      // productId: new FormControl('', [Validators.required, Validators.pattern('^PRD[0-9]+$')]),
-      // productId: new FormControl('', [Validators.required]),
-      // categoryId: new FormControl('', [Validators.required]),
-      // productName: new FormControl('', [Validators.required, Validators.maxLength(25)]),
-      // description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
-      // size: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
-      // quantity: new FormControl([], [Validators.required]),
-      // price: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
-      // image: new FormControl('', [Validators.required]),
-      // imageName: new FormControl('', []),
-      // imageType: new FormControl('', []),
-      // createdAt: new FormControl('', [Validators.required]),
-    });
+    // this.ProdRegForm = this.fb.group({
+    // productId: new FormControl('', [Validators.required, Validators.pattern('^PRD[0-9]+$')]),
+    // productId: new FormControl('', [Validators.required]),
+    // categoryId: new FormControl('', [Validators.required]),
+    // productName: new FormControl('', [Validators.required, Validators.maxLength(25)]),
+    // description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
+    // size: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
+    // quantity: new FormControl([], [Validators.required]),
+    // price: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
+    // image: new FormControl('', [Validators.required]),
+    // imageName: new FormControl('', []),
+    // imageType: new FormControl('', []),
+    // createdAt: new FormControl('', [Validators.required]),
+    // });
   }
 
 
@@ -68,12 +115,51 @@ export class ProductRegistrationComponent implements OnInit {
       categoryId: [null, [Validators.required]],
       productName: [null, [Validators.required, Validators.maxLength(25)]],
       description: [null, [Validators.required, Validators.maxLength(500)]],
+      // colors: [null, [Validators.required, Validators.maxLength(500)]],
       size: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
-      quantity: [null, [Validators.required]],
+      quantity: [1, [Validators.required, Validators.min(1)]],
       price: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
     });
 
     this.getAllCategories();
+    this.populateData();
+
+    // const nav = this.router.getCurrentNavigation();
+    const data = history.state.product;
+
+    console.log('*****',data);
+
+    if(data){
+      this.editData(data);
+      this.showForm = true;
+    }
+  }
+
+
+  public populateData(): void {
+    try {
+      this.prodService.getAllProducts().subscribe({
+        next: (dataList: any) => {
+          if (dataList.length <= 0) {
+            return;
+          }
+
+          this.dataSource = new MatTableDataSource(dataList);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          // console.log("got:",dataList);
+          
+        },
+        error: (error) => {
+          // this.messageService.showError('Action failed with error' + error);
+          this.snackBar.open(error.message, 'ERROR', { duration: 5000 })
+        }
+      });
+    }
+    catch (error) {
+      // this.messageService.showError('Action failed with error' + error);
+    }
+
   }
 
   getAllCategories() {
@@ -81,10 +167,6 @@ export class ProductRegistrationComponent implements OnInit {
       this.listOfCategories = resposne;
       console.log(this.listOfCategories);
     })
-  }
-
-  addProduct(): void {
-
   }
 
 
@@ -167,12 +249,94 @@ export class ProductRegistrationComponent implements OnInit {
 
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  public editData(data: any): void {
+
+    this.ProdRegForm.patchValue(data);
+
+    if (data.image) {
+      this.selectedImage = `data:${data.imageType};base64,${data.image}`;
+    }
+
+    this.saveButtonLabel = 'Edit';
+    this.mode = 'edit';
+    this.selectedData = data;
+  }
+
+  public deleteData(productId: any): void {
+
+    // const productId = data.productId;
+
+    try {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You want to delete this?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel',
+      }).then((result) => {
+        if (result && !result.isConfirmed) {
+          return;
+        }
+
+
+        this.prodService.deleteProduct(productId).subscribe({
+          next: (response) => {
+            const index = this.dataSource.data.findIndex((element) => element.productId === productId);
+            if (index !== -1) {
+              this.dataSource.data.splice(index, 1);
+            }
+            this.dataSource = new MatTableDataSource(this.dataSource.data);
+            // this.messageService.showSuccess('Data deleted successfully!');
+            this.snackBar.open('Data deleted successfully!','Close',{duration:5000});
+
+          },
+          error: (error) => {
+            this.snackBar.open('Action failed with error ' + error,'Close',{duration:5000});
+          }
+        });
+
+
+        // this.prodService.deleteProduct(productId).subscribe(response=>{
+            // if(response == null){
+            //   this.snackBar.open('Product deleted successfully', 'Close', { duration: 5000 });
+            //   this.products = this.products.filter(p => p.productId !== productId);
+            //   this.dataSource = new MatTableDataSource(this.dataSource.data);
+            // }
+            // else{
+            //   this.snackBar.open(response.message, 'Close', { duration: 5000, panelClass: 'error-snackbar' });
+            // }
+          // });
+      });
+    }
+    catch (error) {
+      this.snackBar.open('Action failed with error ' + error,'Close',{duration:5000});
+    }
+
+
+  }
+
 
   public resetData(): void {
     this.ProdRegForm.reset();
     this.ProdRegForm.updateValueAndValidity();
+    this.saveButtonLabel = 'Save';
     this.ProdRegForm.enable();
+    this.isButtonDisabled = false;
     this.submitted = false;
+  }
+
+
+  public refreshData(): void {
+    this.populateData();
   }
 
   closeForm() {

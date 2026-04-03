@@ -17,6 +17,8 @@ import { AdminService } from '../../service/admin.service';
 export class PostCategoryComponent implements OnInit{
 
   categoryForm!: FormGroup;
+  showForm = false;
+  submitted = false;
 
   constructor(
     private fb: FormBuilder,
@@ -36,7 +38,7 @@ export class PostCategoryComponent implements OnInit{
     if(this.categoryForm.valid){
       this.adminService.addCategory(this.categoryForm.value).subscribe({
         next: (response) => {
-          if(response.id != null){
+          if(response.categoryId != null){
             this.snackBar.open('Category posted successfully', 'Ok', {duration: 5000});
             this.router.navigateByUrl('dashboard');
           }
@@ -49,6 +51,20 @@ export class PostCategoryComponent implements OnInit{
     else{
       this.categoryForm.markAllAsTouched();
     }
+  }
+
+
+  public resetData(): void {
+    this.categoryForm.reset();
+    this.categoryForm.updateValueAndValidity();
+    this.categoryForm.enable();
+    this.submitted = false;
+  }
+
+  closeForm() {
+    this.showForm = false;
+    this.categoryForm.reset();
+    this.submitted = false;
   }
 
 }

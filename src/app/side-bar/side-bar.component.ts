@@ -41,17 +41,17 @@ export class SideBarComponent implements OnInit{
     {
       routeLink: 'product-reg',
       icon: 'fal fa-utensils',
-      label: 'Product Registration',
+      label: 'Products',
     },
     {
       routeLink: 'employee-reg',
       icon: 'fal fa-people-carry',
-      label: 'Employee Registration',
+      label: 'Employees',
     },
     {
       routeLink: 'customer-reg',
       icon: 'far fa-users',
-      label: 'Customer Registration',
+      label: 'Customers',
     },
     {
       routeLink: 'category',

@@ -15,23 +15,23 @@ export class DashboardService {
 
 
 
-  getAllProductsByName(productName:any): Observable<any> {
+  getAllProductsByName(productName: any): Observable<any> {
     return this.http.get(BASIC_URL + `api/admin/search/${productName}`, {
       headers: this.createAuthorizationHeader(),
     })
   }
 
   deleteProduct(productId: any): Observable<any> {
-      return this.http.delete(BASIC_URL + `api/admin/product/${productId}`, {
-        headers: this.createAuthorizationHeader(),
-      })
-    }
+    return this.http.delete(BASIC_URL + `api/admin/product/${productId}`, {
+      headers: this.createAuthorizationHeader(),
+    })
+  }
 
   private createAuthorizationHeader(): HttpHeaders {
     return new HttpHeaders().set('Authorization', 'Bearer ' + UserStorageService.getToken())
   }
 
-  
+
 
 
 }

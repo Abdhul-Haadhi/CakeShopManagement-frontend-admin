@@ -73,6 +73,12 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  goToEdit(product:any){
+    this.router.navigate(['/product-reg'], {
+      state: {product:product}
+    });
+  }
+
 
 
   deleteProduct(productId: any) {

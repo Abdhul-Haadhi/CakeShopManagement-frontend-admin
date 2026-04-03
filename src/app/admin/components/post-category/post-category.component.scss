@@ -1,9 +1,35 @@
+.container-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+}
+
+.heading-bar {
+   background: linear-gradient(to right, #034a9c, #012a5b);
+   border-radius: 10px;
+}
+
+.heading-text {
+    color: white;
+}
+
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+.form-button {
+    margin-right: 1%;
+    border-radius: 50px;
+}
+
 .container {
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
     margin-top: 90px;
 }
+
 
 h2 {
     text-align: center;
@@ -33,7 +59,11 @@ form {
     }
 
     button {
-        align-self: center;
+        // align-self: center;
+        margin-top: 8px;
+        border-radius: 50px;
+        // display: flex;
+        // flex-direction: column
     };
 }
 

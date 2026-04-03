@@ -32,9 +32,9 @@
             <mat-divider></mat-divider>
 
             <div class="actions">
-                <button mat-raised-button color="primary" class="update-button"
-                    [routerLink]="'/product/'+product.productId">Update</button>
-                <button mat-raised-button color="warn" class="delete-button" (click)="deleteProduct(product.productId)">Delete</button>
+                <button mat-raised-button color="primary" class="update-button" (click)="goToEdit(product)">Update</button>
+                <button mat-raised-button color="warn" class="delete-button"
+                    (click)="deleteProduct(product.productId)">Delete</button>
             </div>
         </div>
     </mat-card>
