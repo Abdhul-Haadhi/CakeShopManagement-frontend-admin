@@ -73,9 +73,9 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  goToEdit(product:any){
+  goToEdit(product: any) {
     this.router.navigate(['/product-reg'], {
-      state: {product:product}
+      state: { product: product }
     });
   }
 
@@ -92,6 +92,12 @@ export class DashboardComponent implements OnInit {
         this.snackBar.open(response.message, 'Close', { duration: 5000, panelClass: 'error-snackbar' });
       }
     })
+  }
+
+  public refreshData(): void {
+    this.products = [];               // optinal
+    this.searchProductForm.reset();
+    this.getAllProducts();
   }
 
 }

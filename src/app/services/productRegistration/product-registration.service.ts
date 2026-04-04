@@ -49,11 +49,39 @@ export class ProductRegistrationService {
     });
   }
 
+  getProductById(productId): Observable<any> {
+    return this.http.get(BASIC_URL + `api/admin/product/${productId}`, {
+      headers: this.createAuthorizationHeader(),
+    });
+  }
+
   deleteProduct(productId: any): Observable<any> {
     return this.http.delete(BASIC_URL + `api/admin/product/${productId}`, {
       headers: this.createAuthorizationHeader(),
     })
   }
+
+  editData(productId:any,productDto:any): Observable<any> {
+    return this.http.put(BASIC_URL + `api/admin/product/${productId}`, productDto, {
+      headers: this.createAuthorizationHeader(),
+    })
+  }
+
+  // editData(id: number, from_details: any) {
+  //   console.log('In edit data');
+
+  //   const requestUrl = environment.baseUrl + '/product-registration/' + id.toString();
+
+  //   let headers = {};
+
+  //   if (this.httpService.getAuthToken() !== null) {
+  //     headers = {
+  //       Authorization: 'Bearer ' + this.httpService.getAuthToken(),
+  //     };
+  //   }
+
+  //   return this.http.put(requestUrl, from_details, { headers: headers })
+  // }
 
 
   private createAuthorizationHeader(): HttpHeaders {

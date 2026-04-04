@@ -8,7 +8,7 @@ import { NgIf, NgForOf } from '@angular/common';
 import { ProductRegistrationService } from '../../services/productRegistration/product-registration.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from '../../admin/service/admin.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -50,6 +50,7 @@ export class ProductRegistrationComponent implements OnInit {
 
 
 
+  // productId = this.activatedRoute.snapshot.params['productId'];
 
   ProdRegForm: FormGroup;
   listOfCategories: any = [];
@@ -61,8 +62,9 @@ export class ProductRegistrationComponent implements OnInit {
   isButtonDisabled = false;
   mode = 'add';
   selectedImage: any;
-  selectedData!: { id: any; };
+  selectedData!: { productId: any; };
   products: any[] = [];
+  existingImage: string | null = null;
 
 
   dataSource!: MatTableDataSource<any>;
@@ -88,7 +90,8 @@ export class ProductRegistrationComponent implements OnInit {
     private prodService: ProductRegistrationService,
     private adminService: AdminService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    // private activatedRoute: ActivatedRoute
   ) {
     // this.ProdRegForm = this.fb.group({
     // productId: new FormControl('', [Validators.required, Validators.pattern('^PRD[0-9]+$')]),
@@ -127,13 +130,20 @@ export class ProductRegistrationComponent implements OnInit {
     // const nav = this.router.getCurrentNavigation();
     const data = history.state.product;
 
-    console.log('*****',data);
+    // console.log('*****', data);
 
-    if(data){
+    if (data) {
       this.editData(data);
       this.showForm = true;
     }
+    // this.getProductById();
   }
+
+  // getProductById() {
+  //   this.prodService.getProductById(this.productId).subscribe(response => {
+  //     this.existingImage = 'data:image/jpeg;base64,' + response.byteImage;
+  //   })
+  // }
 
 
   public populateData(): void {
@@ -147,8 +157,9 @@ export class ProductRegistrationComponent implements OnInit {
           this.dataSource = new MatTableDataSource(dataList);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
+          // this.existingImage = 'data:image/jpeg;base64,' + dataList.byteImage;
           // console.log("got:",dataList);
-          
+
         },
         error: (error) => {
           // this.messageService.showError('Action failed with error' + error);
@@ -172,6 +183,9 @@ export class ProductRegistrationComponent implements OnInit {
 
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
+
+    this.existingImage = null;
+
     this.previewImage();
   }
 
@@ -213,39 +227,72 @@ export class ProductRegistrationComponent implements OnInit {
     //   this.snackBar.open("Something error", "Error", {duration:5000})
     // }
 
-
-    if (this.ProdRegForm.valid) {
-      const formData: FormData = new FormData();
-      if (this.selectedFile) {
-        formData.append('image', this.selectedFile);
-      }
-      formData.append('categoryId', this.ProdRegForm.get('categoryId').value);
-      formData.append('productName', this.ProdRegForm.get('productName').value);
-      formData.append('description', this.ProdRegForm.get('description').value);
-      formData.append('size', this.ProdRegForm.get('size').value);
-      formData.append('quantity', this.ProdRegForm.get('quantity').value);
-      formData.append('price', this.ProdRegForm.get('price').value);
-
-      this.prodService.addProduct(formData).subscribe({
-        next: (response: any) => {
-          console.log("RESPONSE:", response);
-          if (response.productId != null) {
-            this.snackBar.open('Product added successfully', 'Ok', { duration: 5000 });
-            this.router.navigateByUrl('/dashboard');
+    try {
+      if (this.mode === 'add') {
+        if (this.ProdRegForm.valid) {
+          const formData: FormData = new FormData();
+          if (this.selectedFile) {
+            formData.append('image', this.selectedFile);
           }
-          else {
-            this.snackBar.open(response.message, 'ERROR', { duration: 5000 });
+          formData.append('categoryId', this.ProdRegForm.get('categoryId').value);
+          formData.append('productName', this.ProdRegForm.get('productName').value);
+          formData.append('description', this.ProdRegForm.get('description').value);
+          formData.append('size', this.ProdRegForm.get('size').value);
+          formData.append('quantity', this.ProdRegForm.get('quantity').value);
+          formData.append('price', this.ProdRegForm.get('price').value);
+
+          this.prodService.addProduct(formData).subscribe({
+            next: (response: any) => {
+              console.log("RESPONSE:", response);
+              if (response.productId != null) {
+                this.snackBar.open('Product added successfully', 'Ok', { duration: 5000 });
+                this.router.navigateByUrl('/dashboard');
+              }
+              else {
+                this.snackBar.open(response.message, 'ERROR', { duration: 5000 });
+              }
+            }
+          })
+
+        }
+        else {
+          for (const i in this.ProdRegForm.controls) {
+            this.ProdRegForm.controls[i].markAsDirty();
+            this.ProdRegForm.controls[i].updateValueAndValidity();
           }
         }
-      })
 
-    }
-    else {
-      for (const i in this.ProdRegForm.controls) {
-        this.ProdRegForm.controls[i].markAsDirty();
-        this.ProdRegForm.controls[i].updateValueAndValidity();
+      } else if (this.mode === 'edit') {
+        const formData: FormData = new FormData();
+
+        if (this.selectedFile) {
+          formData.append('image', this.selectedFile);
+        }
+        formData.append('categoryId', this.ProdRegForm.get('categoryId').value);
+        formData.append('productName', this.ProdRegForm.get('productName').value);
+        formData.append('description', this.ProdRegForm.get('description').value);
+        formData.append('size', this.ProdRegForm.get('size').value);
+        formData.append('quantity', this.ProdRegForm.get('quantity').value);
+        formData.append('price', this.ProdRegForm.get('price').value);
+
+        this.prodService.editData(this.selectedData.productId, formData).subscribe({
+          next:(response:any)=>{
+            this.snackBar.open('Product updated successfully', 'Ok', { duration: 5000 });
+            this.router.navigateByUrl('/dashboard');
+          },
+          error:(error)=>{
+            this.snackBar.open('Update failed', 'Error', { duration: 5000 });
+          }
+        });
       }
+      this.mode = 'add';
+      this.ProdRegForm.disable();
+      this.isButtonDisabled = true;
     }
+    catch (error) {
+      this.snackBar.open("Something went wrong ", "Error", { duration: 5000 })
+    }
+
 
   }
 
@@ -261,8 +308,8 @@ export class ProductRegistrationComponent implements OnInit {
 
     this.ProdRegForm.patchValue(data);
 
-    if (data.image) {
-      this.selectedImage = `data:${data.imageType};base64,${data.image}`;
+    if (data.byteImage) {
+      this.existingImage = 'data:image/jpeg;base64,' + data.byteImage;
     }
 
     this.saveButtonLabel = 'Edit';
@@ -296,29 +343,29 @@ export class ProductRegistrationComponent implements OnInit {
             }
             this.dataSource = new MatTableDataSource(this.dataSource.data);
             // this.messageService.showSuccess('Data deleted successfully!');
-            this.snackBar.open('Data deleted successfully!','Close',{duration:5000});
+            this.snackBar.open('Data deleted successfully!', 'Close', { duration: 5000 });
 
           },
           error: (error) => {
-            this.snackBar.open('Action failed with error ' + error,'Close',{duration:5000});
+            this.snackBar.open('Action failed with error ' + error, 'Close', { duration: 5000 });
           }
         });
 
 
         // this.prodService.deleteProduct(productId).subscribe(response=>{
-            // if(response == null){
-            //   this.snackBar.open('Product deleted successfully', 'Close', { duration: 5000 });
-            //   this.products = this.products.filter(p => p.productId !== productId);
-            //   this.dataSource = new MatTableDataSource(this.dataSource.data);
-            // }
-            // else{
-            //   this.snackBar.open(response.message, 'Close', { duration: 5000, panelClass: 'error-snackbar' });
-            // }
-          // });
+        // if(response == null){
+        //   this.snackBar.open('Product deleted successfully', 'Close', { duration: 5000 });
+        //   this.products = this.products.filter(p => p.productId !== productId);
+        //   this.dataSource = new MatTableDataSource(this.dataSource.data);
+        // }
+        // else{
+        //   this.snackBar.open(response.message, 'Close', { duration: 5000, panelClass: 'error-snackbar' });
+        // }
+        // });
       });
     }
     catch (error) {
-      this.snackBar.open('Action failed with error ' + error,'Close',{duration:5000});
+      this.snackBar.open('Action failed with error ' + error, 'Close', { duration: 5000 });
     }
 
 
@@ -342,6 +389,9 @@ export class ProductRegistrationComponent implements OnInit {
   closeForm() {
     this.showForm = false;
     this.ProdRegForm.reset();
+    this.existingImage = null;
+    this.selectedFile = null;
+    this.saveButtonLabel = 'Save'
     this.submitted = false;
   }
 
