@@ -6,6 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 import { NgIf } from "@angular/common";
 import { AuthService } from '../services/auth/auth.service';
 import { UserStorageService } from '../services/storage/user-storage.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-nav-bar',
@@ -34,8 +35,23 @@ export class NavBarComponent implements OnInit {
   }
 
   logout() {
-    UserStorageService.signOut();
-    this.router.navigateByUrl('/login', {replaceUrl: true});
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You want to logout?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, logout!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result && !result.isConfirmed) {
+        return;
+      }
+
+      UserStorageService.signOut();
+      this.router.navigateByUrl('/login', { replaceUrl: true });
+
+    });
+
   }
 
 }

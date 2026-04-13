@@ -4,7 +4,7 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { AngularMaterailModules } from '../../AngularMeterialModules';
 import { MatCard } from '@angular/material/card';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgIf, NgForOf } from '@angular/common';
+import { NgIf, NgForOf, DatePipe } from '@angular/common';
 import { ProductRegistrationService } from '../../services/productRegistration/product-registration.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,6 +13,8 @@ import { AdminService } from '../../admin/service/admin.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import Swal from 'sweetalert2';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 
 // interface Colors {
@@ -25,8 +27,9 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-product-registration',
   standalone: true,
-  imports: [AngularMaterailModules, MatToolbar, MatFormFieldModule, MatCard, MatFormField, ReactiveFormsModule, NgIf, NgForOf],
+  imports: [AngularMaterailModules, MatToolbar, MatFormFieldModule, MatCard, MatFormField, ReactiveFormsModule, NgIf, NgForOf, DatePipe],
   templateUrl: './product-registration.component.html',
+  providers: [provideNativeDateAdapter()],
   styleUrl: './product-registration.component.scss'
 })
 
@@ -65,6 +68,8 @@ export class ProductRegistrationComponent implements OnInit {
   selectedData!: { productId: any; };
   products: any[] = [];
   existingImage: string | null = null;
+  maxDate: Date;
+  minDate: Date;
 
 
   dataSource!: MatTableDataSource<any>;
@@ -74,12 +79,14 @@ export class ProductRegistrationComponent implements OnInit {
 
   displayedColumns: string[] = [
     // 'productId',
+    'productSku',
     'productName',
     'byteImage',
     'description',
     // 'colors',
     'size',
     'price',
+    'addedDate',
     'actions',
   ];
 
@@ -93,28 +100,15 @@ export class ProductRegistrationComponent implements OnInit {
     private router: Router,
     // private activatedRoute: ActivatedRoute
   ) {
-    // this.ProdRegForm = this.fb.group({
-    // productId: new FormControl('', [Validators.required, Validators.pattern('^PRD[0-9]+$')]),
-    // productId: new FormControl('', [Validators.required]),
-    // categoryId: new FormControl('', [Validators.required]),
-    // productName: new FormControl('', [Validators.required, Validators.maxLength(25)]),
-    // description: new FormControl('', [Validators.required, Validators.maxLength(500)]),
-    // size: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
-    // quantity: new FormControl([], [Validators.required]),
-    // price: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
-    // image: new FormControl('', [Validators.required]),
-    // imageName: new FormControl('', []),
-    // imageType: new FormControl('', []),
-    // createdAt: new FormControl('', [Validators.required]),
-    // });
+    this.maxDate = new Date();
+    this.minDate = new Date();
   }
-
-
 
 
   ngOnInit(): void {
 
     this.ProdRegForm = this.fb.group({
+      productSku: [null, [Validators.required, Validators.pattern('^PRD[0-9]+$')]],
       categoryId: [null, [Validators.required]],
       productName: [null, [Validators.required, Validators.maxLength(25)]],
       description: [null, [Validators.required, Validators.maxLength(500)]],
@@ -122,7 +116,48 @@ export class ProductRegistrationComponent implements OnInit {
       size: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
       quantity: [1, [Validators.required, Validators.min(1)]],
       price: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
+      addedDate: new FormControl(new Date(), Validators.required),
     });
+
+    const skuControl = this.ProdRegForm.get('productSku');
+
+    skuControl?.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe(value => {
+
+        console.log("Typing:", value); // 🔥 MUST PRINT
+
+        if (!value) return;
+
+        const control = this.ProdRegForm.get('productSku');
+
+        this.prodService.checkSkuExists(value).subscribe({
+          next: (exists) => {
+
+            if (exists) {
+              control?.setErrors({ ...control.errors, duplicate: true });
+            } else {
+              if (control?.errors) {
+                delete control.errors['duplicate']; // ✅ remove only duplicate
+
+                if (Object.keys(control.errors).length === 0) {
+                  control.setErrors(null); // ✅ clear all if nothing left
+                } else {
+                  control.setErrors(control.errors);
+                }
+              }
+            }
+
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        });
+
+      });
 
     this.getAllCategories();
     this.populateData();
@@ -176,7 +211,7 @@ export class ProductRegistrationComponent implements OnInit {
   getAllCategories() {
     this.adminService.getAllCategories().subscribe(resposne => {
       this.listOfCategories = resposne;
-      console.log(this.listOfCategories);
+      // console.log(this.listOfCategories);
     })
   }
 
@@ -199,35 +234,9 @@ export class ProductRegistrationComponent implements OnInit {
 
 
   onSubmit(): void {
-    // try{
-    //   this.submitted=true;
-    //   if(this.ProdRegForm.invalid){
-    //     return;
-    //   }
-    //   this.prodService.addProduct(this.ProdRegForm.value).subscribe({
-    //     next: (response: any) => {
-    //       if(this.dataSource && this.dataSource.data && this.dataSource.data.length > 0){
-    //         const formData: FormData = new FormData();
-    //         formData.append('image', this.selectedFile);
-    //         this.dataSource = new MatTableDataSource([response, ...this.dataSource.data,]);
-    //       }
-    //       else{
-    //         this.dataSource = new MatTableDataSource([response]);
-    //       }
-    //       this.snackBar.open("Product added successfully", 'Ok', {duration:5000});
-    //     },
-    //     error:(error)=>{
-    //       console.error("FULL ERROR:", error);
-    //       this.snackBar.open("Something went wrong while adding", "Error", {duration:5000});
-    //     }
-    //   });
-
-    // }
-    // catch(error){
-    //   this.snackBar.open("Something error", "Error", {duration:5000})
-    // }
-
+    console.log("FORM VALUE:", this.ProdRegForm.value);
     try {
+
       if (this.mode === 'add') {
         if (this.ProdRegForm.valid) {
           const formData: FormData = new FormData();
@@ -235,15 +244,21 @@ export class ProductRegistrationComponent implements OnInit {
             formData.append('image', this.selectedFile);
           }
           formData.append('categoryId', this.ProdRegForm.get('categoryId').value);
+          formData.append('productSku', this.ProdRegForm.get('productSku').value);
           formData.append('productName', this.ProdRegForm.get('productName').value);
           formData.append('description', this.ProdRegForm.get('description').value);
           formData.append('size', this.ProdRegForm.get('size').value);
           formData.append('quantity', this.ProdRegForm.get('quantity').value);
           formData.append('price', this.ProdRegForm.get('price').value);
+          const rawDate = this.ProdRegForm.get('addedDate')?.value;
+          if (rawDate) {
+            const formattedDate = new Date(rawDate).toISOString();
+            formData.append('addedDate', formattedDate);
+          }
 
           this.prodService.addProduct(formData).subscribe({
             next: (response: any) => {
-              console.log("RESPONSE:", response);
+              // console.log("RESPONSE:", formData);
               if (response.productId != null) {
                 this.snackBar.open('Product added successfully', 'Ok', { duration: 5000 });
                 this.router.navigateByUrl('/dashboard');
@@ -251,11 +266,38 @@ export class ProductRegistrationComponent implements OnInit {
               else {
                 this.snackBar.open(response.message, 'ERROR', { duration: 5000 });
               }
+            },
+            error: (error) => {
+              console.error("ERROR RESPONSE:", error);
+
+              // 🔥 show backend message
+              this.snackBar.open(
+                error.error?.message || 'Product SKU already exists!',
+                'Error',
+                { duration: 5000 }
+              );
             }
+            // error: (error) => {
+            //   console.error(error);
+            //   console.log("FULL ERROR:", error);
+
+            //   // if (error.error?.message?.includes('SKU')) {
+            //   //   this.ProdRegForm.get('productSku')?.setErrors({ duplicate: true });
+            //   // }
+            //   const errorMessage = error.message || '';
+
+            //   if (errorMessage.toLowerCase().includes('sku')) {
+            //     this.ProdRegForm.get('productSku')?.setErrors({ duplicate: true });
+            //   }
+
+            //   this.snackBar.open(error.message || 'Error occurred', 'Error', { duration: 3000 });
+            // }
           })
 
         }
         else {
+          console.log("wrong");
+
           for (const i in this.ProdRegForm.controls) {
             this.ProdRegForm.controls[i].markAsDirty();
             this.ProdRegForm.controls[i].updateValueAndValidity();
@@ -269,19 +311,29 @@ export class ProductRegistrationComponent implements OnInit {
           formData.append('image', this.selectedFile);
         }
         formData.append('categoryId', this.ProdRegForm.get('categoryId').value);
+        formData.append('productSku', this.ProdRegForm.get('productSku').value);
         formData.append('productName', this.ProdRegForm.get('productName').value);
         formData.append('description', this.ProdRegForm.get('description').value);
         formData.append('size', this.ProdRegForm.get('size').value);
         formData.append('quantity', this.ProdRegForm.get('quantity').value);
         formData.append('price', this.ProdRegForm.get('price').value);
+        const rawDate = this.ProdRegForm.get('addedDate')?.value;
+        if (rawDate) {
+          const formattedDate = new Date(rawDate).toISOString();
+          formData.append('addedDate', formattedDate);
+        }
+
+        formData.forEach((value, key) => {
+          console.log("FORMDATA:", key, value);
+        });
 
         this.prodService.editData(this.selectedData.productId, formData).subscribe({
-          next:(response:any)=>{
+          next: (response: any) => {
             this.snackBar.open('Product updated successfully', 'Ok', { duration: 5000 });
             this.router.navigateByUrl('/dashboard');
           },
-          error:(error)=>{
-            this.snackBar.open('Update failed', 'Error', { duration: 5000 });
+          error: (error) => {
+            this.snackBar.open(error.error?.message || 'Update failed', 'Error', { duration: 5000 });
           }
         });
       }
@@ -319,8 +371,6 @@ export class ProductRegistrationComponent implements OnInit {
 
   public deleteData(productId: any): void {
 
-    // const productId = data.productId;
-
     try {
       Swal.fire({
         title: 'Are you sure?',
@@ -350,18 +400,6 @@ export class ProductRegistrationComponent implements OnInit {
             this.snackBar.open('Action failed with error ' + error, 'Close', { duration: 5000 });
           }
         });
-
-
-        // this.prodService.deleteProduct(productId).subscribe(response=>{
-        // if(response == null){
-        //   this.snackBar.open('Product deleted successfully', 'Close', { duration: 5000 });
-        //   this.products = this.products.filter(p => p.productId !== productId);
-        //   this.dataSource = new MatTableDataSource(this.dataSource.data);
-        // }
-        // else{
-        //   this.snackBar.open(response.message, 'Close', { duration: 5000, panelClass: 'error-snackbar' });
-        // }
-        // });
       });
     }
     catch (error) {
@@ -379,6 +417,8 @@ export class ProductRegistrationComponent implements OnInit {
     this.ProdRegForm.enable();
     this.isButtonDisabled = false;
     this.submitted = false;
+    this.existingImage = null;
+    this.selectedFile = null;
   }
 
 
@@ -389,6 +429,7 @@ export class ProductRegistrationComponent implements OnInit {
   closeForm() {
     this.showForm = false;
     this.ProdRegForm.reset();
+    this.ProdRegForm.enable();
     this.existingImage = null;
     this.selectedFile = null;
     this.saveButtonLabel = 'Save'

@@ -10,6 +10,7 @@ import { AngularMaterailModules } from "../../AngularMeterialModules";
 import { FormBuilder, FormGroup, Validators, ɵInternalFormsSharedModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-dashboard',
@@ -82,16 +83,32 @@ export class DashboardComponent implements OnInit {
 
 
   deleteProduct(productId: any) {
-    this.dashboardService.deleteProduct(productId).subscribe(response => {
-      if (response == null) {
-        this.snackBar.open('Product deleted successfully', 'Close', { duration: 5000 });
-        // this.getAllProducts();
-        this.products = this.products.filter(p => p.productId !== productId);
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You want to delete this?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result && !result.isConfirmed) {
+        return;
       }
-      else {
-        this.snackBar.open(response.message, 'Close', { duration: 5000, panelClass: 'error-snackbar' });
-      }
-    })
+
+      this.dashboardService.deleteProduct(productId).subscribe(response => {
+        if (response == null) {
+          this.snackBar.open('Product deleted successfully', 'Close', { duration: 5000 });
+          // this.getAllProducts();
+          this.products = this.products.filter(p => p.productId !== productId);
+        }
+        else {
+          this.snackBar.open(response.message, 'Close', { duration: 5000, panelClass: 'error-snackbar' });
+        }
+      });
+
+    });
+
   }
 
   public refreshData(): void {
