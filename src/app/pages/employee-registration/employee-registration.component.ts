@@ -1,39 +1,80 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatToolbar } from '@angular/material/toolbar';
 import { AngularMaterailModules } from '../../AngularMeterialModules';
 import { MatCard } from '@angular/material/card';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgIf, NgForOf, DatePipe } from '@angular/common';
-import { ProductRegistrationService } from '../../services/productRegistration/product-registration.service';
+import { NgIf, NgForOf, DatePipe, JsonPipe } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AdminService } from '../../admin/service/admin.service';
+import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import Swal from 'sweetalert2';
-import { provideNativeDateAdapter } from '@angular/material/core';
 import { EmployeeRegistrationService } from '../../services/employeeRegistration/employee-registration.service';
+import { MatDialog } from '@angular/material/dialog';
+import { RegDialogComponent } from './reg-dialog/reg-dialog.component';
+
+interface Roles {
+  value: string;
+  viewValue: string;
+}
 
 @Component({
   selector: 'app-employee-registration',
   standalone: true,
-  imports: [AngularMaterailModules, MatToolbar, MatFormFieldModule, MatCard, MatFormField, ReactiveFormsModule, NgIf, NgForOf, DatePipe],
+  imports: [AngularMaterailModules, MatToolbar, MatFormFieldModule, MatCard, MatFormField, ReactiveFormsModule, NgIf, NgForOf, DatePipe, JsonPipe],
   templateUrl: './employee-registration.component.html',
   styleUrl: './employee-registration.component.scss'
 })
-export class EmployeeRegistrationComponent {
+export class EmployeeRegistrationComponent implements OnInit {
 
 
+  // listOfRoles: Roles[] = [
+  //   { value: 'White', viewValue: 'White' },
+  //   { value: 'Yellow', viewValue: 'Yellow' },
+  //   { value: 'Orange', viewValue: 'Orange' },
+  //   { value: 'Green', viewValue: 'Green' },
+  //   { value: 'Blue', viewValue: 'Blue' },
+  //   { value: 'Purple', viewValue: 'Purple' },
+  //   { value: 'Pink', viewValue: 'Pink' },
+  //   { value: 'Red', viewValue: 'Red' },
+  //   { value: 'black', viewValue: 'Black' },
+  //   { value: 'No colors', viewValue: 'No colors' },
+  // ];
+
+
+  protected readonly value = signal('');
+
+  protected onInput(event: Event) {
+    this.value.set((event.target as HTMLInputElement).value);
+  }
+
+
+
+
+  // hide = signal(true);
+  // clickEvent(event: MouseEvent) {
+  //   this.hide.set(!this.hide());
+  //   event.stopPropagation();
+  // }
+
+  togglePasswordVisibility() {
+    this.hidePassword = !this.hidePassword;
+  }
+
+
+  hidePassword = true;
   EmpRegForm: FormGroup;
   showForm = false;
   submitted = false;
   saveButtonLabel: string = 'Save';
   isButtonDisabled = false;
   mode = 'add';
-  selectedData!: { productId: any; };
+  selectedData!: { employeeId: any; };
   maxDate: Date;
+  minDate: Date;
+
 
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -41,42 +82,41 @@ export class EmployeeRegistrationComponent {
 
 
 
-  // displayedColumns: string[] = [
-  //   // 'productId',
-  //   'employeeName',
-  //   'byteImage',
-  //   'description',
-  //   // 'colors',
-  //   'size',
-  //   'price',
-  //   'addedDate',
-  //   'actions',
-  // ];
+  displayedColumns: string[] = [
+    'employeeName',
+    'email',
+    'phone',
+    'address',
+    'joinDate',
+    'actions',
+  ];
 
 
   constructor(private fb: FormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
     private empService: EmployeeRegistrationService,
-  ) { }
+    private _dialog: MatDialog,
+  ) {
+    this.maxDate = new Date();
+    this.minDate = new Date();
+  }
 
   ngOnInit(): void {
 
     this.EmpRegForm = this.fb.group({
       // employeeId: [null, [Validators.required]],
       employeeName: new FormControl('', [Validators.required, Validators.pattern('^[A-Za-z ]+$'),]),
-      nic: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{9}[vVxX]$|^[0-9]{12}')]),
-      birthday: new FormControl('', [Validators.required]),
-      gender: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
-      // password: [null, [Validators.required, Validators.maxLength(500)]],
+      phone: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$'),]),
       address: new FormControl('', [Validators.required, Validators.maxLength(150),]),
-      contactNo: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$'),]),
+      joinDate: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required]),
     });
 
     this.populateData();
 
-    const data = history.state.product;
+    const data = history.state.employee;
 
 
     if (data) {
@@ -105,36 +145,36 @@ export class EmployeeRegistrationComponent {
       });
     }
     catch (error) {
-      // this.messageService.showError('Action failed with error' + error);
+      this.snackBar.open(error.message, 'ERROR', { duration: 5000 });
     }
 
   }
 
 
+
+
   onSubmit(): void {
+    Object.values(this.EmpRegForm.controls).forEach(control => {
+      control.markAsTouched();
+    });
     console.log("FORM VALUE:", this.EmpRegForm.value);
     try {
       if (this.mode === 'add') {
         if (this.EmpRegForm.valid) {
-          const formData: FormData = new FormData();
-          formData.append('categoryId', this.EmpRegForm.get('categoryId').value);
-          formData.append('productName', this.EmpRegForm.get('productName').value);
-          formData.append('description', this.EmpRegForm.get('description').value);
-          formData.append('size', this.EmpRegForm.get('size').value);
-          formData.append('quantity', this.EmpRegForm.get('quantity').value);
-          formData.append('price', this.EmpRegForm.get('price').value);
-          const rawDate = this.EmpRegForm.get('addedDate')?.value;
-          if (rawDate) {
-            const formattedDate = new Date(rawDate).toISOString();
-            formData.append('addedDate', formattedDate);
-          }
+          const payload = {
+            employeeName: this.EmpRegForm.get('employeeName').value,
+            email: this.EmpRegForm.get('email').value,
+            phone: this.EmpRegForm.get('phone').value,
+            address: this.EmpRegForm.get('address').value,
+            password: this.EmpRegForm.get('password').value,
+            joinDate: new Date(this.EmpRegForm.get('joinDate').value).toISOString()
+          };
 
-          this.empService.addEmployee(formData).subscribe({
+          this.empService.addEmployee(payload).subscribe({
             next: (response: any) => {
-              // console.log("RESPONSE:", formData);
-              if (response.productId != null) {
-                this.snackBar.open('Product added successfully', 'Ok', { duration: 5000 });
-                this.router.navigateByUrl('/dashboard');
+              console.log("RESPONSE:", payload);
+              if (response.employeeId != null) {
+                this.snackBar.open('Employee added successfully', 'Ok', { duration: 5000 });
               }
               else {
                 this.snackBar.open(response.message, 'ERROR', { duration: 5000 });
@@ -155,26 +195,22 @@ export class EmployeeRegistrationComponent {
       } else if (this.mode === 'edit') {
         const formData: FormData = new FormData();
 
-        formData.append('categoryId', this.EmpRegForm.get('categoryId').value);
-        formData.append('productName', this.EmpRegForm.get('productName').value);
-        formData.append('description', this.EmpRegForm.get('description').value);
-        formData.append('size', this.EmpRegForm.get('size').value);
-        formData.append('quantity', this.EmpRegForm.get('quantity').value);
-        formData.append('price', this.EmpRegForm.get('price').value);
-        const rawDate = this.EmpRegForm.get('addedDate')?.value;
-        if (rawDate) {
-          const formattedDate = new Date(rawDate).toISOString();
-          formData.append('addedDate', formattedDate);
-        }
+        const payload = {
+          employeeName: this.EmpRegForm.get('employeeName').value,
+          email: this.EmpRegForm.get('email').value,
+          phone: this.EmpRegForm.get('phone').value,
+          address: this.EmpRegForm.get('address').value,
+          password: this.EmpRegForm.get('password').value,
+          joinDate: new Date(this.EmpRegForm.get('joinDate').value).toISOString()
+        };
 
         formData.forEach((value, key) => {
           console.log("FORMDATA:", key, value);
         });
 
-        this.empService.editData(this.selectedData.productId, formData).subscribe({
+        this.empService.editData(this.selectedData.employeeId, payload).subscribe({
           next: (response: any) => {
-            this.snackBar.open('Product updated successfully', 'Ok', { duration: 5000 });
-            this.router.navigateByUrl('/dashboard');
+            this.snackBar.open('Employee details updated successfully', 'Ok', { duration: 5000 });
           },
           error: (error) => {
             this.snackBar.open('Update failed', 'Error', { duration: 5000 });
@@ -184,6 +220,7 @@ export class EmployeeRegistrationComponent {
       this.mode = 'add';
       this.EmpRegForm.disable();
       this.isButtonDisabled = true;
+      this.refreshData();
     }
     catch (error) {
       this.snackBar.open("Something went wrong ", "Error", { duration: 5000 })
@@ -191,6 +228,62 @@ export class EmployeeRegistrationComponent {
 
 
   }
+
+  // onSubmit() {
+  //   try {
+  //     this.submitted = true;
+  //     if (this.EmpRegForm.invalid) {
+  //       return;
+  //     }
+  //     if (this.mode === 'add') {
+  //       this.empService.addEmployee(this.EmpRegForm.value).subscribe({
+  //         next: (response: any) => {
+  //           if (
+  //             this.dataSource &&
+  //             this.dataSource.data &&
+  //             this.dataSource.data.length > 0
+  //           ) {
+  //             this.dataSource = new MatTableDataSource([
+  //               response,
+  //               ...this.dataSource.data,
+  //             ]);
+  //           } else {
+  //             this.dataSource = new MatTableDataSource([response]);
+  //           }
+  //           if (response.employeeId != null) {
+  //             this.snackBar.open('Employee added successfully', 'Ok', { duration: 5000 });
+  //           }
+  //           // this.addNotification('Employee Added Successfully');
+  //         },
+  //         error: (error) => {
+  //           this.snackBar.open(error.message, 'ERROR', { duration: 5000 });
+  //         },
+  //       });
+  //     } else if (this.mode === 'edit') {
+  //       this.empService
+  //         .editData(this.selectedData?.employeeId, this.EmpRegForm.value)
+  //         .subscribe({
+  //           next: (response) => {
+  //             let elementIndex = this.dataSource.data.findIndex(
+  //               (element) => element.id === this.selectedData?.employeeId
+  //             );
+  //             this.dataSource.data[elementIndex] = response;
+  //             this.dataSource = new MatTableDataSource(this.dataSource.data);
+  //             this.snackBar.open('Employee details updated successfully', 'Ok', { duration: 5000 });
+  //           },
+  //           error: (error) => {
+  //             this.snackBar.open('Update failed', 'Error', { duration: 5000 });
+  //           },
+  //         });
+  //     }
+  //     this.mode = 'add';
+  //     this.EmpRegForm.disable();
+  //     this.isButtonDisabled = true;
+  //     this.closeForm();
+  //   } catch (error) {
+  //     this.snackBar.open('Update failed', 'Error', { duration: 5000 });
+  //   }
+  // }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -203,7 +296,10 @@ export class EmployeeRegistrationComponent {
 
   public editData(data: any): void {
 
-    this.EmpRegForm.patchValue(data);
+    this.EmpRegForm.patchValue({
+      ...data,
+      addedDate: data.addedDate ? new Date(data.addedDate + 'Z') : null
+    });
 
 
     this.saveButtonLabel = 'Edit';
@@ -211,7 +307,9 @@ export class EmployeeRegistrationComponent {
     this.selectedData = data;
   }
 
-  public deleteData(productId: any): void {
+  public deleteData(employeeId: any): void {
+
+    console.log("FULL OBJECT:", employeeId);
 
     try {
       Swal.fire({
@@ -227,9 +325,11 @@ export class EmployeeRegistrationComponent {
         }
 
 
-        this.empService.deleteEmployee(productId).subscribe({
+        this.empService.deleteEmployee(employeeId).subscribe({
           next: (response) => {
-            const index = this.dataSource.data.findIndex((element) => element.productId === productId);
+            console.log("Delete response:", response);
+
+            const index = this.dataSource.data.findIndex((element) => element.employeeId === employeeId);
             if (index !== -1) {
               this.dataSource.data.splice(index, 1);
             }
@@ -239,7 +339,8 @@ export class EmployeeRegistrationComponent {
 
           },
           error: (error) => {
-            this.snackBar.open('Action failed with error ' + error, 'Close', { duration: 5000 });
+            console.error("DELETE ERROR:", error);
+            this.snackBar.open(error?.error?.message || 'Delete failed', 'Close', { duration: 5000 });
           }
         });
       });
@@ -272,6 +373,27 @@ export class EmployeeRegistrationComponent {
     this.EmpRegForm.enable();
     this.saveButtonLabel = 'Save'
     this.submitted = false;
+    this.isButtonDisabled = false;
+  }
+
+  public addLoginCredentials(employee: any): void {
+    try {
+      const dialogRef = this._dialog.open(RegDialogComponent, {
+        data: { id: employee.id, role: 'EMPLOYEE' },
+      });
+
+      dialogRef.afterClosed().subscribe({
+        next: (value: any) => {
+          if (value) {
+            this.snackBar.open(
+              'Employee Login Details Added Successfully!', 'Ok', { duration: 5000 }
+            );
+          }
+        },
+      });
+    } catch (error: any) {
+      this.snackBar.open('Action Failed!', 'Close', { duration: 5000 });
+    }
   }
 
 

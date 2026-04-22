@@ -188,8 +188,8 @@
         </mat-form-field> -->
 
       </div>
-      <button type="submit" color="primary" class="form-button" mat-raised-button [disabled]="isButtonDisabled"
-        [disabled]="ProdRegForm.invalid || ProdRegForm.get('productSku')?.hasError('duplicate') || !this.selectedFile">{{saveButtonLabel}}</button>
+      <button type="submit" color="primary" class="form-button" mat-raised-button
+        [disabled]="isButtonDisabled || ProdRegForm.invalid || (mode === 'add' && ProdRegForm.get('productSku')?.hasError('duplicate')) || (mode === 'add' && !this.selectedFile) ">{{saveButtonLabel}}</button>
       <button type="reset" color="secondary" class="form-button" mat-raised-button (click)="resetData()">Reset</button>
       <button mat-raised-button type="button" class="form-button" color="warn" (click)="closeForm()">Cancel</button>
     </form>

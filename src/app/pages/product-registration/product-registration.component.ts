@@ -128,7 +128,7 @@ export class ProductRegistrationComponent implements OnInit {
       )
       .subscribe(value => {
 
-        console.log("Typing:", value); // 🔥 MUST PRINT
+        console.log("Typing:", value);
 
         if (!value) return;
 
@@ -141,10 +141,10 @@ export class ProductRegistrationComponent implements OnInit {
               control?.setErrors({ ...control.errors, duplicate: true });
             } else {
               if (control?.errors) {
-                delete control.errors['duplicate']; // ✅ remove only duplicate
+                delete control.errors['duplicate'];
 
                 if (Object.keys(control.errors).length === 0) {
-                  control.setErrors(null); // ✅ clear all if nothing left
+                  control.setErrors(null);
                 } else {
                   control.setErrors(control.errors);
                 }
@@ -203,7 +203,7 @@ export class ProductRegistrationComponent implements OnInit {
       });
     }
     catch (error) {
-      // this.messageService.showError('Action failed with error' + error);
+      this.snackBar.open(error.message, 'ERROR', { duration: 5000 });
     }
 
   }
@@ -269,8 +269,6 @@ export class ProductRegistrationComponent implements OnInit {
             },
             error: (error) => {
               console.error("ERROR RESPONSE:", error);
-
-              // 🔥 show backend message
               this.snackBar.open(
                 error.error?.message || 'Product SKU already exists!',
                 'Error',
@@ -358,7 +356,14 @@ export class ProductRegistrationComponent implements OnInit {
 
   public editData(data: any): void {
 
-    this.ProdRegForm.patchValue(data);
+    this.ProdRegForm.patchValue({
+      ...data,
+      addedDate: data.addedDate ? new Date(data.addedDate + 'Z') : null
+    });
+
+    this.ProdRegForm.updateValueAndValidity();
+
+    this.ProdRegForm.get('productSku')?.disable();
 
     if (data.byteImage) {
       this.existingImage = 'data:image/jpeg;base64,' + data.byteImage;
@@ -367,6 +372,7 @@ export class ProductRegistrationComponent implements OnInit {
     this.saveButtonLabel = 'Edit';
     this.mode = 'edit';
     this.selectedData = data;
+    this.isButtonDisabled=false;
   }
 
   public deleteData(productId: any): void {
@@ -419,6 +425,7 @@ export class ProductRegistrationComponent implements OnInit {
     this.submitted = false;
     this.existingImage = null;
     this.selectedFile = null;
+    this.ProdRegForm.get('productSku')?.enable();
   }
 
 
@@ -434,6 +441,7 @@ export class ProductRegistrationComponent implements OnInit {
     this.selectedFile = null;
     this.saveButtonLabel = 'Save'
     this.submitted = false;
+    this.ProdRegForm.get('productSku')?.enable();
   }
 
 

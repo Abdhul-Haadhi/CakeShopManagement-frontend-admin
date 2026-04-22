@@ -14,32 +14,40 @@ export class EmployeeRegistrationService {
   constructor(private http: HttpClient, private httpService: HttpService) { }
 
 
-  addEmployee(productDto: any): Observable<any> {
-    console.log('got', productDto);
+  // addEmployee(employeeDto: any): Observable<any> {
+  //   console.log('got:::', employeeDto);
 
-    return this.http.post(BASIC_URL + 'api/admin/product-registration', productDto, {
+  //   return this.http.post(BASIC_URL + 'api/admin/employee', employeeDto, {
+  //     headers: this.createAuthorizationHeader(),
+  //   })
+  // }
+
+  addEmployee(employeeDto: any): Observable<any> {
+    return this.http.post(BASIC_URL + 'api/admin/employee', employeeDto, {
       headers: this.createAuthorizationHeader(),
     })
   }
 
   getAllEmployees(): Observable<any> {
-    return this.http.get(BASIC_URL + 'api/admin/products', {
+    return this.http.get(BASIC_URL + 'api/admin/employee', {
       headers: this.createAuthorizationHeader(),
     });
   }
 
-  editData(productId: any, productDto: any): Observable<any> {
-    return this.http.put(BASIC_URL + `api/admin/product/${productId}`, productDto, {
+  editData(employeeId: any, employeeDto: any): Observable<any> {
+    return this.http.put(BASIC_URL + `api/admin/employee/${employeeId}`, employeeDto, {
       headers: this.createAuthorizationHeader(),
     })
   }
 
 
-  deleteEmployee(productId: any): Observable<any> {
-      return this.http.delete(BASIC_URL + `api/admin/product/${productId}`, {
-        headers: this.createAuthorizationHeader(),
-      })
-    }
+  deleteEmployee(employeeId: any): Observable<any> {
+    console.log("got the delete");
+    
+    return this.http.delete(BASIC_URL + `api/admin/employee/${employeeId}`, {
+      headers: this.createAuthorizationHeader(),
+    });
+  }
 
 
 

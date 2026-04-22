@@ -11,265 +11,196 @@
     <form [formGroup]="EmpRegForm" class="example-form" (ngSubmit)="onSubmit()">
       <div class="example-form-div">
         <div class="form-part">
-          <!-- <mat-form-field class="full-width">
-            <mat-label>Employee number</mat-label>
-            <input
-              matInput
-              placeholder="Employee number: EMP_ _ _"
-              formControlName="employeeNumber"
-            />
-            <span
-              class="text-danger"
-              *ngIf="
-                (EmpRegForm.get('employeeNumber')?.touched || submitted) &&
-                EmpRegForm.get('employeeNumber')?.errors &&
-                (EmpRegForm.get('employeeNumber')?.errors)!['required']
-              "
-            >
-              Employee number is required
-            </span>
-            <span
-              class="text-danger"
-              *ngIf="
-                (EmpRegForm.get('employeeNumber')?.touched || submitted) &&
-                EmpRegForm.get('employeeNumber')?.errors &&
-                (EmpRegForm.get('employeeNumber')?.errors)!['pattern']
-              "
-            >
-              Employee number should start with 'EMP'
-            </span>
-          </mat-form-field> -->
 
           <mat-form-field class="full-width">
             <mat-label>Employee name</mat-label>
-            <input
-              matInput
-              placeholder="Employee name"
-              formControlName="employeeName"
-            />
-            <span
-              class="text-danger"
-              *ngIf="
+            <input matInput placeholder="Employee name" formControlName="employeeName" />
+            <span class="text-danger" *ngIf="
                 (EmpRegForm.get('employeeName')?.touched || submitted) &&
                 EmpRegForm.get('employeeName')?.errors &&
                 (EmpRegForm.get('employeeName')?.errors)!['required']
-              "
-            >
+              ">
               Name is required
             </span>
-            <span
-              class="text-danger"
-              *ngIf="
+            <span class="text-danger" *ngIf="
                 (EmpRegForm.get('employeeName')?.touched || submitted) &&
                 EmpRegForm.get('employeeName')?.errors &&
                 (EmpRegForm.get('employeeName')?.errors)!['pattern']
-              "
-            >
+              ">
               Name should be letters
-            </span>
-          </mat-form-field>
-
-          <mat-form-field class="full-width">
-            <mat-label>NIC</mat-label>
-            <input matInput placeholder="NIC" formControlName="nic" />
-            <span
-              class="text-danger"
-              *ngIf="
-                (EmpRegForm.get('nic')?.touched || submitted) &&
-                EmpRegForm.get('nic')?.errors &&
-                (EmpRegForm.get('nic')?.errors)!['required']
-              "
-            >
-              Enter the NIC number
-            </span>
-
-            <span
-              class="text-danger"
-              *ngIf="
-                EmpRegForm.get('nic')?.errors &&
-                (EmpRegForm.get('nic')?.errors)!['pattern']
-              "
-            >
-              Enter a valid NIC number
-            </span>
-          </mat-form-field>
-
-          <mat-form-field class="full-width">
-            <mat-label>Birthday</mat-label>
-            <input
-              matInput
-              [matDatepicker]="picker"
-              formControlName="birthday"
-              [max]="maxDate"
-            />
-            <mat-hint>MM/DD/YYYY</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="picker">
-            </mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <span
-              class="text-danger"
-              *ngIf="
-                (EmpRegForm.get('birthday')?.touched || submitted) &&
-                EmpRegForm.get('birthday')?.errors &&
-                (EmpRegForm.get('birthday')?.errors)!['required']
-              "
-            >
-              Birthday is required
-            </span>
-          </mat-form-field>
-        </div>
-
-        <div class="form-part">
-          <mat-form-field class="full-width">
-            <mat-label>Address</mat-label>
-            <input matInput placeholder="Address" formControlName="address" />
-            <span
-              class="text-danger"
-              *ngIf="
-                (EmpRegForm.get('address')?.touched || submitted) &&
-                EmpRegForm.get('address')?.errors &&
-                (EmpRegForm.get('address')?.errors)!['required']
-              "
-            >
-              Address is required
-            </span>
-            <span
-              class="text-danger"
-              *ngIf="
-                (EmpRegForm.get('address')?.touched || submitted) &&
-                EmpRegForm.get('address')?.errors &&
-                (EmpRegForm.get('address')?.errors)!['maxlength']
-              "
-            >
-              Maximum lenght is 150
-            </span>
-          </mat-form-field>
-
-          <mat-form-field class="full-width">
-            <mat-label>Contact number</mat-label>
-            <input
-              matInput
-              placeholder="Contact number"
-              formControlName="contactNo"
-            />
-            <span
-              class="text-danger"
-              *ngIf="
-                (EmpRegForm.get('contactNo')?.touched || submitted) &&
-                EmpRegForm.get('contactNo')?.errors &&
-                (EmpRegForm.get('contactNo')?.errors)!['required']
-              "
-            >
-              Contact number is required
-            </span>
-            <span
-              class="text-danger"
-              *ngIf="
-                EmpRegForm.get('contactNo')?.errors &&
-                (EmpRegForm.get('contactNo')?.errors)!['pattern']
-              "
-            >
-              Phone number should be 10 digits
             </span>
           </mat-form-field>
 
           <mat-form-field class="full-width">
             <mat-label>Email</mat-label>
             <input matInput placeholder="Email" formControlName="email" />
-            <span
-              class="text-danger"
-              *ngIf="
+            <span class="text-danger" *ngIf="
                 (EmpRegForm.get('email')?.touched || submitted) &&
                 EmpRegForm.get('email')?.errors &&
                 (EmpRegForm.get('email')?.errors)!['required']
-              "
-            >
-              Email is required
+              ">
+              Enter the NIC number
             </span>
-            <span
-              class="text-danger"
-              *ngIf="
+
+            <span class="text-danger" *ngIf="
                 EmpRegForm.get('email')?.errors &&
                 (EmpRegForm.get('email')?.errors)!['email']
-              "
-            >
-              Enter a valid email
+              ">
+              Enter a valid Email address
             </span>
           </mat-form-field>
 
-          <!-- <mat-form-field>
-            <mat-label>Job role</mat-label>
-            <mat-select
-              matInput
-              placeholder="Job role"
-              formControlName="jobRole"
-            >
-              @for (jobRoles of jobRole; track jobRoles) {
-                <mat-option [value]="jobRoles.value">{{
-                  jobRoles.viewValue
-                }}</mat-option>
-              }
-            </mat-select>
-            <span
-              class="text-danger"
-              *ngIf="
-                (EmpRegForm.get('jobRole')?.touched || submitted) &&
-                EmpRegForm.get('jobRole')?.errors &&
-                (EmpRegForm.get('jobRole')?.errors)!['required']
-              "
-            >
-              Job role is required
+          <mat-form-field class="full-width">
+            <mat-label>Contact number</mat-label>
+            <input matInput placeholder="Contact number" formControlName="phone" />
+            <span class="text-danger" *ngIf="
+                (EmpRegForm.get('phone')?.touched || submitted) &&
+                EmpRegForm.get('phone')?.errors &&
+                (EmpRegForm.get('phone')?.errors)!['required']
+              ">
+              Contact number is required
             </span>
+            <span class="text-danger" *ngIf="
+                EmpRegForm.get('phone')?.errors &&
+                (EmpRegForm.get('phone')?.errors)!['pattern']
+              ">
+              Phone number should be 10 digits
+            </span>
+          </mat-form-field>
+
+        </div>
+
+        <div class="form-part">
+
+          <!-- <mat-form-field class="full-width">
+            <mat-label>Select the Role</mat-label>
+            <mat-select formControlName="role" multiple>
+              <mat-option *ngFor="let roles of listOfRoles" [value]="roles.value">
+                {{ roles.value }}
+              </mat-option>
+            </mat-select>
           </mat-form-field> -->
 
-          <mat-radio-group
-            aria-label="Select an option"
-            formControlName="gender"
-          >
-            <mat-label>Gender</mat-label>
-            <mat-radio-button value="Male">Male</mat-radio-button>
-            <mat-radio-button value="Female">Female</mat-radio-button>
-            <span
-              class="text-danger"
-              *ngIf="
-                (EmpRegForm.get('gender')?.touched || submitted) &&
-                EmpRegForm.get('gender')?.errors &&
-                (EmpRegForm.get('gender')?.errors)!['required']
-              "
-            >
-              Gender is required
+          <mat-form-field class="full-width">
+            <mat-label>Address</mat-label>
+            <input matInput placeholder="Address" formControlName="address" />
+            <span class="text-danger" *ngIf="
+                (EmpRegForm.get('address')?.touched || submitted) &&
+                EmpRegForm.get('address')?.errors &&
+                (EmpRegForm.get('address')?.errors)!['required']
+              ">
+              Address is required
             </span>
-          </mat-radio-group>
+            <span class="text-danger" *ngIf="
+                (EmpRegForm.get('address')?.touched || submitted) &&
+                EmpRegForm.get('address')?.errors &&
+                (EmpRegForm.get('address')?.errors)!['maxlength']
+              ">
+              Maximum lenght is 150
+            </span>
+          </mat-form-field>
+
+
+          <mat-form-field class="full-width">
+            <mat-label>Joinned Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="joinDate" [max]="maxDate" />
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker">
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <span class="text-danger" *ngIf="
+                (EmpRegForm.get('joinDate')?.touched || submitted) &&
+                EmpRegForm.get('joinDate')?.errors &&
+                (EmpRegForm.get('joinDate')?.errors)!['required']
+              ">
+              Joinned date is required
+            </span>
+          </mat-form-field>
+
+          <mat-form-field class="full-width">
+            <mat-label>Enter password</mat-label>
+            <input matInput formControlName="password" type="{{hidePassword ? 'password' : 'text'}}" />
+            <button mat-icon-button type="button" matSuffix (click)="togglePasswordVisibility()">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
         </div>
       </div>
 
-      <button
-        type="submit"
-        color="primary"
-        class="form-button"
-        mat-raised-button
-        [disabled]="isButtonDisabled"
-      >
+      <button type="submit" color="primary" class="form-button" mat-raised-button
+        [disabled]="isButtonDisabled || EmpRegForm.invalid">
         {{ saveButtonLabel }}
       </button>
-      <button
-        type="reset"
-        color="secondary"
-        class="form-button"
-        mat-raised-button
-        (click)="resetData()"
-      >
+      <button type="reset" color="secondary" class="form-button" mat-raised-button (click)="resetData()">
         Reset
       </button>
-      <button
-        mat-raised-button
-        type="button"
-        class="form-button"
-        color="warn"
-        (click)="closeForm()"
-      >
+      <button mat-raised-button type="button" class="form-button" color="warn" (click)="closeForm()">
         Cancel
       </button>
     </form>
+  </div>
+
+  <div class="table-section">
+    <div class="refresh-filter-section">
+      <div class="refresh-button">
+        <button mat-icon-button color="primary" (click)="refreshData()">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+
+      <mat-form-field class="filter">
+        <mat-label>Search</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input />
+      </mat-form-field>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      <ng-container matColumnDef="employeeName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Employee Name</th>
+        <td mat-cell *matCellDef="let employee">{{ employee.employeeName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td mat-cell *matCellDef="let employee">{{ employee.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact Number</th>
+        <td mat-cell *matCellDef="let employee">{{ employee.phone }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="address">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Address</th>
+        <td mat-cell *matCellDef="let employee">{{ employee.address }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="joinDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Joined Date</th>
+        <td mat-cell *matCellDef="let employee">
+          {{ employee.joinDate | date : "dd-MM-yyyy" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
+        <td mat-cell *matCellDef="let employee">
+          <button mat-icon-button color="warn" (click)="editData(employee)" (click)="showForm = true" *ngIf="!showForm"
+            matTooltip="edit">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="black" (click)="deleteData(employee.employeeId)" matTooltip="delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Create Login" (click)="addLoginCredentials(employee)">
+            <mat-icon>person_add</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
   </div>
 </div>
