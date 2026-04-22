@@ -37,8 +37,22 @@
     <span class="spacer"></span>
     <section>
       <div class="example-button-row">
-        <button class="login-button" mat-raised-button (click)="logout()">Logout</button>
-        <a href=""><i class="fa-solid fa-circle-user"></i></a>
+        <!-- <button class="login-button" mat-raised-button (click)="logout()">Logout</button> -->
+        <button class="icon-button" mat-icon-button [matMenuTriggerFor]="profileMenu">
+          <mat-icon class="big-icon">account_circle</mat-icon>
+        </button>
+
+        <mat-menu panelClass="user-box" #profileMenu="matMenu">
+          <button mat-menu-item (click)="openEditProfile()">
+            <mat-icon>edit</mat-icon>
+            <span class="profile-button">Edit Profile</span>
+          </button>
+
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span class="profile-button">Logout</span>
+          </button>
+        </mat-menu>
       </div>
     </section>
   </mat-toolbar>

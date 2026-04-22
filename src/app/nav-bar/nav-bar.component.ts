@@ -7,11 +7,14 @@ import { NgIf } from "@angular/common";
 import { AuthService } from '../services/auth/auth.service';
 import { UserStorageService } from '../services/storage/user-storage.service';
 import Swal from 'sweetalert2';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDialog } from '@angular/material/dialog';
+import { EditProfileDialogComponent } from '../components/edit-profile-dialog/edit-profile-dialog.component';
 
 @Component({
   selector: 'app-nav-bar',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, RouterLink, NgIf],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule, RouterLink, NgIf, MatMenuModule],
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.scss'
 })
@@ -21,7 +24,8 @@ export class NavBarComponent implements OnInit {
   isLoggedIn: boolean = UserStorageService.isAdminLoggedIn();
 
   constructor(public auth: AuthService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -33,6 +37,12 @@ export class NavBarComponent implements OnInit {
 
 
   }
+
+  openEditProfile() {
+  this.dialog.open(EditProfileDialogComponent, {
+    width: '450px'
+  });
+}
 
   logout() {
     Swal.fire({

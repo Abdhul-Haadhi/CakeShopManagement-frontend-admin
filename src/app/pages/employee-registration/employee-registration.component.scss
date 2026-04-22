@@ -1,23 +1,27 @@
-.container{
+.container {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
 .heading-bar {
-    background: linear-gradient(to right, #034a9c, #012a5b);
-    border-radius: 10px;
+  background: linear-gradient(to right, #034a9c, #012a5b);
+  border-radius: 10px;
 }
 
 .heading-text {
-    color: white;
+  color: white;
 }
 
 .example-spacer {
-    flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 
-.form-section{
+.text-danger {
+  color: red;
+}
+
+.form-section {
   // flex: 1;
   display: flex;
   flex-direction: row;
@@ -25,45 +29,46 @@
   padding: 5px;
   // border-right: 1px solid rgb(205, 205, 205)
 }
-.table-section{
+
+.table-section {
   width: 100%;
   // flex: 1;
 }
+
 .example-form {
-    min-width: 150px;
-    max-width: 100%;
-    width: 100%;
-    
-  }
+  min-width: 150px;
+  max-width: 100%;
+  width: 100%;
 
-  .example-form-div {
-    display: flex;
-    flex-direction: row;
-  }
-  
-  .full-width {
-    width: 100%;
-  }
+}
 
-  .form-part{
-   margin: 10px;
-  }
-  
-  .form-button{
-    margin-right: 1%;
-    border-radius: 50px;
-  }
+.example-form-div {
+  display: flex;
+  flex-direction: row;
+}
 
-  .refresh-filter-section{
-    display: flex;
-    flex-direction: row;
-  }
+.full-width {
+  width: 100%;
+}
 
-  .refresh-button{
-    margin: 1%;
-  }
+.form-part {
+  margin: 10px;
+}
 
-  .filter{
-    width: 100%;
-  }
-  
+.form-button {
+  margin-right: 1%;
+  border-radius: 50px;
+}
+
+.refresh-filter-section {
+  display: flex;
+  flex-direction: row;
+}
+
+.refresh-button {
+  margin: 1%;
+}
+
+.filter {
+  width: 100%;
+}

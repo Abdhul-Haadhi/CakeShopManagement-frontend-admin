@@ -1,0 +1,61 @@
+<h2 mat-dialog-title>Edit Profile</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="profileForm">
+
+    <mat-form-field class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email">
+      <span class="text-danger" *ngIf="
+        (profileForm.get('email')?.touched || submitted) &&
+        profileForm.get('email')?.errors &&
+        (profileForm.get('email')?.errors)!['required']
+      ">
+        Enter the Email address
+      </span>
+
+      <span class="text-danger" *ngIf="
+        profileForm.get('email')?.errors &&
+        (profileForm.get('email')?.errors)!['email']
+      ">
+        Enter a valid Email address
+      </span>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Current Password</mat-label>
+      <input matInput type="password" formControlName="currentPassword">
+      <span class="text-danger" *ngIf="(profileForm.get('currentPassword')?.touched || submitted) &&
+        profileForm.get('currentPassword')?.errors &&
+        (profileForm.get('currentPassword')?.errors)!['required']">
+        Enter the current password
+      </span>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>New Password</mat-label>
+      <input matInput type="password" formControlName="newPassword">
+      <span class="text-danger" *ngIf="(profileForm.get('newPassword')?.touched || submitted) &&
+        profileForm.get('newPassword')?.errors &&
+        (profileForm.get('newPassword')?.errors)!['required']">
+        Enter the new password
+      </span>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Confirm Password</mat-label>
+      <input matInput type="password" placeholder="Enter password again" formControlName="confirmPassword">
+      <span class="text-danger" *ngIf="(profileForm.get('newPassword')?.touched || submitted) &&
+        profileForm.get('newPassword')?.errors &&
+        (profileForm.get('newPassword')?.errors)!['required']">
+        Enter password again
+      </span>
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="updateProfile()">Save</button>
+</mat-dialog-actions>
