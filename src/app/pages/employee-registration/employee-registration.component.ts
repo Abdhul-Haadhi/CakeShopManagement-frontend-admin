@@ -111,7 +111,7 @@ export class EmployeeRegistrationComponent implements OnInit {
       phone: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$'),]),
       address: new FormControl('', [Validators.required, Validators.maxLength(150),]),
       joinDate: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
+      // password: new FormControl('', [Validators.required]),
     });
 
     this.populateData();
@@ -166,7 +166,7 @@ export class EmployeeRegistrationComponent implements OnInit {
             email: this.EmpRegForm.get('email').value,
             phone: this.EmpRegForm.get('phone').value,
             address: this.EmpRegForm.get('address').value,
-            password: this.EmpRegForm.get('password').value,
+            // password: this.EmpRegForm.get('password').value,
             joinDate: new Date(this.EmpRegForm.get('joinDate').value).toISOString()
           };
 
@@ -175,6 +175,7 @@ export class EmployeeRegistrationComponent implements OnInit {
               console.log("RESPONSE:", payload);
               if (response.employeeId != null) {
                 this.snackBar.open('Employee added successfully', 'Ok', { duration: 5000 });
+                this.refreshData();
               }
               else {
                 this.snackBar.open(response.message, 'ERROR', { duration: 5000 });
@@ -200,7 +201,7 @@ export class EmployeeRegistrationComponent implements OnInit {
           email: this.EmpRegForm.get('email').value,
           phone: this.EmpRegForm.get('phone').value,
           address: this.EmpRegForm.get('address').value,
-          password: this.EmpRegForm.get('password').value,
+          // password: this.EmpRegForm.get('password').value,
           joinDate: new Date(this.EmpRegForm.get('joinDate').value).toISOString()
         };
 
@@ -309,6 +310,9 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   public deleteData(employeeId: any): void {
 
+    // const employeeId = employee.employeeId;
+    // const userId = employee.userId;
+
     console.log("FULL OBJECT:", employeeId);
 
     try {
@@ -335,7 +339,8 @@ export class EmployeeRegistrationComponent implements OnInit {
             }
             this.dataSource = new MatTableDataSource(this.dataSource.data);
             // this.messageService.showSuccess('Data deleted successfully!');
-            this.snackBar.open('Data deleted successfully!', 'Close', { duration: 5000 });
+            this.snackBar.open('Employee deleted successfully!', 'Close', { duration: 5000 });
+            this.refreshData();
 
           },
           error: (error) => {
@@ -343,13 +348,20 @@ export class EmployeeRegistrationComponent implements OnInit {
             this.snackBar.open(error?.error?.message || 'Delete failed', 'Close', { duration: 5000 });
           }
         });
+
+        // this.empService.deleteEmployeeLogin(userId).subscribe({
+        //   next: (response) => {
+        //     const index = this.dataSource.data.findIndex((element) => element.userId === userId);
+        //     if (index !== -1) {
+        //       this.dataSource.data.splice(index, 1);
+        //     }
+        //   }
+        // })
       });
     }
     catch (error) {
       this.snackBar.open('Action failed with error ' + error, 'Close', { duration: 5000 });
     }
-
-
   }
 
 
@@ -379,14 +391,19 @@ export class EmployeeRegistrationComponent implements OnInit {
   public addLoginCredentials(employee: any): void {
     try {
       const dialogRef = this._dialog.open(RegDialogComponent, {
-        data: { id: employee.id, role: 'EMPLOYEE' },
+        data: {
+          employeeId: employee.employeeId,
+          employeeName: employee.employeeName,
+          email: employee.email,
+          role: 'EMPLOYEE'
+        },
       });
 
       dialogRef.afterClosed().subscribe({
         next: (value: any) => {
           if (value) {
             this.snackBar.open(
-              'Employee Login Details Added Successfully!', 'Ok', { duration: 5000 }
+              'Login account created Successfully!', 'Ok', { duration: 5000 }
             );
           }
         },

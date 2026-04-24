@@ -1,1 +1,83 @@
-<p>reg-dialog works!</p>
+<div mat-dialog-title>
+    <h5>{{ title }}</h5>
+</div>
+
+<form [formGroup]="loginDetailsForm" (ngSubmit)="onSubmit()">
+    <div mat-dialog-content class="content">
+        <div class="row">
+            <!-- <mat-form-field appearance="fill">
+                <mat-label>First Name</mat-label>
+                <input matInput type="text" placeholder="Last Name" formControlName="firstName" />
+            </mat-form-field>
+            <mat-error class="text-danger" *ngIf="
+            (loginDetailsForm.get('firstName')?.touched || submitted) &&
+            loginDetailsForm.get('firstName')?.errors &&
+            (loginDetailsForm.get('firstName')?.errors)!['required']
+            ">
+                First name is required.
+            </mat-error> -->
+
+            <!-- <mat-form-field appearance="fill">
+                <mat-label>Last Name</mat-label>
+                <input matInput type="text" placeholder="Last Name" formControlName="lastName" />
+            </mat-form-field>
+            <mat-error class="text-danger" *ngIf="
+            (loginDetailsForm.get('lastName')?.touched || submitted) &&
+            loginDetailsForm.get('lastName')?.errors &&
+            (loginDetailsForm.get('lastName')?.errors)!['required']
+            ">
+                Last name is required.
+            </mat-error> -->
+
+            <mat-form-field class="full-width" appearance="outline">
+                <mat-label>User name</mat-label>
+                <input matInput type="text" placeholder="Your user name" formControlName="userName"  />
+                <!-- <mat-error class="text-danger" *ngIf="
+                (loginDetailsForm.get('email')?.touched || submitted) &&
+                loginDetailsForm.get('email')?.errors &&
+                (loginDetailsForm.get('email')?.errors)!['email']
+                ">
+                    User name is required.
+                </mat-error> -->
+            </mat-form-field>
+
+            <mat-form-field class="full-width" appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput type="text" placeholder="Your email" formControlName="email"  />
+                <!-- <mat-error class="text-danger" *ngIf="
+                (loginDetailsForm.get('email')?.touched || submitted) &&
+                loginDetailsForm.get('email')?.errors &&
+                (loginDetailsForm.get('email')?.errors)!['email']
+                ">
+                    User name is required.
+                </mat-error> -->
+            </mat-form-field>
+
+
+            <mat-form-field class="full-width" appearance="outline">
+                <mat-label>Password</mat-label>
+                <input matInput placeholder="Password" formControlName="password"
+                    type="{{hidePassword ? 'password' : 'text'}}" />
+                <button mat-icon-button type="button" matSuffix (click)="togglePasswordVisibility()">
+                    <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error class="text-danger" *ngIf="
+                (loginDetailsForm.get('password')?.touched || submitted) &&
+                loginDetailsForm.get('password')?.errors &&
+                (loginDetailsForm.get('password')?.errors)!['required']
+                ">
+                    Password is required.
+                </mat-error>
+            </mat-form-field>
+
+        </div>
+    </div>
+    <div mat-dialog-actions class="action">
+        <button mat-raised-button color="primary" type="submit">
+            {{ buttonLabel }}
+        </button>
+        <button mat-raised-button type="button" [mat-dialog-close]="false">
+            Cancel
+        </button>
+    </div>
+</form>

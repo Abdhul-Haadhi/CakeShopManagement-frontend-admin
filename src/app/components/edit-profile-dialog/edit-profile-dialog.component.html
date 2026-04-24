@@ -4,52 +4,62 @@
   <form [formGroup]="profileForm">
 
     <mat-form-field class="full-width">
-      <mat-label>Email</mat-label>
+      <mat-label>Enter new email</mat-label>
       <input matInput formControlName="email">
-      <span class="text-danger" *ngIf="
+      <mat-error class="text-danger" *ngIf="
         (profileForm.get('email')?.touched || submitted) &&
         profileForm.get('email')?.errors &&
         (profileForm.get('email')?.errors)!['required']
       ">
         Enter the Email address
-      </span>
+      </mat-error>
 
-      <span class="text-danger" *ngIf="
+      <mat-error class="text-danger" *ngIf="
         profileForm.get('email')?.errors &&
         (profileForm.get('email')?.errors)!['email']
       ">
         Enter a valid Email address
-      </span>
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field class="full-width">
       <mat-label>Current Password</mat-label>
-      <input matInput type="password" formControlName="currentPassword">
-      <span class="text-danger" *ngIf="(profileForm.get('currentPassword')?.touched || submitted) &&
+      <input matInput formControlName="currentPassword" type="{{hidePassword ? 'password' : 'text'}}">
+      <button mat-icon-button type="button" matSuffix (click)="togglePasswordVisibility()">
+        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      <mat-error class="text-danger" *ngIf="(profileForm.get('currentPassword')?.touched || submitted) &&
         profileForm.get('currentPassword')?.errors &&
         (profileForm.get('currentPassword')?.errors)!['required']">
         Enter the current password
-      </span>
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field class="full-width">
       <mat-label>New Password</mat-label>
-      <input matInput type="password" formControlName="newPassword">
-      <span class="text-danger" *ngIf="(profileForm.get('newPassword')?.touched || submitted) &&
+      <input matInput formControlName="newPassword" type="{{hidePassword ? 'password' : 'text'}}">
+      <button mat-icon-button type="button" matSuffix (click)="togglePasswordVisibility()">
+        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      <mat-error class="text-danger" *ngIf="(profileForm.get('newPassword')?.touched || submitted) &&
         profileForm.get('newPassword')?.errors &&
         (profileForm.get('newPassword')?.errors)!['required']">
         Enter the new password
-      </span>
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field class="full-width">
       <mat-label>Confirm Password</mat-label>
-      <input matInput type="password" placeholder="Enter password again" formControlName="confirmPassword">
-      <span class="text-danger" *ngIf="(profileForm.get('newPassword')?.touched || submitted) &&
+      <input matInput placeholder="Enter password again" formControlName="confirmPassword"
+        type="{{hidePassword ? 'password' : 'text'}}">
+      <button mat-icon-button type="button" matSuffix (click)="togglePasswordVisibility()">
+        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      <mat-error class="text-danger" *ngIf="(profileForm.get('newPassword')?.touched || submitted) &&
         profileForm.get('newPassword')?.errors &&
         (profileForm.get('newPassword')?.errors)!['required']">
         Enter password again
-      </span>
+      </mat-error>
     </mat-form-field>
 
   </form>

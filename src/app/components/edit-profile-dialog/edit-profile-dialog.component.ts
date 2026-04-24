@@ -6,6 +6,8 @@ import { MatFormField } from '@angular/material/form-field';
 import { NgIf } from '@angular/common';
 import { EditProfileService } from '../../services/editProfile/edit-profile.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserStorageService } from '../../services/storage/user-storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit-profile-dialog',
@@ -19,12 +21,14 @@ export class EditProfileDialogComponent {
   profileForm: FormGroup;
   submitted = false;
   selectedData!: { userId: any; };
+  hidePassword = true;
 
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<EditProfileDialogComponent>,
     private editProfileSevice: EditProfileService,
     private snackBar: MatSnackBar,
+    private router: Router,
   ) {
     this.profileForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -32,6 +36,10 @@ export class EditProfileDialogComponent {
       newPassword: ['', Validators.required],
       confirmPassword: ['', Validators.required],
     });
+  }
+
+  togglePasswordVisibility() {
+    this.hidePassword = !this.hidePassword;
   }
 
 
@@ -54,15 +62,24 @@ export class EditProfileDialogComponent {
           console.log("getting:", response);
 
           this.snackBar.open(response || 'Admin details updated successfully', 'Ok', { duration: 5000 });
+          this.logout();
         },
         error: (error) => {
           console.log(error);
 
-          this.snackBar.open(error.error.message || 'Update failed', 'Error', { duration: 5000 });
+          this.snackBar.open('Update failed', 'Error', { duration: 5000 });
         }
       });
 
       this.dialogRef.close();
+
     }
   }
+
+  logout() {
+    UserStorageService.signOut();
+    this.router.navigateByUrl('/login', { replaceUrl: true });
+  }
+
+
 }

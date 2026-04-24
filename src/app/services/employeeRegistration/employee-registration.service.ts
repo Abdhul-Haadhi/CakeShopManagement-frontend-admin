@@ -43,9 +43,26 @@ export class EmployeeRegistrationService {
 
   deleteEmployee(employeeId: any): Observable<any> {
     console.log("got the delete");
-    
+
     return this.http.delete(BASIC_URL + `api/admin/employee/${employeeId}`, {
       headers: this.createAuthorizationHeader(),
+    });
+  }
+
+  // deleteEmployeeLogin(userId: any): Observable<any> {
+  //   console.log("got the login delete");
+
+  //   return this.http.delete(BASIC_URL + `api/admin/employee-login/${userId}`, {
+  //     headers: this.createAuthorizationHeader(),
+  //   });
+  // }
+
+  createEmployeeLogin(payload: any): Observable<any> {
+    console.log('service::',payload);
+    
+    return this.http.post(BASIC_URL + 'api/admin/employee-login', payload, {
+      headers: this.createAuthorizationHeader(),
+      responseType: 'text'
     });
   }
 
