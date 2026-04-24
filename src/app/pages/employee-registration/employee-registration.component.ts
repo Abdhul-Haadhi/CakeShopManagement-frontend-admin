@@ -310,9 +310,6 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   public deleteData(employeeId: any): void {
 
-    // const employeeId = employee.employeeId;
-    // const userId = employee.userId;
-
     console.log("FULL OBJECT:", employeeId);
 
     try {
@@ -338,7 +335,6 @@ export class EmployeeRegistrationComponent implements OnInit {
               this.dataSource.data.splice(index, 1);
             }
             this.dataSource = new MatTableDataSource(this.dataSource.data);
-            // this.messageService.showSuccess('Data deleted successfully!');
             this.snackBar.open('Employee deleted successfully!', 'Close', { duration: 5000 });
             this.refreshData();
 
@@ -348,15 +344,6 @@ export class EmployeeRegistrationComponent implements OnInit {
             this.snackBar.open(error?.error?.message || 'Delete failed', 'Close', { duration: 5000 });
           }
         });
-
-        // this.empService.deleteEmployeeLogin(userId).subscribe({
-        //   next: (response) => {
-        //     const index = this.dataSource.data.findIndex((element) => element.userId === userId);
-        //     if (index !== -1) {
-        //       this.dataSource.data.splice(index, 1);
-        //     }
-        //   }
-        // })
       });
     }
     catch (error) {

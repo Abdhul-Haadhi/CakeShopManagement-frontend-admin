@@ -49,14 +49,6 @@ export class EmployeeRegistrationService {
     });
   }
 
-  // deleteEmployeeLogin(userId: any): Observable<any> {
-  //   console.log("got the login delete");
-
-  //   return this.http.delete(BASIC_URL + `api/admin/employee-login/${userId}`, {
-  //     headers: this.createAuthorizationHeader(),
-  //   });
-  // }
-
   createEmployeeLogin(payload: any): Observable<any> {
     console.log('service::',payload);
     
