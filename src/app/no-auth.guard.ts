@@ -7,7 +7,7 @@ export const noAuthGuard: CanActivateFn = (route, state) => {
 
   const router = inject(Router);
 
-  if(UserStorageService.isAdminLoggedIn()){
+  if (UserStorageService.isAdminLoggedIn() || UserStorageService.isEmployeeLoggedIn()) {
     router.navigate(['/dashboard']);
     return false;
   }

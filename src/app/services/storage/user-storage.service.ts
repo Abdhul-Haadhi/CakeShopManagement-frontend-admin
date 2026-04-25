@@ -55,14 +55,14 @@ export class UserStorageService {
   }
 
 
-  // static isCustomerLoggedIn(): boolean {
-  //   if (this.getToken === null) {
-  //     return false;
-  //   }
+  static isEmployeeLoggedIn(): boolean {
+    if (this.getToken() === null) {
+      return false;
+    }
 
-  //   const role: string = this.getUserRole();
-  //   return role == 'CUSTOMER';
-  // }
+    const role: string = this.getUserRole();
+    return role == 'EMPLOYEE';
+  }
 
   static signOut(): void {
     window.localStorage.removeItem(TOKEN);

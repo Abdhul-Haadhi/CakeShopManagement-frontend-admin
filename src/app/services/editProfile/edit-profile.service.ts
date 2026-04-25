@@ -16,7 +16,7 @@ export class EditProfileService {
   constructor(private http: HttpClient) { }
 
   editProfile(updateProfileDto: any): Observable<any> {
-    return this.http.put(BASIC_URL + `profile`, updateProfileDto, {
+    return this.http.put(BASIC_URL + `api/admin/profile`, updateProfileDto, {
       headers: this.createAuthorizationHeader(),
       responseType: 'text'
     })

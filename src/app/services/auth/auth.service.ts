@@ -17,34 +17,38 @@ export class AuthService {
     private userStorageService: UserStorageService
   ) { }
 
-  isAuthenticated(): boolean{
-    if(sessionStorage.getItem('token')!==null){
-      return true;
-    }
-    return false;
+  // isAuthenticated(): boolean{
+  //   if(sessionStorage.getItem('token')!==null){
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
+  isAuthenticated(): boolean {
+    return UserStorageService.getToken() !== null;
   }
 
-  canAccess(){
-    if(!this.isAuthenticated()){
+  canAccess() {
+    if (!this.isAuthenticated()) {
       this.router.navigate(['/login'])
     }
   }
 
-  
 
-  register(signupRequest:any): Observable<any> {
-    return this.http.post(BASIC_URL+ "sign-up", signupRequest);
+
+  register(signupRequest: any): Observable<any> {
+    return this.http.post(BASIC_URL + "sign-up", signupRequest);
   }
 
-  login(username: String, password: String): any{
+  login(username: String, password: String): any {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    const body = {username, password};
+    const body = { username, password };
 
-    return this.http.post(BASIC_URL + 'authenticate', body, {headers, observe: 'response'}).pipe(
-      map((res) =>{
+    return this.http.post(BASIC_URL + 'authenticate', body, { headers, observe: 'response' }).pipe(
+      map((res) => {
         const token = res.headers.get('authorization').substring(7);
         const user = res.body;
-        if(token && user){
+        if (token && user) {
           this.userStorageService.saveToken(token);
           this.userStorageService.saveUser(user);
 
@@ -57,18 +61,14 @@ export class AuthService {
   }
 
   startAutoLogoutTimer() {
-  const expiryTime = 1000 * 60 * 60 * 5; // 5hrs
+    const expiryTime = 1000 * 60 * 60 * 5; // 5hrs
 
-  setTimeout(() => {
-    UserStorageService.signOut();
-    alert("Session expired. Please login again");
-    window.location.href = '/login';
-  }, expiryTime);
-}
-
-
-
-  isLoggedin(){
-
+    setTimeout(() => {
+      UserStorageService.signOut();
+      alert("Session expired. Please login again");
+      window.location.href = '/login';
+    }, expiryTime);
   }
+
+
 }

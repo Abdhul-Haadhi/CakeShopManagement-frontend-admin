@@ -40,43 +40,43 @@ export class ProductRegistrationService {
   addProduct(productDto: any): Observable<any> {
     console.log('got', productDto);
 
-    return this.http.post(BASIC_URL + 'api/admin/product-registration', productDto, {
+    return this.http.post(BASIC_URL + 'api/employee/product-registration', productDto, {
       headers: this.createAuthorizationHeader(),
     })
   }
 
   getAllProducts(): Observable<any> {
-    return this.http.get(BASIC_URL + 'api/admin/products', {
+    return this.http.get(BASIC_URL + 'api/employee/products', {
       headers: this.createAuthorizationHeader(),
     });
   }
 
   getProductById(productId): Observable<any> {
-    return this.http.get(BASIC_URL + `api/admin/product/${productId}`, {
+    return this.http.get(BASIC_URL + `api/employee/product/${productId}`, {
       headers: this.createAuthorizationHeader(),
     });
   }
 
   getAllProductsByName(productName: any): Observable<any> {
-    return this.http.get(BASIC_URL + `api/admin/search/${productName}`, {
+    return this.http.get(BASIC_URL + `api/employee/search/${productName}`, {
       headers: this.createAuthorizationHeader(),
     })
   }
 
   checkSkuExists(productSku: any): Observable<any> {
-    return this.http.get(BASIC_URL + `api/admin/check-sku/${productSku}`,
+    return this.http.get(BASIC_URL + `api/employee/check-sku/${productSku}`,
       { headers: this.createAuthorizationHeader() }
     );
   }
 
   deleteProduct(productId: any): Observable<any> {
-    return this.http.delete(BASIC_URL + `api/admin/product/${productId}`, {
+    return this.http.delete(BASIC_URL + `api/employee/product/${productId}`, {
       headers: this.createAuthorizationHeader(),
     })
   }
 
   editData(productId: any, productDto: any): Observable<any> {
-    return this.http.put(BASIC_URL + `api/admin/product/${productId}`, productDto, {
+    return this.http.put(BASIC_URL + `api/employee/product/${productId}`, productDto, {
       headers: this.createAuthorizationHeader(),
     })
   }

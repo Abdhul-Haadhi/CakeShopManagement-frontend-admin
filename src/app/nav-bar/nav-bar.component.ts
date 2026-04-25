@@ -21,7 +21,7 @@ import { EditProfileDialogComponent } from '../components/edit-profile-dialog/ed
 export class NavBarComponent implements OnInit {
 
 
-  isLoggedIn: boolean = UserStorageService.isAdminLoggedIn();
+  isLoggedIn: boolean = UserStorageService.isAdminLoggedIn() || UserStorageService.isEmployeeLoggedIn();
 
   constructor(public auth: AuthService,
     private router: Router,
@@ -31,7 +31,7 @@ export class NavBarComponent implements OnInit {
   ngOnInit(): void {
 
     this.router.events.subscribe(() => {
-      this.isLoggedIn = UserStorageService.isAdminLoggedIn();
+      this.isLoggedIn = UserStorageService.isAdminLoggedIn() || UserStorageService.isEmployeeLoggedIn();
     })
 
 

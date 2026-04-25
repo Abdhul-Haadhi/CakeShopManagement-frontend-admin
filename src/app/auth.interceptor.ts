@@ -10,9 +10,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError(error => {
-      if (error.status === 401 || error.status === 403) {
+      if (error.status === 401) {
         alert("Session expired. Please login again");
         router.navigate(['/login']);
+      }
+      if (error.status === 403) {
+        alert("Access denied");
       }
       return throwError(() => error);
     })

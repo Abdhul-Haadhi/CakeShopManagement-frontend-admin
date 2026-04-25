@@ -15,6 +15,7 @@
     <ng-container *ngIf="isLoggedIn">
         <div class="sidenav-nav">
             @for (item of items; track $index) {
+            @if (item.roles.includes(currentRole)) {
             <li class="sidenav-nav-item">
                 <a class="sidenav-nav-link" [routerLink]="item.routeLink" routerLinkActive="active"
                     [routerLinkActiveOptions]="{ exact: true }">
@@ -25,6 +26,9 @@
 
                 </a>
             </li>
+
+            }
+
             }
         </div>
     </ng-container>
