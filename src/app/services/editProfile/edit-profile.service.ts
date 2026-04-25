@@ -22,6 +22,18 @@ export class EditProfileService {
     })
   }
 
+  changeEmployeePassword(data: any): Observable<any> {
+    return this.http.put(BASIC_URL + `api/employee/change-password`, data, {
+      headers: this.createAuthorizationHeader(),
+      responseType: 'text'
+    });
+  }
+
+  getEmployeeById(employeeId: any) {
+    return this.http.get(`${BASIC_URL}api/employee/${employeeId}`, {
+      headers: this.createAuthorizationHeader()
+    });
+  }
 
 
   private createAuthorizationHeader(): HttpHeaders {

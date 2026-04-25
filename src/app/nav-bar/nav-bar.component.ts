@@ -39,10 +39,15 @@ export class NavBarComponent implements OnInit {
   }
 
   openEditProfile() {
-  this.dialog.open(EditProfileDialogComponent, {
-    width: '450px'
-  });
-}
+    const employeeId = UserStorageService.getEmployeeId();
+
+    console.log("Employee ID:", employeeId);
+
+    this.dialog.open(EditProfileDialogComponent, {
+      width: '450px',
+      data: { employeeId }
+    });
+  }
 
   logout() {
     Swal.fire({

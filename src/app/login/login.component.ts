@@ -51,6 +51,9 @@ export class LoginComponent implements OnInit {
     this.authService.login(username, password).subscribe({
       next: (response) => {
 
+        console.log("login response: ",response);
+        
+
         this.snackBar.open('Login Success', 'Ok', {duration: 5000});
         this.router.navigateByUrl('dashboard');
 

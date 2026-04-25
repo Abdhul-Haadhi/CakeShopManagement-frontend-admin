@@ -37,6 +37,14 @@ export class UserStorageService {
     return user.userId;
   }
 
+  static getEmployeeId(): string {
+    const user = this.getUser();
+    if (user == null) {
+      return '';
+    }
+    return user.employeeId;
+  }
+
   static getUserRole(): string {
     const user = this.getUser();
     if (user == null) {
