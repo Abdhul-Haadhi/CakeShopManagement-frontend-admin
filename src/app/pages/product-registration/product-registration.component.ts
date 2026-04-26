@@ -127,9 +127,9 @@ export class ProductRegistrationComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(value => {
-
         console.log("Typing:", value);
 
+        if (this.mode !== 'add') return;
         if (!value) return;
 
         const control = this.ProdRegForm.get('productSku');
@@ -252,13 +252,18 @@ export class ProductRegistrationComponent implements OnInit {
           formData.append('price', this.ProdRegForm.get('price').value);
           const rawDate = this.ProdRegForm.get('addedDate')?.value;
           if (rawDate) {
-            const formattedDate = new Date(rawDate).toISOString();
+            // const formattedDate = new Date(rawDate).toISOString().split('T')[0];
+            const date = new Date(rawDate);
+            const formattedDate = date.getFullYear() + '-' +
+              String(date.getMonth() + 1).padStart(2, '0') + '-' +
+              String(date.getDate()).padStart(2, '0');
+              
             formData.append('addedDate', formattedDate);
           }
 
           this.prodService.addProduct(formData).subscribe({
             next: (response: any) => {
-              // console.log("RESPONSE:", formData);
+              console.log("RESPONSE:", formData);
               if (response.productId != null) {
                 this.snackBar.open('Product added successfully', 'Ok', { duration: 5000 });
                 this.router.navigateByUrl('/dashboard');
@@ -317,7 +322,7 @@ export class ProductRegistrationComponent implements OnInit {
         formData.append('price', this.ProdRegForm.get('price').value);
         const rawDate = this.ProdRegForm.get('addedDate')?.value;
         if (rawDate) {
-          const formattedDate = new Date(rawDate).toISOString();
+          const formattedDate = new Date(rawDate).toISOString().split('T')[0];
           formData.append('addedDate', formattedDate);
         }
 
@@ -363,6 +368,7 @@ export class ProductRegistrationComponent implements OnInit {
 
     this.ProdRegForm.updateValueAndValidity();
 
+    this.ProdRegForm.get('productSku')?.setErrors(null);
     this.ProdRegForm.get('productSku')?.disable();
 
     if (data.byteImage) {
@@ -372,7 +378,7 @@ export class ProductRegistrationComponent implements OnInit {
     this.saveButtonLabel = 'Edit';
     this.mode = 'edit';
     this.selectedData = data;
-    this.isButtonDisabled=false;
+    this.isButtonDisabled = false;
   }
 
   public deleteData(productId: any): void {

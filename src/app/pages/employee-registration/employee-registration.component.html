@@ -1,4 +1,5 @@
 <div class="container">
+
   <mat-toolbar class="heading-bar">
     <span class="heading-text">Employee registration</span>
     <span class="example-spacer"></span>
@@ -15,57 +16,57 @@
           <mat-form-field class="full-width">
             <mat-label>Employee name</mat-label>
             <input matInput placeholder="Employee name" formControlName="employeeName" />
-            <span class="text-danger" *ngIf="
+            <mat-error class="text-danger" *ngIf="
                 (EmpRegForm.get('employeeName')?.touched || submitted) &&
                 EmpRegForm.get('employeeName')?.errors &&
                 (EmpRegForm.get('employeeName')?.errors)!['required']
               ">
               Name is required
-            </span>
-            <span class="text-danger" *ngIf="
+            </mat-error>
+            <mat-error class="text-danger" *ngIf="
                 (EmpRegForm.get('employeeName')?.touched || submitted) &&
                 EmpRegForm.get('employeeName')?.errors &&
                 (EmpRegForm.get('employeeName')?.errors)!['pattern']
               ">
               Name should be letters
-            </span>
+            </mat-error>
           </mat-form-field>
 
           <mat-form-field class="full-width">
             <mat-label>Email</mat-label>
             <input matInput placeholder="Email" formControlName="email" />
-            <span class="text-danger" *ngIf="
+            <mat-error class="text-danger" *ngIf="
                 (EmpRegForm.get('email')?.touched || submitted) &&
                 EmpRegForm.get('email')?.errors &&
                 (EmpRegForm.get('email')?.errors)!['required']
               ">
               Enter the NIC number
-            </span>
+            </mat-error>
 
-            <span class="text-danger" *ngIf="
+            <mat-error class="text-danger" *ngIf="
                 EmpRegForm.get('email')?.errors &&
                 (EmpRegForm.get('email')?.errors)!['email']
               ">
               Enter a valid Email address
-            </span>
+            </mat-error>
           </mat-form-field>
 
           <mat-form-field class="full-width">
             <mat-label>Contact number</mat-label>
             <input matInput placeholder="Contact number" formControlName="phone" />
-            <span class="text-danger" *ngIf="
+            <mat-error class="text-danger" *ngIf="
                 (EmpRegForm.get('phone')?.touched || submitted) &&
                 EmpRegForm.get('phone')?.errors &&
                 (EmpRegForm.get('phone')?.errors)!['required']
               ">
               Contact number is required
-            </span>
-            <span class="text-danger" *ngIf="
+            </mat-error>
+            <mat-error class="text-danger" *ngIf="
                 EmpRegForm.get('phone')?.errors &&
                 (EmpRegForm.get('phone')?.errors)!['pattern']
               ">
               Phone number should be 10 digits
-            </span>
+            </mat-error>
           </mat-form-field>
 
         </div>
@@ -84,20 +85,20 @@
           <mat-form-field class="full-width">
             <mat-label>Address</mat-label>
             <input matInput placeholder="Address" formControlName="address" />
-            <span class="text-danger" *ngIf="
+            <mat-error class="text-danger" *ngIf="
                 (EmpRegForm.get('address')?.touched || submitted) &&
                 EmpRegForm.get('address')?.errors &&
                 (EmpRegForm.get('address')?.errors)!['required']
               ">
               Address is required
-            </span>
-            <span class="text-danger" *ngIf="
+            </mat-error>
+            <mat-error class="text-danger" *ngIf="
                 (EmpRegForm.get('address')?.touched || submitted) &&
                 EmpRegForm.get('address')?.errors &&
                 (EmpRegForm.get('address')?.errors)!['maxlength']
               ">
               Maximum lenght is 150
-            </span>
+            </mat-error>
           </mat-form-field>
 
 
@@ -108,13 +109,13 @@
             <mat-datepicker-toggle matIconSuffix [for]="picker">
             </mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
-            <span class="text-danger" *ngIf="
+            <mat-error class="text-danger" *ngIf="
                 (EmpRegForm.get('joinDate')?.touched || submitted) &&
                 EmpRegForm.get('joinDate')?.errors &&
                 (EmpRegForm.get('joinDate')?.errors)!['required']
               ">
               Joinned date is required
-            </span>
+            </mat-error>
           </mat-form-field>
 
           <!-- <mat-form-field class="full-width">
@@ -189,8 +190,7 @@
             matTooltip="edit">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="black" (click)="deleteData(employee.employeeId)"
-            matTooltip="delete">
+          <button mat-icon-button color="black" (click)="deleteData(employee.employeeId)" matTooltip="delete">
             <mat-icon>delete</mat-icon>
           </button>
           <button mat-icon-button matTooltip="Create Login" (click)="addLoginCredentials(employee)">

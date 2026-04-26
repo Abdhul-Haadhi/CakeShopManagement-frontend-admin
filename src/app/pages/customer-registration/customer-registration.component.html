@@ -1,1 +1,205 @@
-<p>customer-registration works!</p>
+<div class="container">
+
+    <mat-toolbar class="heading-bar">
+        <span class="heading-text">Customer registration</span>
+        <span class="example-spacer"></span>
+        <button class="form-button" mat-raised-button color="warn" (click)="showForm = true" *ngIf="!showForm">
+            +Add Customer
+        </button>
+    </mat-toolbar>
+
+    <div *ngIf="showForm" class="form-section">
+        <form [formGroup]="CustRegForm" class="example-form" (ngSubmit)="onSubmit()">
+            <div class="example-form-div">
+                <div class="form-part">
+
+                    <mat-form-field class="full-width">
+                        <mat-label>Customer name</mat-label>
+                        <input matInput placeholder="Customer name" formControlName="customerName" />
+                        <mat-error class="text-danger" *ngIf="
+                            (CustRegForm.get('customerName')?.touched || submitted) &&
+                            CustRegForm.get('customerName')?.errors &&
+                            (CustRegForm.get('customerName')?.errors)!['required']
+                        ">
+                            Name is required
+                        </mat-error>
+                        <mat-error class="text-danger" *ngIf="
+                (CustRegForm.get('customerName')?.touched || submitted) &&
+                CustRegForm.get('customerName')?.errors &&
+                (CustRegForm.get('customerName')?.errors)!['pattern']
+              ">
+                            Name should be letters
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="full-width">
+                        <mat-label>Email</mat-label>
+                        <input matInput placeholder="Email" formControlName="email" />
+                        <mat-error class="text-danger" *ngIf="
+                (CustRegForm.get('email')?.touched || submitted) &&
+                CustRegForm.get('email')?.errors &&
+                (CustRegForm.get('email')?.errors)!['required']
+              ">
+                            Enter the NIC number
+                        </mat-error>
+
+                        <mat-error class="text-danger" *ngIf="
+                CustRegForm.get('email')?.errors &&
+                (CustRegForm.get('email')?.errors)!['email']
+              ">
+                            Enter a valid Email address
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="full-width">
+                        <mat-label>Contact number</mat-label>
+                        <input matInput placeholder="Contact number" formControlName="phone" />
+                        <mat-error class="text-danger" *ngIf="
+                (CustRegForm.get('phone')?.touched || submitted) &&
+                CustRegForm.get('phone')?.errors &&
+                (CustRegForm.get('phone')?.errors)!['required']
+              ">
+                            Contact number is required
+                        </mat-error>
+                        <mat-error class="text-danger" *ngIf="
+                CustRegForm.get('phone')?.errors &&
+                (CustRegForm.get('phone')?.errors)!['pattern']
+              ">
+                            Phone number should be 10 digits
+                        </mat-error>
+                    </mat-form-field>
+
+                </div>
+
+                <div class="form-part">
+
+                    <!-- <mat-form-field class="full-width">
+            <mat-label>Select the Role</mat-label>
+            <mat-select formControlName="role" multiple>
+              <mat-option *ngFor="let roles of listOfRoles" [value]="roles.value">
+                {{ roles.value }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field> -->
+
+                    <mat-form-field class="full-width">
+                        <mat-label>Address</mat-label>
+                        <input matInput placeholder="Address" formControlName="address" />
+                        <mat-error class="text-danger" *ngIf="
+                (CustRegForm.get('address')?.touched || submitted) &&
+                CustRegForm.get('address')?.errors &&
+                (CustRegForm.get('address')?.errors)!['required']
+              ">
+                            Address is required
+                        </mat-error>
+                        <mat-error class="text-danger" *ngIf="
+                (CustRegForm.get('address')?.touched || submitted) &&
+                CustRegForm.get('address')?.errors &&
+                (CustRegForm.get('address')?.errors)!['maxlength']
+              ">
+                            Maximum lenght is 150
+                        </mat-error>
+                    </mat-form-field>
+
+
+                    <mat-form-field class="full-width">
+                        <mat-label>Joinned Date</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="joinDate" [max]="maxDate" />
+                        <mat-hint>MM/DD/YYYY</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-error class="text-danger" *ngIf="
+                (CustRegForm.get('joinDate')?.touched || submitted) &&
+                CustRegForm.get('joinDate')?.errors &&
+                (CustRegForm.get('joinDate')?.errors)!['required']
+              ">
+                            Joinned date is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- <mat-form-field class="full-width">
+            <mat-label>Enter password</mat-label>
+            <input matInput formControlName="password" type="{{hidePassword ? 'password' : 'text'}}" />
+            <button mat-icon-button type="button" matSuffix (click)="togglePasswordVisibility()">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field> -->
+                </div>
+            </div>
+
+            <button type="submit" color="primary" class="form-button" mat-raised-button
+                [disabled]="isButtonDisabled || CustRegForm.invalid">
+                {{ saveButtonLabel }}
+            </button>
+            <button type="reset" color="secondary" class="form-button" mat-raised-button (click)="resetData()">
+                Reset
+            </button>
+            <button mat-raised-button type="button" class="form-button" color="warn" (click)="closeForm()">
+                Cancel
+            </button>
+        </form>
+    </div>
+
+    <div class="table-section">
+        <div class="refresh-filter-section">
+            <div class="refresh-button">
+                <button mat-icon-button color="primary" (click)="refreshData()">
+                    <mat-icon>refresh</mat-icon>
+                </button>
+            </div>
+
+            <mat-form-field class="filter">
+                <mat-label>Search</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input />
+            </mat-form-field>
+        </div>
+
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="customerName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Name</th>
+                <td mat-cell *matCellDef="let customer">{{ customer.customerName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                <td mat-cell *matCellDef="let customer">{{ customer.email }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="phone">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact Number</th>
+                <td mat-cell *matCellDef="let customer">{{ customer.phone }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="address">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Address</th>
+                <td mat-cell *matCellDef="let customer">{{ customer.address }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="joinDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Joined Date</th>
+                <td mat-cell *matCellDef="let customer">
+                    {{ customer.joinDate | date : "dd-MM-yyyy" }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
+                <td mat-cell *matCellDef="let customer">
+                    <button mat-icon-button color="warn" (click)="editData(customer)" (click)="showForm = true"
+                        *ngIf="!showForm" matTooltip="edit">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="black" (click)="deleteData(customer.customerId)" matTooltip="delete">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+    </div>
+
+</div>

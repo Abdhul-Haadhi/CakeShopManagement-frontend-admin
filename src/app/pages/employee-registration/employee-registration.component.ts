@@ -15,10 +15,10 @@ import { EmployeeRegistrationService } from '../../services/employeeRegistration
 import { MatDialog } from '@angular/material/dialog';
 import { RegDialogComponent } from './reg-dialog/reg-dialog.component';
 
-interface Roles {
-  value: string;
-  viewValue: string;
-}
+// interface Roles {
+//   value: string;
+//   viewValue: string;
+// }
 
 @Component({
   selector: 'app-employee-registration',
@@ -59,9 +59,9 @@ export class EmployeeRegistrationComponent implements OnInit {
   //   event.stopPropagation();
   // }
 
-  togglePasswordVisibility() {
-    this.hidePassword = !this.hidePassword;
-  }
+  // togglePasswordVisibility() {
+  //   this.hidePassword = !this.hidePassword;
+  // }
 
 
   hidePassword = true;
@@ -150,6 +150,13 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   }
 
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
 
 
 
@@ -167,7 +174,7 @@ export class EmployeeRegistrationComponent implements OnInit {
             phone: this.EmpRegForm.get('phone').value,
             address: this.EmpRegForm.get('address').value,
             // password: this.EmpRegForm.get('password').value,
-            joinDate: new Date(this.EmpRegForm.get('joinDate').value).toISOString()
+            joinDate: this.formatDate(this.EmpRegForm.get('joinDate')?.value),
           };
 
           this.empService.addEmployee(payload).subscribe({
@@ -202,7 +209,7 @@ export class EmployeeRegistrationComponent implements OnInit {
           phone: this.EmpRegForm.get('phone').value,
           address: this.EmpRegForm.get('address').value,
           // password: this.EmpRegForm.get('password').value,
-          joinDate: new Date(this.EmpRegForm.get('joinDate').value).toISOString()
+          joinDate: this.formatDate(this.EmpRegForm.get('joinDate')?.value),
         };
 
         formData.forEach((value, key) => {
@@ -212,16 +219,23 @@ export class EmployeeRegistrationComponent implements OnInit {
         this.empService.editData(this.selectedData.employeeId, payload).subscribe({
           next: (response: any) => {
             this.snackBar.open('Employee details updated successfully', 'Ok', { duration: 5000 });
+            this.refreshData();
+            this.closeForm();
+
           },
           error: (error) => {
             this.snackBar.open('Update failed', 'Error', { duration: 5000 });
           }
         });
+
       }
+
       this.mode = 'add';
       this.EmpRegForm.disable();
       this.isButtonDisabled = true;
       this.refreshData();
+      this.closeForm();
+
     }
     catch (error) {
       this.snackBar.open("Something went wrong ", "Error", { duration: 5000 })
@@ -299,7 +313,7 @@ export class EmployeeRegistrationComponent implements OnInit {
 
     this.EmpRegForm.patchValue({
       ...data,
-      addedDate: data.addedDate ? new Date(data.addedDate + 'Z') : null
+      joinDate: data.joinDate ? new Date(data.joinDate) : null
     });
 
 

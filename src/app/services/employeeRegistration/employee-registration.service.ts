@@ -11,7 +11,7 @@ const BASIC_URL = "http://localhost:8080/"
 })
 export class EmployeeRegistrationService {
 
-  constructor(private http: HttpClient, private httpService: HttpService) { }
+  constructor(private http: HttpClient) { }
 
 
   // addEmployee(employeeDto: any): Observable<any> {
