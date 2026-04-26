@@ -43,6 +43,9 @@ export class EditProfileDialogComponent implements OnInit {
     const role = UserStorageService.getUserRole();
 
     if (role === 'EMPLOYEE') {
+
+      this.profileForm.get('email')?.disable();
+
       const employeeId = this.data.employeeId;
 
       this.editProfileSevice.getEmployeeById(employeeId).subscribe({
@@ -54,6 +57,8 @@ export class EditProfileDialogComponent implements OnInit {
       });
     }
     else if (role === 'ADMIN') {
+      this.profileForm.get('email')?.enable();
+      
       this.profileForm.patchValue({
         email: UserStorageService.getUser()?.email
       });
