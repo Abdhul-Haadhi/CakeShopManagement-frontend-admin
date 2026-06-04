@@ -1,0 +1,99 @@
+<h2 class="dialog-title">Manage Customization Options</h2>
+
+<div class="form-row">
+
+    <input type="text" [(ngModel)]="optionName" placeholder="Option Name">
+
+    <select [(ngModel)]="optionType">
+        <option value="TEXT">TEXT</option>
+        <option value="TEXTAREA">TEXTAREA</option>
+        <option value="CHECKBOX">CHECKBOX</option>
+        <option value="RADIO">RADIO</option>
+        <option value="DROPDOWN">DROPDOWN</option>
+    </select>
+
+    <button (click)="addOption()">
+        {{editingId ? 'Update Option' : 'Add Option'}}
+    </button>
+
+    <button *ngIf="editingId" (click)="resetForm()">
+        Cancel Edit
+    </button>
+
+</div>
+
+<hr>
+
+<h3>Available Options</h3>
+
+<div class="options-list">
+
+    <div class="option-card" *ngFor="let option of options"
+        [class.selected]="selectedOption?.optionId === option.optionId" (click)="selectOption(option)">
+
+        <div class="option-info">
+            <span class="option-name">
+                {{option.optionName}}
+            </span>
+
+            <span class="option-type">
+                {{option.optionType}}
+            </span>
+        </div>
+
+        <div class="option-actions">
+            <button mat-icon-button matTooltip="edit" color="black" class="edit-btn"
+                (click)="editOption(option); $event.stopPropagation()"><mat-icon>edit</mat-icon>
+            </button>
+
+            <button mat-icon-button matTooltip="delete" color="warn" class="delete-btn"
+                (click)="deleteOption(option.optionId); $event.stopPropagation()"><mat-icon>delete</mat-icon>
+            </button>
+        </div>
+
+    </div>
+
+    <div class="dialog-actions">
+        <button class="close-btn" (click)="closeDialog()">
+            Close
+        </button>
+    </div>
+
+</div>
+
+<hr>
+
+<div *ngIf="selectedOption && (selectedOption.optionType === 'CHECKBOX' ||
+    selectedOption.optionType === 'RADIO' ||
+    selectedOption.optionType === 'DROPDOWN')" class="values-section">
+    
+    <h3>Values for {{selectedOption.optionName}}</h3>
+
+    <div class="value-form">
+        <input type="text" [(ngModel)]="valueText" placeholder="Enter value">
+
+        <button (click)="addValue()">
+            {{editingValueId ? 'Update Value' : 'Add Value'}}
+        </button>
+
+        <button *ngIf="editingValueId" (click)="resetValueForm()">
+            Cancel
+        </button>
+    </div>
+
+    <div class="value-list">
+        <div class="vlaue-card" *ngFor="let val of optionValues">
+            <span>{{val.value}}</span>
+
+            <div>
+                <button mat-icon-button (click)="editValue(val)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+
+                <button mat-icon-button color="warn" (click)="deleteValue(val.valueId)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

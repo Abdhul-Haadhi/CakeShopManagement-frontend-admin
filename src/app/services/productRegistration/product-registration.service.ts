@@ -17,26 +17,6 @@ export class ProductRegistrationService {
   constructor(private http: HttpClient, private httpService: HttpService) { }
 
 
-  // serviceCall(formDetails: any){
-  //   // console.log('In the service');
-  //   // console.log(formDetails);
-  //   // console.log("TOKEN:", this.httpService.getAuthToken());
-
-  //   const requestUrl = environment.baseUrl + 'api/admin/product-registration';
-
-  //   let headers = {};
-
-  //   if(this.httpService.getAuthToken() !== null){
-  //     headers = {
-  //       Authorization: 'Bearer ' + this.httpService.getAuthToken(),
-  //     };
-  //   }
-
-  //   return this.http.post(requestUrl, formDetails, {headers:headers});
-
-  // }
-
-
   addProduct(productDto: any): Observable<any> {
     console.log('got', productDto);
 
@@ -81,22 +61,11 @@ export class ProductRegistrationService {
     })
   }
 
-  // editData(id: number, from_details: any) {
-  //   console.log('In edit data');
-
-  //   const requestUrl = environment.baseUrl + '/product-registration/' + id.toString();
-
-  //   let headers = {};
-
-  //   if (this.httpService.getAuthToken() !== null) {
-  //     headers = {
-  //       Authorization: 'Bearer ' + this.httpService.getAuthToken(),
-  //     };
-  //   }
-
-  //   return this.http.put(requestUrl, from_details, { headers: headers })
-  // }
-
+  getAllCustomizationOptions(){
+    return this.http.get(BASIC_URL + 'api/employee/customization-options',{
+      headers: this.createAuthorizationHeader(),
+    })
+  }
 
   private createAuthorizationHeader(): HttpHeaders {
     return new HttpHeaders().set('Authorization', 'Bearer ' + UserStorageService.getToken())

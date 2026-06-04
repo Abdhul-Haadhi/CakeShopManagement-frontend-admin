@@ -78,3 +78,25 @@ form {
         }
     }
 }
+
+.refresh-filter-section {
+    display: flex;
+    flex-direction: row;
+}
+
+.refresh-button {
+    margin: 1%;
+}
+
+.filter {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.table-section {
+    width: 100%;
+}
+
+.full-row {
+    grid-column: span 2;
+}

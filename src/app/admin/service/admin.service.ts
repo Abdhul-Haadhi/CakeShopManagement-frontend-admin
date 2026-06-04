@@ -25,6 +25,18 @@ export class AdminService {
     })
   }
 
+  editCategory(categoryId: any, categoryDto: any): Observable<any> {
+      return this.http.put(BASIC_URL + `api/employee/categories/${categoryId}`, categoryDto, {
+        headers: this.createAuthorizationHeader(),
+      })
+    }
+
+  deleteCategory(categoryId:any): Observable<any>{
+    return this.http.delete(BASIC_URL + `api/employee/category/${categoryId}`, {
+      headers: this.createAuthorizationHeader(),
+    })
+  }
+
 
 
   private createAuthorizationHeader(): HttpHeaders{

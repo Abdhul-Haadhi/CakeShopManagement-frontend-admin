@@ -15,7 +15,10 @@ import { MatSort } from '@angular/material/sort';
 import Swal from 'sweetalert2';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ManageCustomizationDialogComponent } from '../../components/manage-customization-dialog/manage-customization-dialog.component';
 
 // interface Colors {
 //   value: string;
@@ -27,7 +30,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 @Component({
   selector: 'app-product-registration',
   standalone: true,
-  imports: [AngularMaterailModules, MatToolbar, MatFormFieldModule, MatCard, MatFormField, ReactiveFormsModule, NgIf, NgForOf, DatePipe],
+  imports: [AngularMaterailModules, FormsModule, MatToolbar, MatCheckboxModule, MatFormFieldModule, MatCard, MatFormField, ReactiveFormsModule, NgIf, NgForOf, DatePipe],
   templateUrl: './product-registration.component.html',
   providers: [provideNativeDateAdapter()],
   styleUrl: './product-registration.component.scss'
@@ -67,9 +70,14 @@ export class ProductRegistrationComponent implements OnInit {
   selectedImage: any;
   selectedData!: { productId: any; };
   products: any[] = [];
+  availableOptions: any[] = [];
+  selectedCustomizations: any[] = [];
   existingImage: string | null = null;
   maxDate: Date;
   minDate: Date;
+
+  isCustomizationDisabled = false;
+
 
 
   dataSource!: MatTableDataSource<any>;
@@ -98,6 +106,7 @@ export class ProductRegistrationComponent implements OnInit {
     private adminService: AdminService,
     private snackBar: MatSnackBar,
     private router: Router,
+    private dialog: MatDialog,
     // private activatedRoute: ActivatedRoute
   ) {
     this.maxDate = new Date();
@@ -162,6 +171,8 @@ export class ProductRegistrationComponent implements OnInit {
     this.getAllCategories();
     this.populateData();
 
+    this.loadCustomizationOptions();
+
     // const nav = this.router.getCurrentNavigation();
     const data = history.state.product;
 
@@ -172,6 +183,23 @@ export class ProductRegistrationComponent implements OnInit {
       this.showForm = true;
     }
     // this.getProductById();
+
+
+  }
+
+  openCustomizationManager() {
+    const dialogRef = this.dialog.open(
+      ManageCustomizationDialogComponent,
+      {
+        width: '800px',
+        maxWidth: '90vw',
+        // disableClose: true,
+      }
+    );
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.loadCustomizationOptions();
+    });
   }
 
   // getProductById() {
@@ -257,9 +285,24 @@ export class ProductRegistrationComponent implements OnInit {
             const formattedDate = date.getFullYear() + '-' +
               String(date.getMonth() + 1).padStart(2, '0') + '-' +
               String(date.getDate()).padStart(2, '0');
-              
+
             formData.append('addedDate', formattedDate);
           }
+
+          const customizationData = this.availableOptions
+            .filter(option => option.selected)
+            .map(option => ({
+              optionId: option.optionId,
+              extraPrice: option.extraPrice,
+            }));
+
+          formData.append('customizations', JSON.stringify(customizationData));
+
+          console.log("CUSTOMIZATION DATA", customizationData);
+
+          formData.forEach((value, key) => {
+            console.log(key, value);
+          });
 
           this.prodService.addProduct(formData).subscribe({
             next: (response: any) => {
@@ -275,26 +318,12 @@ export class ProductRegistrationComponent implements OnInit {
             error: (error) => {
               console.error("ERROR RESPONSE:", error);
               this.snackBar.open(
-                error.error?.message || 'Product SKU already exists!',
+                error.error?.message || 'Failed to save product!',
                 'Error',
                 { duration: 5000 }
               );
             }
-            // error: (error) => {
-            //   console.error(error);
-            //   console.log("FULL ERROR:", error);
 
-            //   // if (error.error?.message?.includes('SKU')) {
-            //   //   this.ProdRegForm.get('productSku')?.setErrors({ duplicate: true });
-            //   // }
-            //   const errorMessage = error.message || '';
-
-            //   if (errorMessage.toLowerCase().includes('sku')) {
-            //     this.ProdRegForm.get('productSku')?.setErrors({ duplicate: true });
-            //   }
-
-            //   this.snackBar.open(error.message || 'Error occurred', 'Error', { duration: 3000 });
-            // }
           })
 
         }
@@ -326,6 +355,15 @@ export class ProductRegistrationComponent implements OnInit {
           formData.append('addedDate', formattedDate);
         }
 
+        const customizationData = this.availableOptions
+          .filter(option => option.selected)
+          .map(option => ({
+            optionId: option.optionId,
+            extraPrice: Number(option.extraPrice),
+          }));
+
+        formData.append('customizations', JSON.stringify(customizationData));
+
         formData.forEach((value, key) => {
           console.log("FORMDATA:", key, value);
         });
@@ -342,6 +380,7 @@ export class ProductRegistrationComponent implements OnInit {
       }
       this.mode = 'add';
       this.ProdRegForm.disable();
+      this.isCustomizationDisabled = true;
       this.isButtonDisabled = true;
     }
     catch (error) {
@@ -419,6 +458,40 @@ export class ProductRegistrationComponent implements OnInit {
     }
 
 
+  }
+
+
+  toggleCustomization(option: any, checked: boolean) {
+    option.selected = checked;
+
+    if (checked) {
+      this.selectedCustomizations.push({
+        optionId: option.optionId,
+        extraPrice: option.extraPrice || 0
+      });
+
+    } else {
+      this.selectedCustomizations = this.selectedCustomizations.filter(
+        item => item.optionId !== option.optionId
+      );
+    }
+    console.log(this.selectedCustomizations);
+  }
+
+  loadCustomizationOptions() {
+    this.prodService.getAllCustomizationOptions().subscribe({
+      next: (data: any) => {
+        this.availableOptions = data.map((option: any) => ({
+          ...option,
+          selected: false,
+          extraPrice: 0
+        }));
+        console.log("OPTIONS:", this.availableOptions);
+      },
+      error: (error) => {
+        this.snackBar.open('Action failed with error ' + error, 'Close', { duration: 5000 });
+      }
+    });
   }
 
 

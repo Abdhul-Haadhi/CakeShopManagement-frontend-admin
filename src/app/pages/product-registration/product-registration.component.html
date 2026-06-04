@@ -154,6 +154,43 @@
           </span>
         </mat-form-field>
 
+        <!-- <div *ngFor="let option of availableOptions">
+          <mat-checkbox (change)="toggleCustomization(option, $event.checked)">
+            {{option.optionName}}
+          </mat-checkbox>
+
+          <mat-form-field *ngIf="option.selected">
+            <input matInput type="number" placeholder="Extra Price" [value]="option.extraPrice"
+              (input)="option.extraPrice = $any($event.target).value">
+          </mat-form-field>
+        </div> -->
+
+        <div class="customization-section">
+          <label>Customization Options</label>
+
+          <!-- <p>{{ availableOptions | json }}</p> -->
+
+          <div *ngFor="let option of availableOptions" class="customization-item">
+
+            <mat-checkbox (change)="toggleCustomization(option, $event.checked)" [disabled]="isCustomizationDisabled">
+              {{ option.optionName }}
+            </mat-checkbox>
+
+            <mat-form-field *ngIf="option.selected" appearance="outline">
+              <mat-label>Extra Price</mat-label>
+
+              <input [disabled]="isCustomizationDisabled" matInput type="number" [value]="option.extraPrice"
+                (input)="option.extraPrice = $any($event.target).value">
+            </mat-form-field>
+
+          </div>
+          <button [disabled]="isCustomizationDisabled" mat-raised-button color="accent" type="button"
+            (click)="openCustomizationManager()">
+            Manage Options
+          </button>
+        </div>
+
+
         <div class="file-uplaod-container full-row">
           <label class="file-uplaod-label">
             <span>Select an image</span>
@@ -173,9 +210,6 @@
             </div>
           </div>
         </div>
-
-
-
 
 
         <!-- <mat-form-field class="full-width">

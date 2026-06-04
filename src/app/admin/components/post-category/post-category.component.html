@@ -11,7 +11,7 @@
 <div class="form-section" *ngIf="showForm">
     <div class="container">
         <h2>Add category</h2>
-        <form [formGroup]="categoryForm" (ngSubmit)="addCategory()">
+        <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
 
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Name</mat-label>
@@ -33,4 +33,53 @@
 
         </form>
     </div>
+</div>
+
+<!-- Table Section -->
+
+<div class="table-section">
+    <div class="refresh-filter-section">
+        <div class="refresh-button">
+            <button mat-icon-button color="primary" (click)="refreshData()">
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </div>
+
+        <mat-form-field class="filter">
+            <mat-label>Search</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Seach here" #input>
+        </mat-form-field>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="categoryName">
+            <th mat-header-cell *matHeaderCellDef> Category Name</th>
+            <td mat-cell *matCellDef="let category"> {{category.categoryName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef> Description </th>
+            <td mat-cell *matCellDef="let category"> {{category.description}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let category">
+                <button mat-icon-button color="warn" (click)="editData(category); showForm = true" *ngIf="!showForm"
+                    matTooltip="edit">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="black" (click)="deleteData(category.categoryId)" matTooltip="delete">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[10, 20, 25, 100]" aria-label="Select page of users"></mat-paginator>
+
+
 </div>
