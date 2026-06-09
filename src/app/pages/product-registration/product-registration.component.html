@@ -172,7 +172,7 @@
 
           <div *ngFor="let option of availableOptions" class="customization-item">
 
-            <mat-checkbox (change)="toggleCustomization(option, $event.checked)" [disabled]="isCustomizationDisabled">
+            <mat-checkbox [checked]="option.selected" (change)="toggleCustomization(option, $event.checked)" [disabled]="isCustomizationDisabled">
               {{ option.optionName }}
             </mat-checkbox>
 

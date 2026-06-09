@@ -365,7 +365,7 @@ export class ProductRegistrationComponent implements OnInit {
         formData.append('customizations', JSON.stringify(customizationData));
 
         formData.forEach((value, key) => {
-          console.log("FORMDATA:", key, value);
+          console.log("FORMDATAaa:", key, value);
         });
 
         this.prodService.editData(this.selectedData.productId, formData).subscribe({
@@ -412,6 +412,18 @@ export class ProductRegistrationComponent implements OnInit {
 
     if (data.byteImage) {
       this.existingImage = 'data:image/jpeg;base64,' + data.byteImage;
+    }
+
+    if (data.customizations) {
+      this.availableOptions.forEach(option => {
+        const selectedOption = data.customizations.find(
+          (c: any) => c.optionId === option.optionId
+        );
+        if (selectedOption) {
+          option.selected = true;
+          option.extraPrice = selectedOption.extraPrice;
+        }
+      });
     }
 
     this.saveButtonLabel = 'Edit';

@@ -56,13 +56,21 @@ export class ProductRegistrationService {
   }
 
   editData(productId: any, productDto: any): Observable<any> {
+
+    console.log(productDto);
+    console.log(productDto instanceof FormData);
+
+    console.log(
+      this.createAuthorizationHeader().get('Authorization')
+    );
+
     return this.http.put(BASIC_URL + `api/employee/product/${productId}`, productDto, {
       headers: this.createAuthorizationHeader(),
     })
   }
 
-  getAllCustomizationOptions(){
-    return this.http.get(BASIC_URL + 'api/employee/customization-options',{
+  getAllCustomizationOptions() {
+    return this.http.get(BASIC_URL + 'api/employee/customization-options', {
       headers: this.createAuthorizationHeader(),
     })
   }
