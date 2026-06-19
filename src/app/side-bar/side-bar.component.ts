@@ -84,6 +84,12 @@ export class SideBarComponent implements OnInit {
       label: 'Category',
       roles: ['ADMIN', 'EMPLOYEE'],
     },
+    {
+      routeLink: 'orders',
+      icon: 'far fa-users',
+      label: 'Orders',
+      roles: ['ADMIN', 'EMPLOYEE'],
+    },
   ]
 
   toggleCollapse(): void {

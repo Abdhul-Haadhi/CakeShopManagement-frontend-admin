@@ -9,6 +9,7 @@ import { ProductRegistrationComponent } from './pages/product-registration/produ
 import { EmployeeRegistrationComponent } from './pages/employee-registration/employee-registration.component';
 import { noAuthGuard } from './no-auth.guard';
 import { CustomerRegistrationComponent } from './pages/customer-registration/customer-registration.component';
+import { OrdersComponent } from './pages/orders/orders.component';
 
 
 
@@ -22,5 +23,6 @@ export const routes: Routes = [
     {path: "employee-reg", component: EmployeeRegistrationComponent, canActivate: [authGuard]},
     {path: "customer-reg", component: CustomerRegistrationComponent, canActivate: [authGuard]},
     {path: "category", component: PostCategoryComponent},
+    {path: "orders", component: OrdersComponent},
 
 ];

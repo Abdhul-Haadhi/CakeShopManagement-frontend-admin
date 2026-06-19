@@ -1,0 +1,58 @@
+<div class="orders-container">
+    <h1>Placed Orders</h1>
+
+    <div class="order-card" *ngFor="let order of orders">
+        <div class="order-header">
+            <h2>Order #{{order.orderId}}</h2>
+            <span>{{order.status}}</span>
+        </div>
+        <div class="order-details">
+            <p><strong>Total:</strong> LKR {{order.totalAmount}}</p>
+            <p><strong>Quantity:</strong> {{order.quantity}}</p>
+            <p><strong>Tracking ID:</strong> {{order.trackingId}}</p>
+            <p><strong>Order Date:</strong> {{order.orderDate | date}}</p>
+            <p><strong>Delivery Date:</strong> {{order.deliveryDate | date}}</p>
+        </div>
+
+        <div class="order-actions">
+            <select #statusSelect>
+                <option *ngFor="let status of statuses" [value]="status">
+                    {{status}}
+                </option>
+            </select>
+
+            <button (click)="changeStatus(order.orderId,statusSelect.value)">
+                Update Status
+            </button>
+
+            <button class="view-btn" (click)="toggleItems(order.orderId)">
+                {{ expandedOrderId === order.orderId ? 'Hide Items' : 'View Items' }}
+            </button>
+        </div>
+
+        <div class="order-items" *ngIf="expandedOrderId === order.orderId">
+            <div class="item-card" *ngFor="let item of order.orderItems">
+                <h3>{{item.productName}}</h3>
+                <p><strong>Qty:</strong> {{item.quantity}}</p>
+                <p><strong>Price:</strong> LKR {{item.price}}</p>
+
+                <div class="customizations" *ngIf="item.customizations?.length">
+                    <h4>Customizations</h4>
+
+                    <div class="custom-item" *ngFor="let custom of item.customizations">
+                        <p>
+                            <strong>{{custom.optionName}}:</strong>
+                            {{custom.value}}
+                            <span *ngIf="custom.extraPrice > 0">
+                                (+LKR {{custom.extraPrice}})
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <p><strong>Total Price:</strong> LKR {{order.totalAmount}}</p>
+            </div>
+        </div>
+    </div>
+
+
+</div>
