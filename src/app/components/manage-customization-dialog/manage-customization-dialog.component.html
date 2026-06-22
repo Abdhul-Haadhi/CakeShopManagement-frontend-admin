@@ -10,7 +10,9 @@
         <option value="CHECKBOX">CHECKBOX</option>
         <option value="RADIO">RADIO</option>
         <option value="DROPDOWN">DROPDOWN</option>
+        <option value="FILE">FILE / IMAGE UPLOAD</option>
     </select>
+
 
     <button (click)="addOption()">
         {{editingId ? 'Update Option' : 'Add Option'}}
@@ -20,6 +22,10 @@
         Cancel Edit
     </button>
 
+</div>
+<div *ngIf="optionType === 'FILE'" class="file-info">
+    Customer will upload an image during ordering.
+    No predefined values are required.
 </div>
 
 <hr>
@@ -66,7 +72,7 @@
 <div *ngIf="selectedOption && (selectedOption.optionType === 'CHECKBOX' ||
     selectedOption.optionType === 'RADIO' ||
     selectedOption.optionType === 'DROPDOWN')" class="values-section">
-    
+
     <h3>Values for {{selectedOption.optionName}}</h3>
 
     <div class="value-form">

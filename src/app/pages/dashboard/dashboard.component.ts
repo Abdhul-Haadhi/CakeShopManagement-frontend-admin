@@ -39,6 +39,8 @@ export class DashboardComponent implements OnInit {
   getAllProducts() {
     this.products = [];
     this.prodService.getAllProducts().subscribe(response => {
+      console.log("all::",response);
+      
       response.forEach(element => {
         element.processedImage = 'data:image/jpeg;base64,' + element.byteImage;
         this.products.push(element);

@@ -38,8 +38,8 @@ export class CustomerRegistrationComponent implements OnInit {
   isButtonDisabled = false;
   mode = 'add';
   selectedData!: { customerId: any; };
-  maxDate: Date;
-  minDate: Date;
+  // maxDate: Date;
+  // minDate: Date;
 
 
   dataSource!: MatTableDataSource<any>;
@@ -62,8 +62,8 @@ export class CustomerRegistrationComponent implements OnInit {
     private customerService: CustomerRegistrationService,
     private _dialog: MatDialog,
   ) {
-    this.maxDate = new Date();
-    this.minDate = new Date();
+    // this.maxDate = new Date();
+    // this.minDate = new Date();
   }
 
 
@@ -75,7 +75,7 @@ export class CustomerRegistrationComponent implements OnInit {
       email: new FormControl('', [Validators.required, Validators.email]),
       phone: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$'),]),
       address: new FormControl('', [Validators.required, Validators.maxLength(150),]),
-      joinDate: new FormControl('', [Validators.required]),
+      // joinDate: new FormControl('', [Validators.required]),
       // password: new FormControl('', [Validators.required]),
     });
 
@@ -116,13 +116,20 @@ export class CustomerRegistrationComponent implements OnInit {
 
   }
 
-  formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
+  openAddForm() {
+    this.showForm = true;
+    this.mode = 'add';
+    this.saveButtonLabel = 'Save';
+    this.CustRegForm.enable();
   }
+
+  // formatDate(date: Date): string {
+  //   const year = date.getFullYear();
+  //   const month = String(date.getMonth() + 1).padStart(2, '0');
+  //   const day = String(date.getDate()).padStart(2, '0');
+
+  //   return `${year}-${month}-${day}`;
+  // }
 
   onSubmit(): void {
     Object.values(this.CustRegForm.controls).forEach(control => {
@@ -139,7 +146,7 @@ export class CustomerRegistrationComponent implements OnInit {
             address: this.CustRegForm.get('address').value,
             // password: this.CustRegForm.get('password').value,
             // joinDate: new Date(this.CustRegForm.get('joinDate').value).toISOString()
-            joinDate: this.formatDate(this.CustRegForm.get('joinDate')?.value)
+            // joinDate: this.formatDate(this.CustRegForm.get('joinDate')?.value)
           };
 
           this.customerService.addCustomer(payload).subscribe({
@@ -178,7 +185,7 @@ export class CustomerRegistrationComponent implements OnInit {
           phone: this.CustRegForm.get('phone').value,
           address: this.CustRegForm.get('address').value,
           // password: this.CustRegForm.get('password').value,
-          joinDate: new Date(this.CustRegForm.get('joinDate').value).toISOString()
+          // joinDate: new Date(this.CustRegForm.get('joinDate').value).toISOString()
         };
 
         formData.forEach((value, key) => {
@@ -219,7 +226,7 @@ export class CustomerRegistrationComponent implements OnInit {
 
     this.CustRegForm.patchValue({
       ...data,
-      addedDate: data.addedDate ? new Date(data.addedDate + 'Z') : null
+      // addedDate: data.addedDate ? new Date(data.addedDate + 'Z') : null
     });
 
 

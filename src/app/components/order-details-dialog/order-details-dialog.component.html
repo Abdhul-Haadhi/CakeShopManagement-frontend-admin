@@ -1,0 +1,61 @@
+<h2 mat-dialog-title>Order Details - #{{ data.order.orderId }}</h2>
+
+<mat-dialog-content class="details-panel">
+
+    <div class="customer-details">
+        <h3>Customer Information</h3>
+        <p><strong>Name:</strong> {{data.order.customerName}}</p>
+        <p><strong>Email:</strong> {{data.order.email}}</p>
+        <p><strong>Phone:</strong> {{data.order.phone}}</p>
+        <p><strong>Address:</strong> {{data.order.address}}</p>
+        <p><strong>City:</strong> {{data.order.city}}</p>
+        <p><strong>Payment:</strong> {{data.order.paymentMethod}}</p>
+    </div>
+
+    <div class="items-section">
+        <h3>Ordered Items</h3>
+
+        <div class="item-card" *ngFor="let item of data.order.orderItems">
+            <h4>{{item.productName}}</h4>
+            <p>Qty: {{item.quantity}}</p>
+            <p>Price: LKR {{item.price}}</p>
+
+            <div class="customizations" *ngIf="item.customizations?.length">
+                <h5>Customizations</h5>
+
+                <div *ngFor="let custom of item.customizations">
+
+                    <div *ngIf="custom.optionType === 'FILE'; else normalCustom">
+                        <strong>{{custom.optionName}}</strong>:
+                        <img *ngIf="custom.referenceImage" [src]="'data:image/jpeg;base64,' + custom.referenceImage"
+                            width="120" (click)="openImageLightbox(custom.referenceImage)" class="clickable-thumbnail"
+                            title="Click to expand" style="border-radius: 10px;">
+                    </div>
+
+                    <ng-template #normalCustom>
+                        ✓ {{custom.optionName}}: {{custom.value}}
+                    </ng-template>
+                    
+                    <span *ngIf="custom.extraPrice > 0">
+                        (+LKR {{custom.extraPrice}})
+                    </span>
+                </div>
+                <hr>
+                <p><Strong>Total Amount: {{data.order.totalAmount}}</Strong></p>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #imagePreviewDialog>
+        <div class="lightbox-container">
+            <button class="close-lightbox-btn" mat-dialog-close>&times;</button>
+            <img [src]="'data:image/jpeg;base64,' + selectedPreviewImage" alt="Enlarged customization preview">
+        </div>
+    </ng-template>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="closeDialog()"
+        style="background: #034a9c; color: white; padding: 8px 16px; border-radius: 5px; border: none; cursor: pointer;">Close</button>
+</mat-dialog-actions>

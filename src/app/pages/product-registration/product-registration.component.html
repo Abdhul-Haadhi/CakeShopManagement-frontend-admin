@@ -1,10 +1,31 @@
 <div class="container">
+
   <mat-toolbar class="heading-bar">
     <span class="heading-text">Product registration</span>
     <span class="example-spacer"></span>
-    <button class="form-button" mat-raised-button color="warn" (click)="showForm = true" *ngIf="!showForm">
+    <button class="form-button" mat-raised-button color="warn" (click)="openAddForm()" *ngIf="!showForm">
       +Add Product
     </button>
+    
+    <ng-container *ngIf="showForm">
+
+      <button mat-raised-button color="accent" type="button" (click)="openCustomizationManager()">
+        Manage Options
+      </button>
+
+      <button mat-raised-button color="primary" class="save-button" (click)="onSubmit()" [disabled]="ProdRegForm.invalid">
+        {{ saveButtonLabel }}
+      </button>
+
+      <button mat-raised-button color="basic" (click)="resetData()">
+        Reset
+      </button>
+
+      <button mat-raised-button color="warn" (click)="closeForm()">
+        Cancel
+      </button>
+
+    </ng-container>
   </mat-toolbar>
 
 
@@ -27,15 +48,15 @@
         </mat-form-field> -->
         <mat-form-field class="full-width">
           <mat-label>Product SKU</mat-label>
-          <input matInput placeholder="Enter product SKU: PRD_ _ _" formControlName="productSku">
+          <input readonly matInput placeholder="Enter product SKU: PRD_ _ _" formControlName="productSku">
           <span class="text-danger"
             *ngIf="(ProdRegForm.get('productSku')?.touched || submitted) && ProdRegForm.get('productSku')?.errors && ProdRegForm.get('productSku')?.errors!['required']">
             Product SKU is required
           </span>
-          <span class="text-danger"
+          <!-- <span class="text-danger"
             *ngIf="ProdRegForm.get('productSku')?.errors && ProdRegForm.get('productSku')?.errors!['pattern']">
             Product SKU should start with 'PRD'
-          </span>
+          </span> -->
           <mat-error *ngIf="ProdRegForm.get('productSku')?.hasError('duplicate')">
             Product SKU is already exist
           </mat-error>
@@ -81,21 +102,12 @@
           </span>
         </mat-form-field>
 
-        <!-- <mat-form-field class="full-width">
-          <mat-label>Select Colors</mat-label>
-          <mat-select formControlName="colors" multiple>
-            <mat-option *ngFor="let color of colors" [value]="color.value">
-              {{ color.viewValue }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field> -->
-
         <mat-form-field class="full-width">
-          <mat-label>Size(g)</mat-label>
+          <mat-label>Minimum Weight (g)</mat-label>
           <input matInput placeholder="Enter size of the product in grams (g)" formControlName="size">
           <span class="text-danger"
             *ngIf="(ProdRegForm.get('size')?.touched || submitted) && ProdRegForm.get('size')?.errors && ProdRegForm.get('size')?.errors!['required']">
-            size is required
+            Base weight is required
           </span>
           <span class="text-danger"
             *ngIf="ProdRegForm.get('size')?.errors && ProdRegForm.get('size')?.errors!['pattern']">
@@ -104,15 +116,6 @@
         </mat-form-field>
 
         <!-- <mat-form-field class="full-width">
-          <mat-label>Quantity</mat-label>
-          <input matInput placeholder="Enter Quantity" formControlName="quantity">
-          <span class="text-danger"
-            *ngIf="(ProdRegForm.get('quantity')?.touched || submitted) && ProdRegForm.get('quantity')?.errors && ProdRegForm.get('quantity')?.errors!['required']">
-            Quantity is required
-          </span>
-        </mat-form-field> -->
-
-        <mat-form-field class="full-width">
           <mat-label>Quantity</mat-label>
           <input matInput type="number" formControlName="quantity" min="1">
           <span class="text-danger"
@@ -123,7 +126,7 @@
             *ngIf="(ProdRegForm.get('quantity')?.touched || submitted) && ProdRegForm.get('quantity')?.errors && ProdRegForm.get('quantity')?.errors!['min']">
             Minimum order Qty. for the selected item is 1
           </span>
-        </mat-form-field>
+        </mat-form-field> -->
 
         <mat-form-field class="full-width">
           <mat-label>Price</mat-label>
@@ -138,7 +141,7 @@
           </span>
         </mat-form-field>
 
-        <mat-form-field class="full-width">
+        <!-- <mat-form-field class="full-width">
           <mat-label>Product added date</mat-label>
           <input matInput [matDatepicker]="picker" formControlName="addedDate" [max]="maxDate" [min]="minDate" />
           <mat-hint>MM/DD/YYYY</mat-hint>
@@ -152,7 +155,7 @@
             ">
             Added date is required
           </span>
-        </mat-form-field>
+        </mat-form-field> -->
 
         <!-- <div *ngFor="let option of availableOptions">
           <mat-checkbox (change)="toggleCustomization(option, $event.checked)">
@@ -172,7 +175,8 @@
 
           <div *ngFor="let option of availableOptions" class="customization-item">
 
-            <mat-checkbox [checked]="option.selected" (change)="toggleCustomization(option, $event.checked)" [disabled]="isCustomizationDisabled">
+            <mat-checkbox [checked]="option.selected" (change)="toggleCustomization(option, $event.checked)"
+              [disabled]="isCustomizationDisabled">
               {{ option.optionName }}
             </mat-checkbox>
 
@@ -184,10 +188,10 @@
             </mat-form-field>
 
           </div>
-          <button [disabled]="isCustomizationDisabled" mat-raised-button color="accent" type="button"
+          <!-- <button [disabled]="isCustomizationDisabled" mat-raised-button color="accent" type="button"
             (click)="openCustomizationManager()">
             Manage Options
-          </button>
+          </button> -->
         </div>
 
 
@@ -222,10 +226,10 @@
         </mat-form-field> -->
 
       </div>
-      <button type="submit" color="primary" class="form-button" mat-raised-button
+      <!-- <button type="submit" color="primary" class="form-button" mat-raised-button
         [disabled]="isButtonDisabled || ProdRegForm.invalid || (mode === 'add' && ProdRegForm.get('productSku')?.hasError('duplicate')) || (mode === 'add' && !this.selectedFile) ">{{saveButtonLabel}}</button>
       <button type="reset" color="secondary" class="form-button" mat-raised-button (click)="resetData()">Reset</button>
-      <button mat-raised-button type="button" class="form-button" color="warn" (click)="closeForm()">Cancel</button>
+      <button mat-raised-button type="button" class="form-button" color="warn" (click)="closeForm()">Cancel</button> -->
     </form>
   </div>
 

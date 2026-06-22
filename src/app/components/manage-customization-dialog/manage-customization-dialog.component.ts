@@ -104,6 +104,17 @@ export class ManageCustomizationDialogComponent implements OnInit {
 
 
   addValue() {
+
+    if (
+      this.selectedOption.optionType === 'FILE' ||
+      this.selectedOption.optionType === 'TEXT' ||
+      this.selectedOption.optionType === 'TEXTAREA' ||
+      this.selectedOption.optionType === 'NUMBER'
+    ) {
+      this.snackBar.open('This option type does not support predefined values', 'Close', { duration: 3000 });
+      return;
+    }
+
     if (!this.valueText.trim()) {
       this.snackBar.open('Please enter a value', 'Close', { duration: 3000 });
       return;

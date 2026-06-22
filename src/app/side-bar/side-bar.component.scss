@@ -8,15 +8,18 @@
   height: 100vh;
   box-shadow: 0.063rem 0 1.25rem 0 #000000;
 }
+
 .sidenav-collapsed {
   width: 5rem;
 }
+
 .sidenav .logo-container {
   display: flex;
   align-items: center;
   padding: 0.938rem 0.938rem 0 0.938rem;
   width: 100%;
 }
+
 .sidenav .logo-container .logo {
   background: #fff;
   text-align: center;
@@ -29,6 +32,7 @@
   cursor: pointer;
   border: none;
 }
+
 .sidenav .logo-container .logo-text {
   margin-left: 1.5rem;
   font-size: 24px;
@@ -36,6 +40,7 @@
   color: #fff;
   text-decoration: none;
 }
+
 .sidenav .logo-container .btn-close {
   margin-left: 18%;
   cursor: pointer;
@@ -45,9 +50,16 @@
   background-color: transparent;
   border: none;
 }
+
 .sidenav .logo-container .btn-close .fa-times {
   color: #fff;
   font-size: 24px;
+}
+
+.close-icon {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 20px;
 }
 
 .sidenav-nav {
@@ -60,10 +72,12 @@
   height: calc(100% - 3.65rem);
   cursor: pointer;
 }
+
 .sidenav-nav .sidenav-nav-item {
   width: 100%;
   margin-bottom: 0.625rem;
 }
+
 .sidenav-nav .sidenav-nav-item .sidenav-nav-link {
   display: flex;
   align-items: center;
@@ -73,6 +87,7 @@
   border-radius: 0.625rem;
   transition: all 0.3s ease;
 }
+
 .sidenav-nav .sidenav-nav-item .sidenav-nav-link .sidenav-link-icon {
   font-size: 22px;
   width: 2rem;
@@ -80,10 +95,12 @@
   text-align: center;
   padding: 12px;
 }
+
 .sidenav-nav .sidenav-nav-item .sidenav-nav-link .sidenav-link-text {
   margin-left: 1.5rem;
   font-size: 18px;
 }
+
 .sidenav-nav .sidenav-nav-item:hover .sidenav-nav-link {
   background-color: #fff;
   color: #000;
@@ -92,6 +109,7 @@
 .active {
   background-color: #fff;
 }
+
 .active .sidenav-link-icon,
 .active .sidenav-link-text {
   color: #000;

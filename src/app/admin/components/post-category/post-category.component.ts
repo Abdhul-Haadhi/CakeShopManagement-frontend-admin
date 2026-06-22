@@ -83,6 +83,13 @@ export class PostCategoryComponent implements OnInit {
   //   }
   // }
 
+  openAddForm() {
+    this.showForm = true;
+    this.mode = 'add';
+    this.saveButtonLabel = 'Save';
+    this.categoryForm.enable();
+  }
+
 
   onSubmit(): void {
     Object.values(this.categoryForm.controls).forEach(control => {

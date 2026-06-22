@@ -1,5 +1,12 @@
-<div class="orders-container">
-    <h1>Placed Orders</h1>
+<!-- <div class="orders-container">
+
+    <mat-toolbar class="heading-bar">
+        <span class="heading-text">Placed Orders</span>
+        <span class="example-spacer"></span>
+
+    </mat-toolbar>
+
+    <h1></h1>
 
     <div class="order-card" *ngFor="let order of orders">
         <div class="order-header">
@@ -53,6 +60,209 @@
             </div>
         </div>
     </div>
+
+
+</div> -->
+
+<!-- 
+<div class="orders-container">
+
+    <mat-toolbar class="heading-bar">
+        <span class="heading-text">Placed Orders</span>
+    </mat-toolbar>
+
+    <table mat-table [dataSource]="orders" class="orders-table mat-elevation-z8"> -->
+
+<!-- Order ID -->
+<!-- <ng-container matColumnDef="orderId">
+            <th mat-header-cell *matHeaderCellDef> Order ID </th>
+            <td mat-cell *matCellDef="let order"> #{{order.orderId}} </td>
+        </ng-container> -->
+
+<!-- Total -->
+<!-- <ng-container matColumnDef="totalAmount">
+            <th mat-header-cell *matHeaderCellDef> Total </th>
+            <td mat-cell *matCellDef="let order"> LKR {{order.totalAmount}} </td>
+        </ng-container> -->
+
+<!-- Quantity -->
+<!-- <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> Qty </th>
+            <td mat-cell *matCellDef="let order"> {{order.quantity}} </td>
+        </ng-container> -->
+
+<!-- Tracking -->
+<!-- <ng-container matColumnDef="trackingId">
+            <th mat-header-cell *matHeaderCellDef> Tracking ID </th>
+            <td mat-cell *matCellDef="let order"> {{order.trackingId}} </td>
+        </ng-container> -->
+
+<!-- Status -->
+<!-- <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Status </th>
+            <td mat-cell *matCellDef="let order">
+                {{order.status}}
+            </td>
+        </ng-container> -->
+
+<!-- Order Date -->
+<!-- <ng-container matColumnDef="orderDate">
+            <th mat-header-cell *matHeaderCellDef> Order Date </th>
+            <td mat-cell *matCellDef="let order">
+                {{order.orderDate | date}}
+            </td>
+        </ng-container> -->
+
+<!-- Delivery Date -->
+<!-- <ng-container matColumnDef="deliveryDate">
+            <th mat-header-cell *matHeaderCellDef> Delivery Date </th>
+            <td mat-cell *matCellDef="let order">
+                {{order.deliveryDate | date}}
+            </td>
+        </ng-container> -->
+
+<!-- Actions -->
+<!-- <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let order">
+
+                <select [(ngModel)]="order.status">
+                    <option *ngFor="let status of statuses" [value]="status">
+                        {{status}}
+                    </option>
+                </select>
+
+                <button class="update-btn" (click)="changeStatus(order.orderId, order.status)">
+                    Update
+                </button>
+
+                <button class="view-btn" (click)="toggleItems(order.orderId)">
+                    {{ expandedOrderId === order.orderId ? 'Hide' : 'View' }}
+                </button>
+
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table> -->
+
+<!-- Expanded items -->
+<!-- <div class="order-items" *ngFor="let order of orders">
+        <div *ngIf="expandedOrderId === order.orderId">
+
+            <h3>Items of Order #{{order.orderId}}</h3>
+
+            <div class="item-card" *ngFor="let item of order.orderItems">
+                <h4>{{item.productName}}</h4>
+                <p>Qty: {{item.quantity}}</p>
+                <p>Price: LKR {{item.price}}</p>
+
+                <div *ngIf="item.customizations?.length">
+                    <p *ngFor="let custom of item.customizations">
+                        {{custom.optionName}} - {{custom.value}}
+                        <span *ngIf="custom.extraPrice > 0">
+                            (+LKR {{custom.extraPrice}})
+                        </span>
+                    </p>
+                    <p><strong>Total Price:</strong> LKR {{order.totalAmount}}</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div> -->
+
+
+<div class="orders-container">
+
+    <mat-toolbar class="heading-bar">
+        <span class="heading-text">Placed Orders</span>
+    </mat-toolbar>
+
+    <table mat-table [dataSource]="orders" class="orders-table mat-elevation-z8">
+
+        <!-- Order ID -->
+        <ng-container matColumnDef="orderId">
+            <th mat-header-cell *matHeaderCellDef> Order ID </th>
+            <td mat-cell *matCellDef="let order"> #{{order.orderId}} </td>
+        </ng-container>
+
+        <!-- Customer -->
+        <ng-container matColumnDef="customer">
+            <th mat-header-cell *matHeaderCellDef> Customer </th>
+            <td mat-cell *matCellDef="let order">
+                <div class="customer-cell">
+                    <strong>{{order.customerName}}</strong>
+                    <small>{{order.phone}}</small>
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Total -->
+        <ng-container matColumnDef="totalAmount">
+            <th mat-header-cell *matHeaderCellDef> Total </th>
+            <td mat-cell *matCellDef="let order"> LKR {{order.totalAmount}} </td>
+        </ng-container>
+
+        <!-- Quantity -->
+        <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> Qty </th>
+            <td mat-cell *matCellDef="let order"> {{order.quantity}} </td>
+        </ng-container>
+
+        <!-- Status -->
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Status </th>
+            <td mat-cell *matCellDef="let order">
+                <span class="status-badge">
+                    {{order.status}}
+                </span>
+            </td>
+        </ng-container>
+
+        <!-- Delivery -->
+        <ng-container matColumnDef="deliveryDate">
+            <th mat-header-cell *matHeaderCellDef> Delivery </th>
+            <td mat-cell *matCellDef="let order">
+                {{order.deliveryDate | date}}
+            </td>
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let order">
+
+                <select class="select-value" [(ngModel)]="order.status">
+                    <option *ngFor="let status of statuses" [value]="status">
+                        {{status}}
+                    </option>
+                </select>
+
+                <button class="update-btn" (click)="changeStatus(order.orderId, order.status)"
+                    [disabled]="order.status === order.originalStatus">
+                    Update
+                </button>
+
+                <!-- <button class="view-btn" (click)="toggleItems(order.orderId)">
+                    {{ expandedOrderId === order.orderId ? 'Hide Details' : 'View Details' }}
+                </button> -->
+
+                <button class="view-btn" (click)="viewDetails(order)">
+                    View Details
+                </button>
+
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
 
 
 </div>

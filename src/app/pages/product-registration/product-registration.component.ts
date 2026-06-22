@@ -14,16 +14,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import Swal from 'sweetalert2';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ManageCustomizationDialogComponent } from '../../components/manage-customization-dialog/manage-customization-dialog.component';
-
-// interface Colors {
-//   value: string;
-//   viewValue: string;
-// }
 
 
 
@@ -39,22 +33,6 @@ import { ManageCustomizationDialogComponent } from '../../components/manage-cust
 
 
 export class ProductRegistrationComponent implements OnInit {
-
-
-  // colors: Colors[] = [
-  //   { value: 'White', viewValue: 'White' },
-  //   { value: 'Yellow', viewValue: 'Yellow' },
-  //   { value: 'Orange', viewValue: 'Orange' },
-  //   { value: 'Green', viewValue: 'Green' },
-  //   { value: 'Blue', viewValue: 'Blue' },
-  //   { value: 'Purple', viewValue: 'Purple' },
-  //   { value: 'Pink', viewValue: 'Pink' },
-  //   { value: 'Red', viewValue: 'Red' },
-  //   { value: 'black', viewValue: 'Black' },
-  //   { value: 'No colors', viewValue: 'No colors' },
-  // ];
-
-
 
   // productId = this.activatedRoute.snapshot.params['productId'];
 
@@ -73,8 +51,8 @@ export class ProductRegistrationComponent implements OnInit {
   availableOptions: any[] = [];
   selectedCustomizations: any[] = [];
   existingImage: string | null = null;
-  maxDate: Date;
-  minDate: Date;
+  // maxDate: Date;
+  // minDate: Date;
 
   isCustomizationDisabled = false;
 
@@ -91,7 +69,6 @@ export class ProductRegistrationComponent implements OnInit {
     'productName',
     'byteImage',
     'description',
-    // 'colors',
     'size',
     'price',
     'addedDate',
@@ -109,64 +86,59 @@ export class ProductRegistrationComponent implements OnInit {
     private dialog: MatDialog,
     // private activatedRoute: ActivatedRoute
   ) {
-    this.maxDate = new Date();
-    this.minDate = new Date();
+    // this.maxDate = new Date();
+    // this.minDate = new Date();
   }
 
 
   ngOnInit(): void {
 
     this.ProdRegForm = this.fb.group({
-      productSku: [null, [Validators.required, Validators.pattern('^PRD[0-9]+$')]],
+      // productSku: ["PRD", [Validators.required, Validators.pattern('^PRD[0-9]+$')]],
+      productSku: [{ value: '', disabled: true }],
       categoryId: [null, [Validators.required]],
       productName: [null, [Validators.required, Validators.maxLength(25)]],
       description: [null, [Validators.required, Validators.maxLength(500)]],
-      // colors: [null, [Validators.required, Validators.maxLength(500)]],
       size: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
-      quantity: [1, [Validators.required, Validators.min(1)]],
+      // quantity: [1, [Validators.required, Validators.min(1)]],
       price: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
-      addedDate: new FormControl(new Date(), Validators.required),
+      // addedDate: new FormControl(new Date(), Validators.required),
     });
 
     const skuControl = this.ProdRegForm.get('productSku');
 
-    skuControl?.valueChanges
-      .pipe(
-        debounceTime(500),
-        distinctUntilChanged()
-      )
-      .subscribe(value => {
-        console.log("Typing:", value);
+    // skuControl?.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).subscribe(value => {
+    //   console.log("Typing:", value);
 
-        if (this.mode !== 'add') return;
-        if (!value) return;
+    //   if (this.mode !== 'add') return;
+    //   if (!value) return;
 
-        const control = this.ProdRegForm.get('productSku');
+    //   const control = this.ProdRegForm.get('productSku');
 
-        this.prodService.checkSkuExists(value).subscribe({
-          next: (exists) => {
+    //   this.prodService.checkSkuExists(value).subscribe({
+    //     next: (exists) => {
 
-            if (exists) {
-              control?.setErrors({ ...control.errors, duplicate: true });
-            } else {
-              if (control?.errors) {
-                delete control.errors['duplicate'];
+    //       if (exists) {
+    //         control?.setErrors({ ...control.errors, duplicate: true });
+    //       } else {
+    //         if (control?.errors) {
+    //           delete control.errors['duplicate'];
 
-                if (Object.keys(control.errors).length === 0) {
-                  control.setErrors(null);
-                } else {
-                  control.setErrors(control.errors);
-                }
-              }
-            }
+    //           if (Object.keys(control.errors).length === 0) {
+    //             control.setErrors(null);
+    //           } else {
+    //             control.setErrors(control.errors);
+    //           }
+    //         }
+    //       }
 
-          },
-          error: (err) => {
-            console.error(err);
-          }
-        });
+    //     },
+    //     error: (err) => {
+    //       console.error(err);
+    //     }
+    //   });
 
-      });
+    // });
 
     this.getAllCategories();
     this.populateData();
@@ -185,6 +157,24 @@ export class ProductRegistrationComponent implements OnInit {
     // this.getProductById();
 
 
+  }
+
+  generateSKU() {
+    const nextNumer = this.dataSource?.data?.length + 1 || 1;
+    const sku = `PRD${String(nextNumer).padStart(4, '0')}`;
+
+    this.ProdRegForm.patchValue({
+      productSku: sku
+    });
+  }
+
+  openAddForm() {
+    this.showForm = true;
+    this.mode = 'add';
+    this.saveButtonLabel = 'Save';
+    this.ProdRegForm.enable();
+    this.generateSKU();
+    this.isCustomizationDisabled = false;
   }
 
   openCustomizationManager() {
@@ -272,22 +262,22 @@ export class ProductRegistrationComponent implements OnInit {
             formData.append('image', this.selectedFile);
           }
           formData.append('categoryId', this.ProdRegForm.get('categoryId').value);
-          formData.append('productSku', this.ProdRegForm.get('productSku').value);
+          // formData.append('productSku', this.ProdRegForm.get('productSku').value);
           formData.append('productName', this.ProdRegForm.get('productName').value);
           formData.append('description', this.ProdRegForm.get('description').value);
           formData.append('size', this.ProdRegForm.get('size').value);
-          formData.append('quantity', this.ProdRegForm.get('quantity').value);
+          // formData.append('quantity', this.ProdRegForm.get('quantity').value);
           formData.append('price', this.ProdRegForm.get('price').value);
-          const rawDate = this.ProdRegForm.get('addedDate')?.value;
-          if (rawDate) {
-            // const formattedDate = new Date(rawDate).toISOString().split('T')[0];
-            const date = new Date(rawDate);
-            const formattedDate = date.getFullYear() + '-' +
-              String(date.getMonth() + 1).padStart(2, '0') + '-' +
-              String(date.getDate()).padStart(2, '0');
+          // const rawDate = this.ProdRegForm.get('addedDate')?.value;
+          // if (rawDate) {
+          //   // const formattedDate = new Date(rawDate).toISOString().split('T')[0];
+          //   const date = new Date(rawDate);
+          //   const formattedDate = date.getFullYear() + '-' +
+          //     String(date.getMonth() + 1).padStart(2, '0') + '-' +
+          //     String(date.getDate()).padStart(2, '0');
 
-            formData.append('addedDate', formattedDate);
-          }
+          //   formData.append('addedDate', formattedDate);
+          // }
 
           const customizationData = this.availableOptions
             .filter(option => option.selected)
@@ -335,6 +325,7 @@ export class ProductRegistrationComponent implements OnInit {
             this.ProdRegForm.controls[i].updateValueAndValidity();
           }
         }
+        this.ProdRegForm.disable();
 
       } else if (this.mode === 'edit') {
         const formData: FormData = new FormData();
@@ -347,13 +338,13 @@ export class ProductRegistrationComponent implements OnInit {
         formData.append('productName', this.ProdRegForm.get('productName').value);
         formData.append('description', this.ProdRegForm.get('description').value);
         formData.append('size', this.ProdRegForm.get('size').value);
-        formData.append('quantity', this.ProdRegForm.get('quantity').value);
+        // formData.append('quantity', this.ProdRegForm.get('quantity').value);
         formData.append('price', this.ProdRegForm.get('price').value);
-        const rawDate = this.ProdRegForm.get('addedDate')?.value;
-        if (rawDate) {
-          const formattedDate = new Date(rawDate).toISOString().split('T')[0];
-          formData.append('addedDate', formattedDate);
-        }
+        // const rawDate = this.ProdRegForm.get('addedDate')?.value;
+        // if (rawDate) {
+        //   const formattedDate = new Date(rawDate).toISOString().split('T')[0];
+        //   formData.append('addedDate', formattedDate);
+        // }
 
         const customizationData = this.availableOptions
           .filter(option => option.selected)
@@ -371,17 +362,19 @@ export class ProductRegistrationComponent implements OnInit {
         this.prodService.editData(this.selectedData.productId, formData).subscribe({
           next: (response: any) => {
             this.snackBar.open('Product updated successfully', 'Ok', { duration: 5000 });
-            this.router.navigateByUrl('/dashboard');
+            this.router.navigateByUrl('/product-reg');
           },
           error: (error) => {
             this.snackBar.open(error.error?.message || 'Update failed', 'Error', { duration: 5000 });
           }
         });
+        this.ProdRegForm.disable();
       }
       this.mode = 'add';
-      this.ProdRegForm.disable();
+
       this.isCustomizationDisabled = true;
       this.isButtonDisabled = true;
+      this.closeForm();
     }
     catch (error) {
       this.snackBar.open("Something went wrong ", "Error", { duration: 5000 })
@@ -402,7 +395,7 @@ export class ProductRegistrationComponent implements OnInit {
 
     this.ProdRegForm.patchValue({
       ...data,
-      addedDate: data.addedDate ? new Date(data.addedDate + 'Z') : null
+      // addedDate: data.addedDate ? new Date(data.addedDate + 'Z') : null
     });
 
     this.ProdRegForm.updateValueAndValidity();
@@ -533,6 +526,7 @@ export class ProductRegistrationComponent implements OnInit {
     this.saveButtonLabel = 'Save'
     this.submitted = false;
     this.ProdRegForm.get('productSku')?.enable();
+    this.loadCustomizationOptions();
   }
 
 

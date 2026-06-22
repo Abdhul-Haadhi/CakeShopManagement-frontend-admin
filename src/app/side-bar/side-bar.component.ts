@@ -56,8 +56,9 @@ export class SideBarComponent implements OnInit {
   items = [
     {
       routeLink: 'dashboard',
-      icon: 'far fa-tachometer-alt-average',
-      label: 'Dashboard',
+      // icon: 'far fa-tachometer-alt-average',
+      icon: 'fal fa-home',
+      label: 'Home',
       roles: ['ADMIN', 'EMPLOYEE'],
     },
     {
@@ -80,13 +81,13 @@ export class SideBarComponent implements OnInit {
     },
     {
       routeLink: 'category',
-      icon: 'far fa-users',
+      icon: 'fal fa-layer-group',
       label: 'Category',
       roles: ['ADMIN', 'EMPLOYEE'],
     },
     {
       routeLink: 'orders',
-      icon: 'far fa-users',
+      icon: 'fal fa-clipboard-list',
       label: 'Orders',
       roles: ['ADMIN', 'EMPLOYEE'],
     },

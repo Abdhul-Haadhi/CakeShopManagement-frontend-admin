@@ -72,8 +72,8 @@ export class EmployeeRegistrationComponent implements OnInit {
   isButtonDisabled = false;
   mode = 'add';
   selectedData!: { employeeId: any; };
-  maxDate: Date;
-  minDate: Date;
+  // maxDate: Date;
+  // minDate: Date;
 
 
   dataSource!: MatTableDataSource<any>;
@@ -98,8 +98,8 @@ export class EmployeeRegistrationComponent implements OnInit {
     private empService: EmployeeRegistrationService,
     private _dialog: MatDialog,
   ) {
-    this.maxDate = new Date();
-    this.minDate = new Date();
+    // this.maxDate = new Date();
+    // this.minDate = new Date();
   }
 
   ngOnInit(): void {
@@ -110,7 +110,7 @@ export class EmployeeRegistrationComponent implements OnInit {
       email: new FormControl('', [Validators.required, Validators.email]),
       phone: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$'),]),
       address: new FormControl('', [Validators.required, Validators.maxLength(150),]),
-      joinDate: new FormControl('', [Validators.required]),
+      // joinDate: new FormControl('', [Validators.required]),
       // password: new FormControl('', [Validators.required]),
     });
 
@@ -130,6 +130,8 @@ export class EmployeeRegistrationComponent implements OnInit {
     try {
       this.empService.getAllEmployees().subscribe({
         next: (dataList: any) => {
+          console.log("getiinggg:",dataList);
+          
           if (dataList.length <= 0) {
             return;
           }
@@ -150,14 +152,20 @@ export class EmployeeRegistrationComponent implements OnInit {
 
   }
 
-  formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+  // formatDate(date: Date): string {
+  //   const year = date.getFullYear();
+  //   const month = String(date.getMonth() + 1).padStart(2, '0');
+  //   const day = String(date.getDate()).padStart(2, '0');
 
-    return `${year}-${month}-${day}`;
+  //   return `${year}-${month}-${day}`;
+  // }
+
+  openAddForm() {
+    this.showForm = true;
+    this.mode = 'add';
+    this.saveButtonLabel = 'Save';
+    this.EmpRegForm.enable();
   }
-
 
 
   onSubmit(): void {
@@ -174,7 +182,7 @@ export class EmployeeRegistrationComponent implements OnInit {
             phone: this.EmpRegForm.get('phone').value,
             address: this.EmpRegForm.get('address').value,
             // password: this.EmpRegForm.get('password').value,
-            joinDate: this.formatDate(this.EmpRegForm.get('joinDate')?.value),
+            // joinDate: this.formatDate(this.EmpRegForm.get('joinDate')?.value),
           };
 
           this.empService.addEmployee(payload).subscribe({
@@ -209,7 +217,7 @@ export class EmployeeRegistrationComponent implements OnInit {
           phone: this.EmpRegForm.get('phone').value,
           address: this.EmpRegForm.get('address').value,
           // password: this.EmpRegForm.get('password').value,
-          joinDate: this.formatDate(this.EmpRegForm.get('joinDate')?.value),
+          // joinDate: this.formatDate(this.EmpRegForm.get('joinDate')?.value),
         };
 
         formData.forEach((value, key) => {
@@ -313,7 +321,7 @@ export class EmployeeRegistrationComponent implements OnInit {
 
     this.EmpRegForm.patchValue({
       ...data,
-      joinDate: data.joinDate ? new Date(data.joinDate) : null
+      // joinDate: data.joinDate ? new Date(data.joinDate) : null
     });
 
 
