@@ -1,0 +1,282 @@
+// .container {
+//     display: flex;
+//     flex-direction: column;
+//     gap: 20px;
+// }
+
+// // .heading-bar {
+// //   background: linear-gradient(to right, #034a9c, #012a5b);
+// //   border-radius: 10px;
+// // }
+
+// .heading-bar {
+//     position: sticky;
+//     top: 75px;
+//     z-index: 999;
+
+//     background: linear-gradient(to right, #034a9c, #012a5b);
+//     border-radius: 10px;
+//     padding: 0 15px;
+// }
+
+// .heading-bar button {
+//     margin-left: 10px;
+//     border-radius: 30px;
+// }
+
+// .heading-bar button[disabled] {
+//     opacity: 0.8 !important;
+//     background-color: #9e9e9e !important;
+//     color: white !important;
+// }
+
+
+// .heading-text {
+//     color: white;
+// }
+
+// .example-spacer {
+//     flex: 1 1 auto;
+// }
+
+// .text-danger {
+//     color: red;
+// }
+
+// .form-section {
+//     // flex: 1;
+//     display: flex;
+//     flex-direction: row;
+//     width: 100%;
+//     padding: 5px;
+//     // border-right: 1px solid rgb(205, 205, 205)
+// }
+
+// .table-section {
+//     width: 100%;
+//     // flex: 1;
+// }
+
+// .example-form {
+//     min-width: 150px;
+//     max-width: 100%;
+//     width: 100%;
+
+// }
+
+// .example-form-div {
+//     display: grid;
+//     grid-template-columns: repeat(2, 1fr); // 🔥 2 columns
+//     gap: 16px;
+// }
+
+// .full-width {
+//     width: 100%;
+// }
+
+// .form-part {
+//     margin: 10px;
+// }
+
+// .form-button {
+//     margin-right: 1%;
+//     border-radius: 50px;
+// }
+
+// .refresh-filter-section {
+//     display: flex;
+//     flex-direction: row;
+// }
+
+// .refresh-button {
+//     margin: 1%;
+// }
+
+// .filter {
+//     width: 100%;
+// }
+
+// .status-chip {
+
+//     padding: 5px 12px;
+
+//     border-radius: 15px;
+
+//     color: white;
+
+//     font-size: 12px;
+
+//     font-weight: 600;
+
+// }
+
+// .green {
+
+//     background: #2e7d32;
+
+// }
+
+// .orange {
+
+//     background: #ef6c00;
+
+// }
+
+// .red {
+
+//     background: #d32f2f;
+
+// }
+
+// .grey {
+
+//     background: #616161;
+
+// }
+
+
+
+
+
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.heading-bar {
+    position: sticky;
+    top: 75px;
+    z-index: 999;
+    background: linear-gradient(to right, #034a9c, #012a5b);
+    border-radius: 10px;
+    padding: 0 15px;
+}
+
+.heading-bar button {
+    margin-left: 10px;
+    border-radius: 30px;
+}
+
+.heading-bar button[disabled] {
+    opacity: 0.8 !important;
+    background-color: #9e9e9e !important;
+    color: white !important;
+}
+
+.heading-text {
+    color: white;
+}
+
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+.text-danger {
+    color: red;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 5px;
+}
+
+.table-section {
+    width: 100%;
+    overflow-x: auto; // Allows smooth horizontal scroll if screen size shrinks
+}
+
+.example-form {
+    min-width: 150px;
+    max-width: 100%;
+    width: 100%;
+}
+
+.example-form-div {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.form-part {
+    margin: 10px;
+}
+
+.form-button {
+    margin-right: 1%;
+    border-radius: 50px;
+}
+
+.refresh-filter-section {
+    display: flex;
+    flex-direction: row;
+}
+
+.refresh-button {
+    margin: 1%;
+}
+
+.filter {
+    width: 100%;
+}
+
+/* --- Table & Column Width Fixes --- */
+table.mat-table {
+    width: 100%;
+
+    .mat-column-stockStatus {
+        min-width: 110px;
+    }
+
+    .mat-column-expiryStatus {
+        min-width: 140px;
+    }
+
+    .mat-column-actions {
+        min-width: 180px;
+    }
+}
+
+/* Flex layout for action buttons row */
+.action-buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    white-space: nowrap;
+}
+
+/* --- Status Chip Styles --- */
+.status-chip {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 15px;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap; // Keeps "Expiring Soon" on a single line
+    text-align: center;
+}
+
+.green {
+    background: #2e7d32;
+}
+
+.orange {
+    background: #ef6c00;
+}
+
+.red {
+    background: #d32f2f;
+}
+
+.grey {
+    background: #616161;
+}

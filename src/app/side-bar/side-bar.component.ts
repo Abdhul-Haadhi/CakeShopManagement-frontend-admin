@@ -91,6 +91,12 @@ export class SideBarComponent implements OnInit {
       label: 'Orders',
       roles: ['ADMIN', 'EMPLOYEE'],
     },
+    {
+      routeLink: 'inventory',
+      icon: 'fas fa-clipboard-list',
+      label: 'Inventory Items',
+      roles: ['ADMIN', 'EMPLOYEE'],
+    },
   ]
 
   toggleCollapse(): void {
