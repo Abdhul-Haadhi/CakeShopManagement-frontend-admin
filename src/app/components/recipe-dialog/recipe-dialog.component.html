@@ -1,0 +1,35 @@
+<h2 mat-dialog-title class="dialog-title">
+    {{data.productName}} <span class="subtitle">Recipe</span>
+</h2>
+
+<mat-dialog-content class="dialog-content">
+    <table mat-table [dataSource]="data.ingredients" class="recipe-table">
+
+        <ng-container matColumnDef="ingredient">
+            <th mat-header-cell *matHeaderCellDef>
+                Ingredient
+            </th>
+            <td mat-cell *matCellDef="let item">
+                <strong>{{item.inventoryName}}</strong>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="qty">
+            <th mat-header-cell *matHeaderCellDef class="text-right">
+                Quantity
+            </th>
+            <td mat-cell *matCellDef="let item" class="text-right">
+                <span class="qty-badge">{{item.quantityRequired}}</span>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['ingredient','qty']"></tr>
+        <tr mat-row *matRowDef="let row;columns:['ingredient','qty']"></tr>
+    </table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-stroked-button color="warn" mat-dialog-close class="close-btn">
+        Close
+    </button>
+</mat-dialog-actions>

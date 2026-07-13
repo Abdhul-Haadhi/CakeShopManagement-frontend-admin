@@ -13,7 +13,7 @@
     </div>
 
     <ng-container *ngIf="isLoggedIn">
-        <div class="sidenav-nav">
+        <!-- <div class="sidenav-nav">
             @for (item of items; track $index) {
             @if (item.roles.includes(currentRole)) {
             <li class="sidenav-nav-item">
@@ -29,6 +29,30 @@
 
             }
 
+            }
+        </div> -->
+        <div class="sidenav-nav">
+            @for (item of items; track $index) {
+            @if (item.roles.includes(currentRole)) {
+
+            @if (item.isHeading) {
+            @if (!isSidebarCollapsed()) {
+            <li class="sidenav-heading">{{ item.label }}</li>
+            }
+            }
+            @else {
+            <li class="sidenav-nav-item">
+                <a class="sidenav-nav-link" [routerLink]="item.routeLink" routerLinkActive="active"
+                    [routerLinkActiveOptions]="{ exact: true }">
+                    <i class="sidenav-link-icon" [class]="item.icon"></i>
+                    @if (!isSidebarCollapsed()) {
+                    <span class="sidenav-link-text">{{ item.label }}</span>
+                    }
+                </a>
+            </li>
+            }
+
+            }
             }
         </div>
     </ng-container>

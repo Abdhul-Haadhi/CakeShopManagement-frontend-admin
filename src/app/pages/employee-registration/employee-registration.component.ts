@@ -15,10 +15,6 @@ import { EmployeeRegistrationService } from '../../services/employeeRegistration
 import { MatDialog } from '@angular/material/dialog';
 import { RegDialogComponent } from './reg-dialog/reg-dialog.component';
 
-// interface Roles {
-//   value: string;
-//   viewValue: string;
-// }
 
 @Component({
   selector: 'app-employee-registration',
@@ -29,28 +25,11 @@ import { RegDialogComponent } from './reg-dialog/reg-dialog.component';
 })
 export class EmployeeRegistrationComponent implements OnInit {
 
-
-  // listOfRoles: Roles[] = [
-  //   { value: 'White', viewValue: 'White' },
-  //   { value: 'Yellow', viewValue: 'Yellow' },
-  //   { value: 'Orange', viewValue: 'Orange' },
-  //   { value: 'Green', viewValue: 'Green' },
-  //   { value: 'Blue', viewValue: 'Blue' },
-  //   { value: 'Purple', viewValue: 'Purple' },
-  //   { value: 'Pink', viewValue: 'Pink' },
-  //   { value: 'Red', viewValue: 'Red' },
-  //   { value: 'black', viewValue: 'Black' },
-  //   { value: 'No colors', viewValue: 'No colors' },
-  // ];
-
-
   protected readonly value = signal('');
 
   protected onInput(event: Event) {
     this.value.set((event.target as HTMLInputElement).value);
   }
-
-
 
 
   // hide = signal(true);
@@ -197,7 +176,6 @@ export class EmployeeRegistrationComponent implements OnInit {
               }
             }
           })
-
         }
         else {
           console.log("wrong");
@@ -207,7 +185,6 @@ export class EmployeeRegistrationComponent implements OnInit {
             this.EmpRegForm.controls[i].updateValueAndValidity();
           }
         }
-
       } else if (this.mode === 'edit') {
         const formData: FormData = new FormData();
 
@@ -249,64 +226,8 @@ export class EmployeeRegistrationComponent implements OnInit {
       this.snackBar.open("Something went wrong ", "Error", { duration: 5000 })
     }
 
-
   }
 
-  // onSubmit() {
-  //   try {
-  //     this.submitted = true;
-  //     if (this.EmpRegForm.invalid) {
-  //       return;
-  //     }
-  //     if (this.mode === 'add') {
-  //       this.empService.addEmployee(this.EmpRegForm.value).subscribe({
-  //         next: (response: any) => {
-  //           if (
-  //             this.dataSource &&
-  //             this.dataSource.data &&
-  //             this.dataSource.data.length > 0
-  //           ) {
-  //             this.dataSource = new MatTableDataSource([
-  //               response,
-  //               ...this.dataSource.data,
-  //             ]);
-  //           } else {
-  //             this.dataSource = new MatTableDataSource([response]);
-  //           }
-  //           if (response.employeeId != null) {
-  //             this.snackBar.open('Employee added successfully', 'Ok', { duration: 5000 });
-  //           }
-  //           // this.addNotification('Employee Added Successfully');
-  //         },
-  //         error: (error) => {
-  //           this.snackBar.open(error.message, 'ERROR', { duration: 5000 });
-  //         },
-  //       });
-  //     } else if (this.mode === 'edit') {
-  //       this.empService
-  //         .editData(this.selectedData?.employeeId, this.EmpRegForm.value)
-  //         .subscribe({
-  //           next: (response) => {
-  //             let elementIndex = this.dataSource.data.findIndex(
-  //               (element) => element.id === this.selectedData?.employeeId
-  //             );
-  //             this.dataSource.data[elementIndex] = response;
-  //             this.dataSource = new MatTableDataSource(this.dataSource.data);
-  //             this.snackBar.open('Employee details updated successfully', 'Ok', { duration: 5000 });
-  //           },
-  //           error: (error) => {
-  //             this.snackBar.open('Update failed', 'Error', { duration: 5000 });
-  //           },
-  //         });
-  //     }
-  //     this.mode = 'add';
-  //     this.EmpRegForm.disable();
-  //     this.isButtonDisabled = true;
-  //     this.closeForm();
-  //   } catch (error) {
-  //     this.snackBar.open('Update failed', 'Error', { duration: 5000 });
-  //   }
-  // }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -331,9 +252,7 @@ export class EmployeeRegistrationComponent implements OnInit {
   }
 
   public deleteData(employeeId: any): void {
-
     console.log("FULL OBJECT:", employeeId);
-
     try {
       Swal.fire({
         title: 'Are you sure?',
@@ -346,8 +265,6 @@ export class EmployeeRegistrationComponent implements OnInit {
         if (result && !result.isConfirmed) {
           return;
         }
-
-
         this.empService.deleteEmployee(employeeId).subscribe({
           next: (response) => {
             console.log("Delete response:", response);
@@ -383,11 +300,6 @@ export class EmployeeRegistrationComponent implements OnInit {
     this.submitted = false;
   }
 
-
-  public refreshData(): void {
-    this.populateData();
-  }
-
   closeForm() {
     this.showForm = false;
     this.EmpRegForm.reset();
@@ -395,6 +307,10 @@ export class EmployeeRegistrationComponent implements OnInit {
     this.saveButtonLabel = 'Save'
     this.submitted = false;
     this.isButtonDisabled = false;
+  }
+
+  public refreshData(): void {
+    this.populateData();
   }
 
   public addLoginCredentials(employee: any): void {

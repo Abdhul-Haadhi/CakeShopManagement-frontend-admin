@@ -114,3 +114,20 @@
 .active .sidenav-link-text {
   color: #000;
 }
+
+/* --- Section Headings --- */
+.sidenav-heading {
+  width: 100%;
+  padding: 1.5rem 0.5rem 0.5rem 0.8rem;
+  /* Adds space above the heading */
+  font-size: 11px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.6);
+  /* Slightly dimmed white to look like a sub-header */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  pointer-events: none;
+  /* Prevents users from clicking it */
+  margin-bottom: 0.2rem;
+  list-style: none;
+}

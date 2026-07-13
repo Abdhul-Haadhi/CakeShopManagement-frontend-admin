@@ -1,0 +1,122 @@
+.page-container {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    /* ADDED: Tells the new form tag to space out its inner cards */
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+.product-card {
+    width: 500px;
+}
+
+.recipe-layout {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 20px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.save-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.recipe-table {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+}
+
+mat-card {
+    padding: 15px;
+}
+
+mat-card-title {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.mat-column-actions {
+    width: 160px;
+    white-space: nowrap;
+    // text-align: center;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.action-buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    /* Adds clean spacing between the View and Delete buttons */
+}
+
+.view-btn {
+    border-radius: 20px;
+    /* Gives it a modern pill shape */
+    padding: 0 16px 0 12px;
+
+    mat-icon {
+        margin-right: 4px;
+        /* Space between the eye icon and the text */
+        transform: scale(0.9);
+        /* Slightly scales down the icon to match the text weight */
+    }
+}
+
+@media(max-width:900px) {
+    .recipe-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .product-card {
+        width: 100%;
+    }
+}
+
+.heading-bar {
+    position: sticky;
+    top: 75px;
+    z-index: 999;
+
+    background: linear-gradient(to right, #034a9c, #012a5b);
+    border-radius: 10px;
+    padding: 0 15px;
+}
+
+.heading-text {
+    color: white;
+}
+
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+.heading-bar button {
+    margin-left: 10px;
+    border-radius: 30px;
+}
+
+
+.heading-bar button[disabled] {
+    opacity: 0.8 !important;
+    background-color: #9e9e9e !important;
+    color: white !important;
+}

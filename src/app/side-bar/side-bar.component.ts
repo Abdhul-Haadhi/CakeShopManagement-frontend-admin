@@ -53,7 +53,12 @@ export class SideBarComponent implements OnInit {
   }
 
 
-  items = [
+  items: any[] = [
+    {
+      isHeading: true,
+      label: 'Daily Operations',
+      roles: ['ADMIN', 'EMPLOYEE']
+    },
     {
       routeLink: 'dashboard',
       // icon: 'far fa-tachometer-alt-average',
@@ -62,14 +67,52 @@ export class SideBarComponent implements OnInit {
       roles: ['ADMIN', 'EMPLOYEE'],
     },
     {
+      routeLink: 'orders',
+      icon: 'fas fa-receipt',
+      label: 'Orders',
+      roles: ['ADMIN', 'EMPLOYEE'],
+    },
+
+
+    {
+      isHeading: true,
+      label: 'Catalog & Inventory',
+      roles: ['ADMIN', 'EMPLOYEE']
+    },
+    {
+      routeLink: 'category',
+      icon: 'fas fa-layer-group',
+      label: 'Category',
+      roles: ['ADMIN', 'EMPLOYEE'],
+    },
+    {
       routeLink: 'product-reg',
-      icon: 'fas fa-utensils',
+      icon: 'fas fa-birthday-cake',
       label: 'Products',
       roles: ['ADMIN', 'EMPLOYEE'],
     },
     {
+      routeLink: 'inventory',
+      icon: 'fas fa-boxes',
+      label: 'Inventory Items',
+      roles: ['ADMIN', 'EMPLOYEE'],
+    },
+    {
+      routeLink: 'recipe',
+      icon: 'fas fa-book-open',
+      label: 'Manage Recipe',
+      roles: ['ADMIN'],
+    },
+
+
+    {
+      isHeading: true,
+      label: 'People & HR',
+      roles: ['ADMIN', 'EMPLOYEE']
+    },
+    {
       routeLink: 'employee-reg',
-      icon: 'fas fa-people-carry',
+      icon: 'fas fa-user-tie',
       label: 'Employees',
       roles: ['ADMIN'],
     },
@@ -79,24 +122,10 @@ export class SideBarComponent implements OnInit {
       label: 'Customers',
       roles: ['ADMIN', 'EMPLOYEE'],
     },
-    {
-      routeLink: 'category',
-      icon: 'fas fa-layer-group',
-      label: 'Category',
-      roles: ['ADMIN', 'EMPLOYEE'],
-    },
-    {
-      routeLink: 'orders',
-      icon: 'fas fa-clipboard-list',
-      label: 'Orders',
-      roles: ['ADMIN', 'EMPLOYEE'],
-    },
-    {
-      routeLink: 'inventory',
-      icon: 'fas fa-clipboard-list',
-      label: 'Inventory Items',
-      roles: ['ADMIN', 'EMPLOYEE'],
-    },
+
+
+
+
   ]
 
   toggleCollapse(): void {

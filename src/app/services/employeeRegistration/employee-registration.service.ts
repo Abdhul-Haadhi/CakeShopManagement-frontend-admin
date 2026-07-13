@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpService } from '../http.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserStorageService } from '../storage/user-storage.service';
 
@@ -12,15 +11,6 @@ const BASIC_URL = "http://localhost:8080/"
 export class EmployeeRegistrationService {
 
   constructor(private http: HttpClient) { }
-
-
-  // addEmployee(employeeDto: any): Observable<any> {
-  //   console.log('got:::', employeeDto);
-
-  //   return this.http.post(BASIC_URL + 'api/admin/employee', employeeDto, {
-  //     headers: this.createAuthorizationHeader(),
-  //   })
-  // }
 
   addEmployee(employeeDto: any): Observable<any> {
     return this.http.post(BASIC_URL + 'api/admin/employee', employeeDto, {
