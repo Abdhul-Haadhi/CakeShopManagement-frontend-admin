@@ -1,0 +1,141 @@
+<div class="page-container">
+    <div class="report-header no-print">
+        <div class="title-section">
+            <h1 class="page-title">Inventory Stock Report</h1>
+            <p class="page-subtitle">Overview of all ingredients and stock levels</p>
+        </div>
+        <div class="action-buttons">
+            <!-- <button mat-stroked-button class="print-btn" (click)="printReport()">
+                <mat-icon>print</mat-icon> Print
+            </button> -->
+            <button mat-flat-button color="primary" class="pdf-btn" (click)="exportToPDF()">
+                <mat-icon>picture_as_pdf</mat-icon> Export PDF
+            </button>
+        </div>
+    </div>
+
+    <div class="summary-grid no-print">
+        <mat-card class="summary-card total">
+            <div class="card-icon"><mat-icon>inventory_2</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">Total Items</span>
+                <span class="card-value">{{totalItems}}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="summary-card low">
+            <div class="card-icon"><mat-icon>warning_amber</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">Low Stock</span>
+                <span class="card-value">{{lowStockItems}}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="summary-card out">
+            <div class="card-icon"><mat-icon>error_outline</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">Out of Stock</span>
+                <span class="card-value">{{outOfStockItems}}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="summary-card expired">
+            <div class="card-icon"><mat-icon>event_busy</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">Expired</span>
+                <span class="card-value">{{expiredItems}}</span>
+            </div>
+        </mat-card>
+    </div>
+
+    <mat-card class="table-card">
+        <div class="table-header no-print">
+            <mat-form-field appearance="outline" class="search-bar">
+                <mat-label>Search Inventory</mat-label>
+                <mat-icon matPrefix>search</mat-icon>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Flour, ITM-0002...">
+            </mat-form-field>
+        </div>
+
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" matSort class="inventory-table">
+
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Item ID </th>
+                    <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Name </th>
+                    <td mat-cell *matCellDef="let row"> <strong>{{row.name}}</strong> </td>
+                </ng-container>
+
+                <ng-container matColumnDef="batchNo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Batch No </th>
+                    <td mat-cell *matCellDef="let row"> <span class="batch-text">{{row.batchNo}}</span> </td>
+                </ng-container>
+
+                <ng-container matColumnDef="quantity">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center"> Current Qty </th>
+                    <td mat-cell *matCellDef="let row" class="text-center">
+                        <span class="qty-text" [ngClass]="{'zero-qty': row.quantity === 0}">{{row.quantity}}</span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="expiryDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Expiry Date </th>
+                    <td mat-cell *matCellDef="let row"> {{row.expiryDate | date:'mediumDate'}} </td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center"> Status </th>
+                    <td mat-cell *matCellDef="let row" class="text-center">
+                        <span class="status-badge" [ngClass]="{
+                            'badge-normal': row.status === 'In Stock',
+                            'badge-low': row.status === 'Low Stock',
+                            'badge-out': row.status === 'Out of Stock',
+                            'badge-expired': row.status === 'Expired'
+                        }">
+                            {{row.status}}
+                        </span>
+                    </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="stockStatus">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center">Stock Status</th>
+                    <td mat-cell *matCellDef="let row" class="text-center">
+                        <span class="status-badge" [ngClass]="{
+                            'badge-normal': row.stockStatus === 'In Stock',
+                            'badge-low': row.stockStatus === 'Low Stock',
+                            'badge-out': row.stockStatus === 'Out of Stock',
+                        }">
+                            {{row.stockStatus}}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="expiryStatus">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center">Expiry Status</th>
+                    <td mat-cell *matCellDef="let row" class="text-center">
+                        <span class="status-badge" [ngClass]="{
+                            'badge-normal': row.expiryStatus === 'Good',
+                            'badge-expired': row.expiryStatus === 'Expired'
+                        }">
+                            {{row.expiryStatus}}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell no-data-cell" colspan="6">No inventory data matching your search.</td>
+                </tr>
+            </table>
+        </div>
+
+        <mat-paginator [pageSizeOptions]="[10, 25, 50]" aria-label="Select page of inventory"
+            class="no-print"></mat-paginator>
+    </mat-card>
+</div>

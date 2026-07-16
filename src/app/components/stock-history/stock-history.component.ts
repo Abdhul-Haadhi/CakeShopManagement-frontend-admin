@@ -3,12 +3,13 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { AngularMaterailModules } from '../../AngularMeterialModules';
 import { StockService } from '../../services/stock/stock.service';
+import { DecimalPipe } from '@angular/common';
 
 
 @Component({
   selector: 'app-stock-history',
   standalone: true,
-  imports: [AngularMaterailModules],
+  imports: [AngularMaterailModules, DecimalPipe],
   templateUrl: './stock-history.component.html',
   styleUrl: './stock-history.component.scss'
 })
@@ -16,7 +17,8 @@ export class StockHistoryComponent implements OnInit {
 
   displayedColumns = [
     'batch',
-    'quantity',
+    'added',
+    'remaining',
     'received',
     'expiry'
   ];

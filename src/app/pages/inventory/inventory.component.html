@@ -1,251 +1,55 @@
-<!-- <div class="container">
-
-    <mat-toolbar class="heading-bar">
-        <span class="heading-text">Item registration</span>
-        <span class="example-spacer"></span>
-        <button class="form-button" mat-raised-button color="warn" (click)="openAddForm()" *ngIf="!showForm">
-            +Add Items
-        </button>
-
-        <ng-container *ngIf="showForm">
-
-            <button mat-raised-button color="primary" class="form-button" (click)="onSubmit()"
-                [disabled]="isButtonDisabled || ItemRegForm.invalid">
-                {{ saveButtonLabel }}
-            </button>
-            <button type="reset" color="secondary" class="form-button" mat-raised-button (click)="resetData()">
-                Reset
-            </button>
-            <button mat-raised-button type="button" class="form-button" color="warn" (click)="closeForm()">
-                Cancel
-            </button>
-
-        </ng-container>
-
-    </mat-toolbar>
-
-
-    <div *ngIf="showForm" class="form-section">
-        <form [formGroup]="ItemRegForm" class="example-form" (ngSubmit)="onSubmit()">
-            <div class="example-form-div">
-                <div class="form-part">
-
-                    <mat-form-field class="full-width">
-                        <mat-label>Item Id</mat-label>
-                        <input matInput placeholder="Item name" formControlName="itemId" readonly/>
-                    </mat-form-field>
-
-                    <mat-form-field class="full-width">
-                        <mat-label>Item name</mat-label>
-                        <input matInput placeholder="Item name" formControlName="itemName" />
-                        <mat-error class="text-danger" *ngIf="
-                            (ItemRegForm.get('itemName')?.touched || submitted) &&
-                            ItemRegForm.get('itemName')?.errors &&
-                            (ItemRegForm.get('itemName')?.errors)!['required']
-                        ">
-                            Name is required
-                        </mat-error>
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Select a category</mat-label>
-                        <mat-select formControlName="category">
-                            <mat-option *ngFor="let category of categories" [value]="category">
-                                {{category}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-
-                <div class="form-part">
-
-                    <mat-form-field class="full-width" appearance="outline">
-                        <mat-label>Unit</mat-label>
-                        <mat-select formControlName="unit">
-                            <mat-option *ngFor="let unit of units" [value]="unit">
-                                {{unit}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-
-                    <mat-form-field class="full-width">
-                        <mat-label>Reorder Level</mat-label>
-                        <input matInput type="number" step="0.01" min="0" placeholder="Reorder Level"
-                            formControlName="reorderLevel" />
-                        <mat-error class="text-danger" *ngIf="
-                            (ItemRegForm.get('reorderLevel')?.touched || submitted) &&
-                            ItemRegForm.get('reorderLevel')?.errors &&
-                            (ItemRegForm.get('reorderLevel')?.errors)!['required']
-                        ">
-                            Reorder Level is required
-                        </mat-error>
-                    </mat-form-field>
-
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <div class="table-section">
-        <div class="refresh-filter-section">
-            <div class="refresh-button">
-                <button mat-icon-button color="primary" (click)="refreshData()">
-                    <mat-icon>refresh</mat-icon>
-                </button>
-            </div>
-
-            <mat-form-field class="filter">
-                <mat-label>Search</mat-label>
-                <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input />
-            </mat-form-field>
-        </div>
-
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-            <ng-container matColumnDef="itemId">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Item ID</th>
-                <td mat-cell *matCellDef="let item">{{ item.itemSku }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="itemName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Name</th>
-                <td mat-cell *matCellDef="let item">{{ item.itemName }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="category">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
-                <td mat-cell *matCellDef="let item">{{ item.category }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="unit">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Units</th>
-                <td mat-cell *matCellDef="let item">{{ item.unit }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="currentQuantity">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Current quantity</th>
-                <td mat-cell *matCellDef="let item">{{ item.currentQuantity + item.unit }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="reorderLevel">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Reorder Level</th>
-                <td mat-cell *matCellDef="let item">{{ item.reorderLevel }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="stockStatus">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock Status</th>
-                <td mat-cell *matCellDef="let item">
-                    <span class="status-chip" [ngClass]="{
-                        'green':getStockStatus(item)=='In Stock',
-                        'orange':getStockStatus(item)=='Low Stock',
-                        'red':getStockStatus(item)=='Out of Stock'
-                    }">
-                        {{getStockStatus(item)}}
-                    </span>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="expiryStatus">
-                <th mat-header-cell *matHeaderCellDef>Expiry Status</th>
-                <td mat-cell *matCellDef="let item">
-                    <span class="status-chip" [ngClass]="{
-                        'green':item.expiryStatus=='Good',
-                        'orange':item.expiryStatus=='Expiring Soon',
-                        'red':item.expiryStatus=='Expired',
-                        'grey':item.expiryStatus=='No Expiry'
-                    }">
-                        {{item.expiryStatus}}
-                    </span>
-                </td>
-            </ng-container>
-
-
-
-            <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
-                <td mat-cell *matCellDef="let item">
-                    <button mat-icon-button color="warn" (click)="editData(item); showForm=true"
-                        *ngIf="!showForm" matTooltip="edit">
-                        <mat-icon>edit</mat-icon>
-                    </button>
-                    <button mat-icon-button color="black" (click)="deleteData(item.inventoryId)" matTooltip="delete">
-                        <mat-icon>delete</mat-icon>
-                    </button>
-                    <button mat-icon-button color="primary" (click)="openStockDialog(item)" matTooltip="Add Stock">
-                        <mat-icon>add_circle</mat-icon>
-                    </button>
-                    <button mat-icon-button color="accent" (click)="openHistory(item)" matTooltip="Stock History">
-                        <mat-icon>history</mat-icon>
-                    </button>
-                </td>
-
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
-    </div>
-
-
-
-</div> -->
-
-
-
-
-
-
 <div class="container">
 
-    <mat-toolbar class="heading-bar">
-        <span class="heading-text">Item registration</span>
+    <mat-toolbar class="heading-bar mat-elevation-z2">
+        <span class="heading-text">Item Registration</span>
         <span class="example-spacer"></span>
-        <button class="form-button" mat-raised-button color="warn" (click)="openAddForm()" *ngIf="!showForm">
-            +Add Items
+        <button class="action-btn header-add-btn" mat-raised-button color="accent" (click)="openAddForm()"
+            *ngIf="!showForm">
+            <mat-icon>add</mat-icon> Add New Item
         </button>
 
         <ng-container *ngIf="showForm">
-
-            <button mat-raised-button color="primary" class="form-button" (click)="onSubmit()"
+            
+            <button mat-raised-button color="primary" class="action-btn" (click)="onSubmit()"
                 [disabled]="isButtonDisabled || ItemRegForm.invalid">
-                {{ saveButtonLabel }}
+                <mat-icon>save</mat-icon> {{ saveButtonLabel }}
             </button>
-            <button type="reset" color="secondary" class="form-button" mat-raised-button (click)="resetData()">
-                Reset
+            <button type="reset" class="action-btn reset-btn" mat-raised-button (click)="resetData()">
+                <mat-icon>restart_alt</mat-icon> Reset
             </button>
-            <button mat-raised-button type="button" class="form-button" color="warn" (click)="closeForm()">
-                Cancel
+            <button mat-raised-button type="button" class="action-btn cancel-btn" (click)="closeForm()">
+                <mat-icon>close</mat-icon> Cancel
             </button>
-
         </ng-container>
-
     </mat-toolbar>
 
+    <div *ngIf="showForm" class="form-section card-wrapper mat-elevation-z3 animate-fade-in">
+        <div class="section-header">
+            <mat-icon color="primary">edit_note</mat-icon>
+            <h3>Item Registration Form</h3>
+        </div>
 
-    <div *ngIf="showForm" class="form-section">
         <form [formGroup]="ItemRegForm" class="example-form" (ngSubmit)="onSubmit()">
             <div class="example-form-div">
                 <div class="form-part">
-
-                    <mat-form-field class="full-width">
-                        <mat-label>Item Id</mat-label>
-                        <input matInput placeholder="Item name" formControlName="itemId" readonly />
+                    <mat-form-field appearance="outline" class="full-width read-only-field">
+                        <mat-label>Item ID</mat-label>
+                        <input matInput placeholder="Auto Generated" formControlName="itemId" readonly />
+                        <mat-icon matSuffix color="primary">lock</mat-icon>
                     </mat-form-field>
 
-                    <mat-form-field class="full-width">
-                        <mat-label>Item name</mat-label>
-                        <input matInput placeholder="Item name" formControlName="itemName" />
-                        <mat-error class="text-danger" *ngIf="
-                            (ItemRegForm.get('itemName')?.touched || submitted) &&
-                            ItemRegForm.get('itemName')?.errors &&
-                            (ItemRegForm.get('itemName')?.errors)!['required']
-                        ">
-                            Name is required
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Item Name</mat-label>
+                        <input matInput placeholder="Enter beautiful cake item name..." formControlName="itemName" />
+                        <!-- <mat-icon matSuffix>bakery_dining</mat-icon> -->
+                        <mat-error
+                            *ngIf="(ItemRegForm.get('itemName')?.touched || submitted) && ItemRegForm.get('itemName')?.hasError('required')">
+                            Item Name is required
                         </mat-error>
                     </mat-form-field>
 
                     <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Select a category</mat-label>
+                        <mat-label>Select a Category</mat-label>
                         <mat-select formControlName="category">
                             <mat-option *ngFor="let category of categories" [value]="category">
                                 {{category}}
@@ -255,9 +59,8 @@
                 </div>
 
                 <div class="form-part">
-
-                    <mat-form-field class="full-width" appearance="outline">
-                        <mat-label>Unit</mat-label>
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Measurement Unit</mat-label>
                         <mat-select formControlName="unit">
                             <mat-option *ngFor="let unit of units" [value]="unit">
                                 {{unit}}
@@ -265,122 +68,128 @@
                         </mat-select>
                     </mat-form-field>
 
-                    <mat-form-field class="full-width">
+                    <mat-form-field appearance="outline" class="full-width">
                         <mat-label>Reorder Level</mat-label>
-                        <input matInput type="number" step="0.01" min="0" placeholder="Reorder Level"
+                        <input matInput type="number" step="0.01" min="0" placeholder="Minimum safety stock level"
                             formControlName="reorderLevel" />
-                        <mat-error class="text-danger" *ngIf="
-                            (ItemRegForm.get('reorderLevel')?.touched || submitted) &&
-                            ItemRegForm.get('reorderLevel')?.errors &&
-                            (ItemRegForm.get('reorderLevel')?.errors)!['required']
-                        ">
+                        <!-- <mat-icon matSuffix>warning_amber</mat-icon> -->
+                        <mat-error
+                            *ngIf="(ItemRegForm.get('reorderLevel')?.touched || submitted) && ItemRegForm.get('reorderLevel')?.hasError('required')">
                             Reorder Level is required
                         </mat-error>
                     </mat-form-field>
-
                 </div>
             </div>
         </form>
     </div>
 
-    <div class="table-section">
-        <div class="refresh-filter-section">
-            <div class="refresh-button">
-                <button mat-icon-button color="primary" (click)="refreshData()">
-                    <mat-icon>refresh</mat-icon>
-                </button>
+    <div class="table-section card-wrapper mat-elevation-z3">
+        <div class="table-header-row">
+            <div class="table-title">
+                <mat-icon color="primary">layers</mat-icon>
+                <h3>Registered Raw Materials & Stock Items</h3>
             </div>
 
-            <mat-form-field class="filter">
-                <mat-label>Search</mat-label>
-                <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input />
-            </mat-form-field>
+            <div class="refresh-filter-section">
+                <button mat-icon-button class="refresh-btn-ui" (click)="refreshData()" matTooltip="Refresh Data Table">
+                    <mat-icon>refresh</mat-icon>
+                </button>
+                <mat-form-field appearance="outline" class="filter">
+                    <mat-label>Search Inventory Items...</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Ex: Flour, Vanilla, Icing..." #input />
+                    <mat-icon matPrefix color="primary">search</mat-icon>
+                </mat-form-field>
+            </div>
         </div>
 
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-            <ng-container matColumnDef="itemId">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Item ID</th>
-                <td mat-cell *matCellDef="let item">{{ item.itemSku }}</td>
-            </ng-container>
+        <div class="responsive-table-container">
+            <table mat-table [dataSource]="dataSource" matSort>
 
-            <ng-container matColumnDef="itemName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Name</th>
-                <td mat-cell *matCellDef="let item">{{ item.itemName }}</td>
-            </ng-container>
+                <ng-container matColumnDef="itemId">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Item ID</th>
+                    <td mat-cell *matCellDef="let item" class="sku-text">{{ item.itemSku }}</td>
+                </ng-container>
 
-            <ng-container matColumnDef="category">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
-                <td mat-cell *matCellDef="let item">{{ item.category }}</td>
-            </ng-container>
+                <ng-container matColumnDef="itemName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Name</th>
+                    <td mat-cell *matCellDef="let item" class="bold-text">{{ item.itemName }}</td>
+                </ng-container>
 
-            <ng-container matColumnDef="unit">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Units</th>
-                <td mat-cell *matCellDef="let item">{{ item.unit }}</td>
-            </ng-container>
+                <ng-container matColumnDef="category">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
+                    <td mat-cell *matCellDef="let item"><span class="category-badge">{{ item.category }}</span></td>
+                </ng-container>
 
-            <ng-container matColumnDef="currentQuantity">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Current quantity</th>
-                <td mat-cell *matCellDef="let item">{{ item.currentQuantity + item.unit }}</td>
-            </ng-container>
+                <ng-container matColumnDef="unit">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Units</th>
+                    <td mat-cell *matCellDef="let item">{{ item.unit }}</td>
+                </ng-container>
 
-            <ng-container matColumnDef="reorderLevel">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Reorder Level</th>
-                <td mat-cell *matCellDef="let item">{{ item.reorderLevel }}</td>
-            </ng-container>
+                <ng-container matColumnDef="currentQuantity">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Current Qty</th>
+                    <td mat-cell *matCellDef="let item" class="bold-text">{{ item.currentQuantity }} {{ item.unit }}
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="stockStatus">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock Status</th>
-                <td mat-cell *matCellDef="let item">
-                    <span class="status-chip" [ngClass]="{
-                        'green':getStockStatus(item)=='In Stock',
-                        'orange':getStockStatus(item)=='Low Stock',
-                        'red':getStockStatus(item)=='Out of Stock'
-                    }">
-                        {{getStockStatus(item)}}
-                    </span>
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="reorderLevel">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Reorder Level</th>
+                    <td mat-cell *matCellDef="let item">{{ item.reorderLevel }}</td>
+                </ng-container>
 
-            <ng-container matColumnDef="expiryStatus">
-                <th mat-header-cell *matHeaderCellDef>Expiry Status</th>
-                <td mat-cell *matCellDef="let item">
-                    <span class="status-chip" [ngClass]="{
-                        'green':item.expiryStatus=='Good',
-                        'orange':item.expiryStatus=='Expiring Soon',
-                        'red':item.expiryStatus=='Expired',
-                        'grey':item.expiryStatus=='No Expiry'
-                    }">
-                        {{item.expiryStatus}}
-                    </span>
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="stockStatus">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock Status</th>
+                    <td mat-cell *matCellDef="let item">
+                        <span class="status-chip text-chip-green" *ngIf="getStockStatus(item) === 'In Stock'">In
+                            Stock</span>
+                        <span class="status-chip text-chip-orange" *ngIf="getStockStatus(item) === 'Low Stock'">Low
+                            Stock</span>
+                        <span class="status-chip text-chip-red" *ngIf="getStockStatus(item) === 'Out of Stock'">Out of
+                            Stock</span>
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
-                <td mat-cell *matCellDef="let item">
-                    <div class="action-buttons-container">
-                        <button mat-icon-button color="warn" (click)="editData(item); showForm=true" *ngIf="!showForm"
-                            matTooltip="edit">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        <button mat-icon-button color="black" (click)="deleteData(item.inventoryId)"
-                            matTooltip="delete">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                        <button mat-icon-button color="primary" (click)="openStockDialog(item)" matTooltip="Add Stock">
-                            <mat-icon>add_circle</mat-icon>
-                        </button>
-                        <button mat-icon-button color="accent" (click)="openHistory(item)" matTooltip="Stock History">
-                            <mat-icon>history</mat-icon>
-                        </button>
-                    </div>
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="expiryStatus">
+                    <th mat-header-cell *matHeaderCellDef>Expiry Status</th>
+                    <td mat-cell *matCellDef="let item">
+                        <span class="status-chip text-chip-green" *ngIf="item.expiryStatus === 'Good'">Good</span>
+                        <span class="status-chip text-chip-orange"
+                            *ngIf="item.expiryStatus === 'Expiring Soon'">Expiring Soon</span>
+                        <span class="status-chip text-chip-red" *ngIf="item.expiryStatus === 'Expired'">Expired</span>
+                        <span class="status-chip text-chip-grey"
+                            *ngIf="item.expiryStatus === 'No Expiry' || !item.expiryStatus">No Expiry</span>
+                    </td>
+                </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let item">
+                        <div class="action-buttons-container">
+                            <button mat-icon-button class="action-icon-btn edit-icon"
+                                (click)="editData(item); showForm=true" *ngIf="!showForm"
+                                matTooltip="Edit Item Parameters">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button class="action-icon-btn delete-icon"
+                                (click)="deleteData(item.inventoryId)" matTooltip="Remove Item Permanent">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                            <button mat-icon-button class="action-icon-btn restock-icon" (click)="openStockDialog(item)"
+                                matTooltip="Add Physical Batch Stock">
+                                <mat-icon>add_circle</mat-icon>
+                            </button>
+                            <button mat-icon-button class="action-icon-btn history-icon" (click)="openHistory(item)"
+                                matTooltip="View Stock Audit Logs">
+                                <mat-icon>history</mat-icon>
+                            </button>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns" class="hoverable-row"></tr>
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of items"></mat-paginator>
     </div>
 
 </div>

@@ -12,6 +12,9 @@ import { CustomerRegistrationComponent } from './pages/customer-registration/cus
 import { OrdersComponent } from './pages/orders/orders.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
 import { RecipeManagementComponent } from './pages/recipe-management/recipe-management.component';
+import { InventoryReportComponent } from './pages/reports/inventory-report/inventory-report.component';
+import { SalesReportComponent } from './pages/reports/sales-report/sales-report.component';
+import { CustomerReportComponent } from './pages/reports/customer-report/customer-report.component';
 
 
 
@@ -27,5 +30,8 @@ export const routes: Routes = [
     { path: "orders", component: OrdersComponent, canActivate: [authGuard] },
     { path: "inventory", component: InventoryComponent, canActivate: [authGuard] },
     { path: "recipe", component: RecipeManagementComponent, canActivate: [authGuard] },
+    { path: "inventory-report", component: InventoryReportComponent, canActivate: [authGuard] },
+    { path: "sales-report", component: SalesReportComponent, canActivate: [authGuard] },
+    { path: "customer-report", component: CustomerReportComponent, canActivate: [authGuard] },
 
 ];

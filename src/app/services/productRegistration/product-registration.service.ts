@@ -43,6 +43,13 @@ export class ProductRegistrationService {
     })
   }
 
+  getNextProductSku(): Observable<string> {
+    return this.http.get(BASIC_URL + 'api/employee/next-product-sku', {
+      headers: this.createAuthorizationHeader(),
+      responseType: 'text'
+    });
+  }
+
   checkSkuExists(productSku: any): Observable<any> {
     return this.http.get(BASIC_URL + `api/employee/check-sku/${productSku}`,
       { headers: this.createAuthorizationHeader() }

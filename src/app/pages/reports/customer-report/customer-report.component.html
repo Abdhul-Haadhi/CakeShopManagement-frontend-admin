@@ -1,0 +1,123 @@
+<div class="page-container">
+
+    <div class="report-header no-print">
+        <div class="title-section">
+            <h1 class="page-title">Customer Report</h1>
+            <p class="page-subtitle">Track engagement, spending, and loyalty</p>
+        </div>
+        <div class="action-buttons">
+            <!-- <button mat-stroked-button class="print-btn" (click)="printReport()">
+                <mat-icon>print</mat-icon> Print
+            </button> -->
+            <button mat-flat-button color="primary" class="pdf-btn" (click)="exportToPDF()">
+                <mat-icon>picture_as_pdf</mat-icon> Export PDF
+            </button>
+        </div>
+    </div>
+
+    <div class="summary-grid no-print">
+        <mat-card class="summary-card total">
+            <div class="card-icon"><mat-icon>groups</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">Total Customers</span>
+                <span class="card-value">{{totalCustomers}}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="summary-card new">
+            <div class="card-icon"><mat-icon>person_add</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">New This Month</span>
+                <span class="card-value">{{newCustomersThisMonth}}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="summary-card active">
+            <div class="card-icon"><mat-icon>how_to_reg</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">Active (30 Days)</span>
+                <span class="card-value">{{activeCustomers}}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="summary-card vip">
+            <div class="card-icon"><mat-icon>workspace_premium</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">VIP Customers</span>
+                <span class="card-value">{{vipCustomers}}</span>
+            </div>
+        </mat-card>
+    </div>
+
+    <mat-card class="table-card">
+        <div class="table-header no-print">
+            <mat-form-field appearance="outline" class="search-bar">
+                <mat-label>Search Customers</mat-label>
+                <mat-icon matPrefix>search</mat-icon>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Search by name or phone...">
+            </mat-form-field>
+        </div>
+
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" matSort class="customer-table">
+
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer </th>
+                    <td mat-cell *matCellDef="let row">
+                        <div class="customer-info">
+                            <!-- <div class="avatar">{{row.name.charAt(0)}}</div> -->
+                            <div class="details">
+                                <strong>{{row.name}}</strong>
+                                <!-- <span class="sub-text">{{row.customerId}}</span> -->
+                            </div>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="phone">
+                    <th mat-header-cell *matHeaderCellDef> Contact </th>
+                    <td mat-cell *matCellDef="let row"> {{row.phone}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalOrders">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center"> Orders </th>
+                    <td mat-cell *matCellDef="let row" class="text-center font-bold"> {{row.totalOrders}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalSpent">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-right"> Total Spent </th>
+                    <td mat-cell *matCellDef="let row" class="text-right font-bold text-green"> Rs. {{row.totalSpent |
+                        number}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="lastOrderDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Order </th>
+                    <td mat-cell *matCellDef="let row"> {{row.lastOrderDate | date:'mediumDate'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center"> Status </th>
+                    <td mat-cell *matCellDef="let row" class="text-center">
+                        <span class="status-badge" [ngClass]="{
+                            'badge-vip': row.status === 'VIP',
+                            'badge-active': row.status === 'Active',
+                            'badge-inactive': row.status === 'Inactive'
+                        }">
+                            {{row.status}}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell no-data-cell" colspan="6">No customers found matching your search.</td>
+                </tr>
+            </table>
+        </div>
+
+        <mat-paginator [pageSizeOptions]="[10, 25, 50]" aria-label="Select page of customers"
+            class="no-print"></mat-paginator>
+    </mat-card>
+</div>

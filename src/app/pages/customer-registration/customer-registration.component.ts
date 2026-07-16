@@ -106,12 +106,12 @@ export class CustomerRegistrationComponent implements OnInit {
 
         },
         error: (error) => {
-          this.snackBar.open(error.message, 'ERROR', { duration: 5000 })
+          this.snackBar.open(error.message, 'ERROR', { duration: 3000 })
         }
       });
     }
     catch (error) {
-      this.snackBar.open(error.message, 'ERROR', { duration: 5000 });
+      this.snackBar.open(error.message, 'ERROR', { duration: 3000 });
     }
 
   }
@@ -153,16 +153,16 @@ export class CustomerRegistrationComponent implements OnInit {
             next: (response: any) => {
               console.log("RESPONSE:", payload);
               if (response.customerId != null) {
-                this.snackBar.open('Customer added successfully', 'Ok', { duration: 5000 });
+                this.snackBar.open('Customer added successfully', 'Ok', { duration: 3000 });
                 this.refreshData();
               }
               else {
-                this.snackBar.open(response.message, 'ERROR', { duration: 5000 });
+                this.snackBar.open(response.message, 'ERROR', { duration: 3000 });
               }
             },
             error: (error) => {
               console.log("FULL ERROR:", error);
-              this.snackBar.open(error.error?.message || 'Save failed', 'Error', { duration: 5000 });
+              this.snackBar.open(error.error?.message || 'Save failed', 'Error', { duration: 3000 });
             }
           })
 
@@ -194,12 +194,12 @@ export class CustomerRegistrationComponent implements OnInit {
 
         this.customerService.editData(this.selectedData.customerId, payload).subscribe({
           next: (response: any) => {
-            this.snackBar.open('Customer details updated successfully', 'Ok', { duration: 5000 });
+            this.snackBar.open('Customer details updated successfully', 'Ok', { duration: 3000 });
             this.refreshData();
             this.closeForm();
           },
           error: (error) => {
-            this.snackBar.open('Update failed', 'Error', { duration: 5000 });
+            this.snackBar.open('Update failed', 'Error', { duration: 3000 });
           }
         });
       }
@@ -209,7 +209,7 @@ export class CustomerRegistrationComponent implements OnInit {
       this.refreshData();
     }
     catch (error) {
-      this.snackBar.open("Something went wrong ", "Error", { duration: 5000 })
+      this.snackBar.open("Something went wrong ", "Error", { duration: 3000 })
     }
 
   }
@@ -262,19 +262,19 @@ export class CustomerRegistrationComponent implements OnInit {
               this.dataSource.data.splice(index, 1);
             }
             this.dataSource = new MatTableDataSource(this.dataSource.data);
-            this.snackBar.open('Customer deleted successfully!', 'Close', { duration: 5000 });
+            this.snackBar.open('Customer deleted successfully!', 'Close', { duration: 3000 });
             this.refreshData();
 
           },
           error: (error) => {
             console.error("DELETE ERROR:", error);
-            this.snackBar.open(error?.error?.message || 'Delete failed', 'Close', { duration: 5000 });
+            this.snackBar.open(error?.error?.message || 'Delete failed', 'Close', { duration: 3000 });
           }
         });
       });
     }
     catch (error) {
-      this.snackBar.open('Action failed with error ' + error, 'Close', { duration: 5000 });
+      this.snackBar.open('Action failed with error ' + error, 'Close', { duration: 3000 });
     }
   }
 

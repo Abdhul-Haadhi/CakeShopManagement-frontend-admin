@@ -4,7 +4,7 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { AngularMaterailModules } from '../../AngularMeterialModules';
 import { MatCard } from '@angular/material/card';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgIf, NgForOf, DatePipe } from '@angular/common';
+import { NgIf, NgForOf, DatePipe, DecimalPipe } from '@angular/common';
 import { ProductRegistrationService } from '../../services/productRegistration/product-registration.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -18,13 +18,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ManageCustomizationDialogComponent } from '../../components/manage-customization-dialog/manage-customization-dialog.component';
-
+import { FormArray } from '@angular/forms';
 
 
 @Component({
   selector: 'app-product-registration',
   standalone: true,
-  imports: [AngularMaterailModules, FormsModule, MatToolbar, MatCheckboxModule, MatFormFieldModule, MatCard, MatFormField, ReactiveFormsModule, NgIf, NgForOf, DatePipe],
+  imports: [AngularMaterailModules, FormsModule, MatToolbar, DecimalPipe, MatCheckboxModule, MatFormFieldModule, MatCard, MatFormField, ReactiveFormsModule, NgIf, NgForOf, DatePipe],
   templateUrl: './product-registration.component.html',
   providers: [provideNativeDateAdapter()],
   styleUrl: './product-registration.component.scss'
@@ -99,10 +99,11 @@ export class ProductRegistrationComponent implements OnInit {
       categoryId: [null, [Validators.required]],
       productName: [null, [Validators.required, Validators.maxLength(25)]],
       description: [null, [Validators.required, Validators.maxLength(500)]],
-      size: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
+      // size: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
       // quantity: [1, [Validators.required, Validators.min(1)]],
-      price: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
+      // price: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
       // addedDate: new FormControl(new Date(), Validators.required),
+      variants: this.fb.array([])
     });
 
     const skuControl = this.ProdRegForm.get('productSku');
@@ -159,13 +160,53 @@ export class ProductRegistrationComponent implements OnInit {
 
   }
 
-  generateSKU() {
-    const nextNumer = this.dataSource?.data?.length + 1 || 1;
-    const sku = `PRD${String(nextNumer).padStart(4, '0')}`;
+  get variants(): FormArray {
+    return this.ProdRegForm.get('variants') as FormArray;
+  }
 
-    this.ProdRegForm.patchValue({
-      productSku: sku
-    });
+  addVariant() {
+    this.variants.push(
+      this.fb.group({
+        weight: [null, [Validators.required, Validators.min(1)]],
+        price: [null, [Validators.required, Validators.min(1)]]
+      })
+    );
+  }
+
+  // removeVariant(index: number) {
+  //   this.variants.removeAt(index);
+  // }
+
+  removeVariant(index: number) {
+    if (this.variants.length == 1) {
+      this.snackBar.open('At least one variant is required.', 'OK', { duration: 3000 });
+      return;
+    }
+    this.variants.removeAt(index);
+  }
+
+
+  // generateSKU() {
+  //   const nextNumer = this.dataSource?.data?.length + 1 || 1;
+  //   const sku = `PRD${String(nextNumer).padStart(4, '0')}`;
+
+  //   this.ProdRegForm.patchValue({
+  //     productSku: sku
+  //   });
+  // }
+
+  generateSKU() {
+    this.prodService.getNextProductSku().subscribe({
+      next: (sku: string) => {
+        // const formattedSku = `PRD${sku}`;
+        this.ProdRegForm.patchValue({
+          productSku: sku
+        });
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    })
   }
 
   openAddForm() {
@@ -174,6 +215,8 @@ export class ProductRegistrationComponent implements OnInit {
     this.saveButtonLabel = 'Save';
     this.ProdRegForm.enable();
     this.generateSKU();
+    this.variants.clear();
+    this.addVariant();
     this.isCustomizationDisabled = false;
   }
 
@@ -265,9 +308,10 @@ export class ProductRegistrationComponent implements OnInit {
           // formData.append('productSku', this.ProdRegForm.get('productSku').value);
           formData.append('productName', this.ProdRegForm.get('productName').value);
           formData.append('description', this.ProdRegForm.get('description').value);
-          formData.append('size', this.ProdRegForm.get('size').value);
+          formData.append('variants', JSON.stringify(this.variants.value));
+          // formData.append('size', this.ProdRegForm.get('size').value);
           // formData.append('quantity', this.ProdRegForm.get('quantity').value);
-          formData.append('price', this.ProdRegForm.get('price').value);
+          // formData.append('price', this.ProdRegForm.get('price').value);
           // const rawDate = this.ProdRegForm.get('addedDate')?.value;
           // if (rawDate) {
           //   // const formattedDate = new Date(rawDate).toISOString().split('T')[0];
@@ -337,9 +381,10 @@ export class ProductRegistrationComponent implements OnInit {
         formData.append('productSku', this.ProdRegForm.get('productSku').value);
         formData.append('productName', this.ProdRegForm.get('productName').value);
         formData.append('description', this.ProdRegForm.get('description').value);
-        formData.append('size', this.ProdRegForm.get('size').value);
+        formData.append('variants', JSON.stringify(this.variants.value));
+        // formData.append('size', this.ProdRegForm.get('size').value);
         // formData.append('quantity', this.ProdRegForm.get('quantity').value);
-        formData.append('price', this.ProdRegForm.get('price').value);
+        // formData.append('price', this.ProdRegForm.get('price').value);
         // const rawDate = this.ProdRegForm.get('addedDate')?.value;
         // if (rawDate) {
         //   const formattedDate = new Date(rawDate).toISOString().split('T')[0];
@@ -402,6 +447,16 @@ export class ProductRegistrationComponent implements OnInit {
 
     this.ProdRegForm.get('productSku')?.setErrors(null);
     this.ProdRegForm.get('productSku')?.disable();
+
+    this.variants.clear();
+    data.variants.forEach((variant: any) => {
+      this.variants.push(
+        this.fb.group({
+          weight: [variant.weight],
+          price: [variant.price]
+        })
+      )
+    });
 
     if (data.byteImage) {
       this.existingImage = 'data:image/jpeg;base64,' + data.byteImage;

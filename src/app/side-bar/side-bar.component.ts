@@ -124,6 +124,29 @@ export class SideBarComponent implements OnInit {
     },
 
 
+    {
+      isHeading: true,
+      label: 'Reports',
+      roles: ['ADMIN', 'EMPLOYEE']
+    },
+    {
+      routeLink: 'inventory-report',
+      icon: 'fas fa-clipboard-check',
+      label: 'Inventory Report',
+      roles: ['ADMIN'],
+    },
+    {
+      routeLink: 'sales-report',
+      icon: 'fas fa-chart-line',
+      label: 'Sales Report',
+      roles: ['ADMIN'],
+    },
+    {
+      routeLink: 'customer-report',
+      icon: 'fas fa-user-tag',
+      label: 'Customer Report',
+      roles: ['ADMIN'],
+    },
 
 
   ]

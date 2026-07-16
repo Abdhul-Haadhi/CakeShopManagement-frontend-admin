@@ -67,6 +67,10 @@ export class OrdersComponent implements OnInit {
 
       // this.orders = res;
 
+      if (res.variants && res.variants.length > 0) {
+          res.selectedVariant = res.variants[0];
+        }
+
       this.orders = res.map(order => ({
         ...order,
         originalStatus: order.status
@@ -87,6 +91,31 @@ export class OrdersComponent implements OnInit {
 
 
     })
+  }
+
+  getAllowedStatuses(currentStatus: string): string[] {
+    switch (currentStatus) {
+      case 'PENDING':
+        return ['PENDING', 'CONFIRMED', 'CANCELLED'];
+
+      case 'CONFIRMED':
+        return ['CONFIRMED', 'BAKING'];
+
+      case 'BAKING':
+        return ['BAKING', 'OUT FOR DELIVERY', 'DELIVERED',];
+
+      case 'OUT FOR DELIVERY':
+        return ['OUT FOR DELIVERY', 'DELIVERED'];
+
+      case 'DELIVERED':
+        return ['DELIVERED'];
+
+      case 'CANCELLED':
+        return ['CANCELLED'];
+
+      default:
+        return [currentStatus];
+    }
   }
 
   // toggleItems(orderId: number) {
