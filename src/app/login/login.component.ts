@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
         console.log("login response: ",response);
         
 
-        this.snackBar.open('Login Success', 'Ok', {duration: 5000});
+        this.snackBar.open('Login Success', 'Ok', {duration: 3000});
         this.router.navigateByUrl('dashboard');
 
         // if (UserStorageService.isAdminLoggedIn()) {
@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
 
       },
       error: (error) => {
-        this.snackBar.open('Bad credintials', 'ERROR', { duration: 5000 });
+        this.snackBar.open('Bad credintials', 'ERROR', { duration: 3000 });
       }
     })
   }

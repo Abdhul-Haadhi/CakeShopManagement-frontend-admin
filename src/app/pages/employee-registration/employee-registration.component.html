@@ -1,35 +1,42 @@
 <div class="container">
 
-  <mat-toolbar class="heading-bar">
+  <mat-toolbar class="heading-bar mat-elevation-z2">
     <span class="heading-text">Employee registration</span>
     <span class="example-spacer"></span>
-    <button class="form-button" mat-raised-button color="warn" (click)="openAddForm()" *ngIf="!showForm">
-      +Add Employee
+    <button class="action-btn header-add-btn" mat-raised-button color="accent" (click)="openAddForm()"
+      *ngIf="!showForm">
+      <mat-icon>add</mat-icon>Add Employee
     </button>
 
     <ng-container *ngIf="showForm">
 
-      <button mat-raised-button color="primary" class="form-button" (click)="onSubmit()"
+      <button mat-raised-button color="primary" class="action-btn" (click)="onSubmit()"
         [disabled]="isButtonDisabled || EmpRegForm.invalid">
-        {{ saveButtonLabel }}
+        <mat-icon>save</mat-icon>{{ saveButtonLabel }}
       </button>
-      <button type="reset" color="secondary" class="form-button" mat-raised-button (click)="resetData()">
-        Reset
+      <button mat-raised-button type="reset" class="action-btn reset-btn" color="basic" (click)="resetData()">
+        <mat-icon>restart_alt</mat-icon>Reset
       </button>
-      <button mat-raised-button type="button" class="form-button" color="warn" (click)="closeForm()">
-        Cancel
+      <button mat-raised-button type="button" class="action-btn cancel-btn" color="warn" (click)="closeForm()">
+        <mat-icon>close</mat-icon>Cancel
       </button>
 
     </ng-container>
-
   </mat-toolbar>
 
-  <div *ngIf="showForm" class="form-section">
+  <!-- Form Section -->
+
+  <div *ngIf="showForm" class="form-section card-wrapper mat-elevation-z3 animate-fade-in">
+    <div class="section-header">
+      <mat-icon color="primary">edit_note</mat-icon>
+      <h3>Employee Registration Form</h3>
+    </div>
+
     <form [formGroup]="EmpRegForm" class="example-form" (ngSubmit)="onSubmit()">
       <div class="example-form-div">
         <div class="form-part">
 
-          <mat-form-field class="full-width">
+          <mat-form-field appearance="outline" class="full-width">
             <mat-label>Employee name</mat-label>
             <input matInput placeholder="Employee name" formControlName="employeeName" />
             <mat-error class="text-danger" *ngIf="
@@ -48,7 +55,7 @@
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field class="full-width">
+          <mat-form-field appearance="outline" class="full-width">
             <mat-label>Email</mat-label>
             <input matInput placeholder="Email" formControlName="email" />
             <mat-error class="text-danger" *ngIf="
@@ -71,7 +78,7 @@
 
         <div class="form-part">
 
-          <mat-form-field class="full-width">
+          <mat-form-field appearance="outline" class="full-width">
             <mat-label>Contact number</mat-label>
             <input matInput placeholder="Contact number" formControlName="phone" />
             <mat-error class="text-danger" *ngIf="
@@ -89,7 +96,7 @@
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field class="full-width">
+          <mat-form-field appearance="outline" class="full-width">
             <mat-label>Address</mat-label>
             <input matInput placeholder="Address" formControlName="address" />
             <mat-error class="text-danger" *ngIf="
@@ -138,67 +145,82 @@
     </form>
   </div>
 
-  <div class="table-section">
-    <div class="refresh-filter-section">
-      <div class="refresh-button">
-        <button mat-icon-button color="primary" (click)="refreshData()">
-          <mat-icon>refresh</mat-icon>
-        </button>
+  <!-- Table Section -->
+
+  <div class="table-section card-wrapper mat-elevation-z3">
+    <div class="table-header-row">
+      <div class="table-title">
+        <mat-icon color="primary">layers</mat-icon>
+        <h3>Registered Employees</h3>
       </div>
 
-      <mat-form-field class="filter">
-        <mat-label>Search</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input />
-      </mat-form-field>
+      <div class="refresh-filter-section">
+        <button mat-icon-button class="refresh-btn-ui" (click)="refreshData()" matTooltip="Refresh Data Table">
+          <mat-icon>refresh</mat-icon>
+        </button>
+        <mat-form-field appearance="outline" class="filter">
+          <mat-label>Search Inventory Items...</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Ex: John, Roy..." #input />
+          <mat-icon matPrefix color="primary">search</mat-icon>
+        </mat-form-field>
+      </div>
     </div>
 
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-      <ng-container matColumnDef="employeeName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Employee Name</th>
-        <td mat-cell *matCellDef="let employee">{{ employee.employeeName }}</td>
-      </ng-container>
+    <div class="responsive-table-container">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="employeeName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Employee Name</th>
+          <td mat-cell *matCellDef="let employee">{{ employee.employeeName }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-        <td mat-cell *matCellDef="let employee">{{ employee.email }}</td>
-      </ng-container>
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+          <td mat-cell *matCellDef="let employee">{{ employee.email }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="phone">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact Number</th>
-        <td mat-cell *matCellDef="let employee">{{ employee.phone }}</td>
-      </ng-container>
+        <ng-container matColumnDef="phone">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact Number</th>
+          <td mat-cell *matCellDef="let employee">{{ employee.phone }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="address">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Address</th>
-        <td mat-cell *matCellDef="let employee">{{ employee.address }}</td>
-      </ng-container>
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Address</th>
+          <td mat-cell *matCellDef="let employee">{{ employee.address }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="joinDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Registered Date</th>
-        <td mat-cell *matCellDef="let employee">
-          {{ employee.joinDate | date : "dd-MM-yyyy" }}
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="joinDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Registered Date</th>
+          <td mat-cell *matCellDef="let employee">
+            {{ employee.joinDate | date : "dd-MM-yyyy" }}
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
-        <td mat-cell *matCellDef="let employee">
-          <button mat-icon-button color="warn" (click)="editData(employee)" (click)="showForm = true" *ngIf="!showForm"
-            matTooltip="edit">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="black" (click)="deleteData(employee.employeeId)" matTooltip="delete">
-            <mat-icon>delete</mat-icon>
-          </button>
-          <button mat-icon-button matTooltip="Create Login" (click)="addLoginCredentials(employee)">
-            <mat-icon>person_add</mat-icon>
-          </button>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
+          <td mat-cell *matCellDef="let employee">
+            <div class="action-buttons-container">
+              <button mat-icon-button class="action-icon-btn edit-icon" (click)="editData(employee)"
+                (click)="showForm = true" *ngIf="!showForm" matTooltip="Edit Item Parameters">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="action-icon-btn delete-icon" (click)="deleteData(employee.employeeId)"
+                matTooltip="Remove Item Permanent">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button mat-icon-button class="action-icon-btn restock-icon" matTooltip="Create Login"
+                (click)="addLoginCredentials(employee)">
+                <mat-icon>person_add</mat-icon>
+              </button>
+            </div>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns" class="hoverable-row"></tr>
+      </table>
+    </div>
+
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
   </div>
 </div>

@@ -56,6 +56,14 @@ export class ProductRegistrationComponent implements OnInit {
 
   isCustomizationDisabled = false;
 
+  variantTypeOptions = [
+    { value: 'WEIGHT', label: 'Weight (g)' },
+    { value: 'PIECE', label: 'Pieces' },
+  ];
+
+  get variantType(): string {
+    return this.ProdRegForm.get('variantType')?.value;
+  }
 
 
   dataSource!: MatTableDataSource<any>;
@@ -99,6 +107,7 @@ export class ProductRegistrationComponent implements OnInit {
       categoryId: [null, [Validators.required]],
       productName: [null, [Validators.required, Validators.maxLength(25)]],
       description: [null, [Validators.required, Validators.maxLength(500)]],
+      variantType: ['WEIGHT', Validators.required],
       // size: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
       // quantity: [1, [Validators.required, Validators.min(1)]],
       // price: [null, [Validators.required, Validators.pattern('^[0-9]+$')]],
@@ -167,7 +176,7 @@ export class ProductRegistrationComponent implements OnInit {
   addVariant() {
     this.variants.push(
       this.fb.group({
-        weight: [null, [Validators.required, Validators.min(1)]],
+        variantValue: [null, [Validators.required, Validators.min(1)]],
         price: [null, [Validators.required, Validators.min(1)]]
       })
     );
@@ -308,7 +317,16 @@ export class ProductRegistrationComponent implements OnInit {
           // formData.append('productSku', this.ProdRegForm.get('productSku').value);
           formData.append('productName', this.ProdRegForm.get('productName').value);
           formData.append('description', this.ProdRegForm.get('description').value);
-          formData.append('variants', JSON.stringify(this.variants.value));
+          // formData.append('variants', JSON.stringify(this.variants.value));
+          const variants = this.variants.value.map((v: any) => ({
+            variantType: this.variantType,
+            weight: this.variantType === 'WEIGHT' ? v.variantValue : null,
+            pieces: this.variantType === 'PIECE' ? v.variantValue : null,
+            price: v.price
+          }));
+
+          formData.append('sellingType', this.variantType);
+          formData.append('variants', JSON.stringify(variants));
           // formData.append('size', this.ProdRegForm.get('size').value);
           // formData.append('quantity', this.ProdRegForm.get('quantity').value);
           // formData.append('price', this.ProdRegForm.get('price').value);
@@ -381,7 +399,16 @@ export class ProductRegistrationComponent implements OnInit {
         formData.append('productSku', this.ProdRegForm.get('productSku').value);
         formData.append('productName', this.ProdRegForm.get('productName').value);
         formData.append('description', this.ProdRegForm.get('description').value);
-        formData.append('variants', JSON.stringify(this.variants.value));
+        // formData.append('variants', JSON.stringify(this.variants.value));
+        const variants = this.variants.value.map((v: any) => ({
+          variantType: this.variantType,
+          weight: this.variantType === 'WEIGHT' ? v.variantValue : null,
+          pieces: this.variantType === 'PIECE' ? v.variantValue : null,
+          price: v.price
+        }));
+
+        formData.append('sellingType', this.variantType);
+        formData.append('variants', JSON.stringify(variants));
         // formData.append('size', this.ProdRegForm.get('size').value);
         // formData.append('quantity', this.ProdRegForm.get('quantity').value);
         // formData.append('price', this.ProdRegForm.get('price').value);
@@ -450,9 +477,12 @@ export class ProductRegistrationComponent implements OnInit {
 
     this.variants.clear();
     data.variants.forEach((variant: any) => {
+      this.ProdRegForm.patchValue({
+        variantType: data.sellingType
+      });
       this.variants.push(
         this.fb.group({
-          weight: [variant.weight],
+          variantValue: [variant.weight != null ? variant.weight : variant.pieces],
           price: [variant.price]
         })
       )

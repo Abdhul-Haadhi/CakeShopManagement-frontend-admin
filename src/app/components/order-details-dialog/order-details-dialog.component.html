@@ -18,6 +18,15 @@
         <div class="item-card" *ngFor="let item of data.order.orderItems">
             <h4>{{item.productName}}</h4>
             <p>Qty: {{item.quantity}}</p>
+            <p>
+                <ng-container *ngIf="item.variantType === 'WEIGHT'; else piece">
+                    {{item.variantValue}} g
+                </ng-container>
+
+                <ng-template #piece>
+                    {{item.variantValue}} pcs
+                </ng-template>
+            </p>
             <p>Price: LKR {{item.price}}</p>
 
             <div class="customizations" *ngIf="item.customizations?.length">
@@ -35,7 +44,7 @@
                     <ng-template #normalCustom>
                         ✓ {{custom.optionName}}: {{custom.value}}
                     </ng-template>
-                    
+
                     <span *ngIf="custom.extraPrice > 0">
                         (+LKR {{custom.extraPrice}})
                     </span>

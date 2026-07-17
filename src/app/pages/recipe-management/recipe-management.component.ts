@@ -29,6 +29,8 @@ export class RecipeManagementComponent implements OnInit {
   dataSource!: MatTableDataSource<any>;
   selectedProductId: number | null = null;
 
+  variants: any[] = [];
+
   showForm = false;
 
   recipeItems: any[] = [];
@@ -66,6 +68,7 @@ export class RecipeManagementComponent implements OnInit {
       productId: ['', Validators.required],
       inventoryId: ['', Validators.required],
       quantityRequired: ['', [Validators.required, Validators.min(0.01)]],
+      variantId:['',Validators.required],
     });
 
     this.loadProducts();
@@ -131,7 +134,8 @@ export class RecipeManagementComponent implements OnInit {
 
     const payload = {
       productId: this.recipeForm.value.productId,
-      ingredients: this.recipeItems
+      ingredients: this.recipeItems,
+      variantId:this.recipeForm.value.variantId,
     };
 
     this.recipeService.addRecipe(payload).subscribe({
@@ -142,6 +146,7 @@ export class RecipeManagementComponent implements OnInit {
         this.ingredientDataSource.data = [];
         this.recipeForm.reset();
         this.loadRecipes();
+        this.closeForm();
       },
       error: (err) => {
         console.log("add::", err);
@@ -157,6 +162,22 @@ export class RecipeManagementComponent implements OnInit {
     this.recipeItems.splice(index, 1);
 
     this.ingredientDataSource.data = [...this.recipeItems];
+  }
+
+  loadVariants(productId: number) {
+    this.productService.getProductVariants(productId).subscribe({
+      next: (res) => {
+        this.variants = res;
+      }
+    });
+  }
+
+  onProductChange(){
+    const productId = this.recipeForm.value.productId;
+
+    if(productId){
+      this.loadVariants(productId);
+    }
   }
 
 

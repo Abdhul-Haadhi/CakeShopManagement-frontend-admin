@@ -94,7 +94,7 @@
 
         h3 {
             margin: 0;
-            font-size: 18px;
+            font-size: 24px;
             font-weight: 700;
             color: #2c3e50;
         }
@@ -130,52 +130,7 @@
     }
 }
 
-.table-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 16px;
 
-    .table-title {
-        margin-bottom: 0;
-    }
-
-    .refresh-filter-section {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        width: 450px;
-        max-width: 100%;
-
-        .refresh-btn-ui {
-            background-color: #e8f0fe;
-            color: #1a73e8;
-            border-radius: 8px;
-            transition: transform 0.3s ease;
-
-            &:hover {
-                transform: rotate(180deg);
-                background-color: #d2e3fc;
-            }
-        }
-
-        .filter {
-            width: 100%;
-            margin-bottom: -22px; // Offsets the default material structural margin
-        }
-    }
-}
-
-
-.table-section {
-    width: 100%;
-}
-
-.full-row {
-    grid-column: span 2;
-}
 
 .section-container {
     background-color: #fafafa;
@@ -328,7 +283,56 @@
 }
 
 
+
 /* --- Clean Modern Data Table Style --- */
+
+.table-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    .table-title {
+        margin-bottom: 0;
+    }
+
+    .refresh-filter-section {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 450px;
+        max-width: 100%;
+
+        .refresh-btn-ui {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+
+            &:hover {
+                transform: rotate(180deg);
+                background-color: #d2e3fc;
+            }
+        }
+
+        .filter {
+            width: 100%;
+            margin-bottom: -22px; // Offsets the default material structural margin
+        }
+    }
+}
+
+
+.table-section {
+    width: 100%;
+}
+
+.full-row {
+    grid-column: span 2;
+}
+
 .responsive-table-container {
     width: 100%;
     overflow-x: auto;

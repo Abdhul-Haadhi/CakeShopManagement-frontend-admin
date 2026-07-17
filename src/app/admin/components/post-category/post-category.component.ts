@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-post-category',
   standalone: true,
-  imports: [FormsModule, AngularMaterailModules, NgIf, ReactiveFormsModule, HttpClientModule],
+  imports: [FormsModule, AngularMaterailModules, NgIf, ReactiveFormsModule, HttpClientModule, MatSort],
   templateUrl: './post-category.component.html',
   styleUrl: './post-category.component.scss'
 })

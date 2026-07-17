@@ -43,6 +43,12 @@ export class ProductRegistrationService {
     })
   }
 
+  getProductVariants(productId: number): Observable<any[]> {
+    return this.http.get<any[]>(BASIC_URL + `api/employee/product/${productId}/variants`, {
+      headers: this.createAuthorizationHeader(),
+    })
+  }
+
   getNextProductSku(): Observable<string> {
     return this.http.get(BASIC_URL + 'api/employee/next-product-sku', {
       headers: this.createAuthorizationHeader(),
