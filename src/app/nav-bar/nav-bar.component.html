@@ -37,6 +37,32 @@
     <span class="spacer"></span>
     <section>
       <div class="example-button-row">
+        <button mat-icon-button [matMenuTriggerFor]="notificationMenu" (click)="onBellClick()" class="icon-button">
+          <!-- The badge is hidden if unreadCount is 0 -->
+          <mat-icon class="bell-icon" [matBadge]="unreadCount" matBadgeColor="warn" [matBadgeHidden]="unreadCount === 0">
+            notifications
+          </mat-icon>
+        </button>
+        <mat-menu #notificationMenu="matMenu" panelClass="notification-dropdown">
+          <div class="notification-header" (click)="$event.stopPropagation()">
+            <h3>Notifications</h3>
+          </div>
+          
+          <div class="notification-list">
+            <div *ngIf="notifications.length === 0" class="empty-state">
+              No new notifications
+            </div>
+
+            <!-- Loop through notifications -->
+            <button mat-menu-item *ngFor="let notif of notifications" class="notification-item">
+              <div class="notif-content">
+                <span class="notif-title">{{ notif.title }}</span>
+                <span class="notif-message">{{ notif.message }}</span>
+              </div>
+            </button>
+          </div>
+        </mat-menu>
+        
         <button class="icon-button" mat-icon-button [matMenuTriggerFor]="profileMenu">
           <mat-icon class="big-icon">account_circle</mat-icon>
         </button>

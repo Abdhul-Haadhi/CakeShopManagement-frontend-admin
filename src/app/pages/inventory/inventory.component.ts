@@ -116,12 +116,12 @@ export class InventoryComponent implements OnInit {
 
         },
         error: (error) => {
-          this.snackBar.open(error.message, 'ERROR', { duration: 3000 })
+          this.snackBar.open(error.error?.message, 'ERROR', { duration: 3000 })
         }
       });
     }
     catch (error) {
-      this.snackBar.open(error.message, 'ERROR', { duration: 3000 });
+      this.snackBar.open(error.error?.message, 'ERROR', { duration: 3000 });
     }
 
   }
@@ -298,7 +298,7 @@ export class InventoryComponent implements OnInit {
           },
           error: (error) => {
             console.error("DELETE ERROR:", error);
-            this.snackBar.open(error?.message || 'Delete failed', 'Close', { duration: 3000 });
+            this.snackBar.open(error.error?.message || 'Delete failed', 'Close', { duration: 3000 });
           }
         });
       });

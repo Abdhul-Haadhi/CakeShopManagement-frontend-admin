@@ -172,6 +172,13 @@ export class PostCategoryComponent implements OnInit {
     this.categoryForm.updateValueAndValidity();
     this.categoryForm.enable();
     this.submitted = false;
+
+    if (this.mode === 'edit' && this.selectedData) {
+      // Restore original selected item data on reset
+      this.categoryForm.patchValue({
+        ...this.selectedData,
+      });
+    }
   }
 
   closeForm() {

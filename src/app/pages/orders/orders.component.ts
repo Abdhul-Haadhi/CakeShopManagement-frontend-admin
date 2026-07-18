@@ -68,8 +68,8 @@ export class OrdersComponent implements OnInit {
       // this.orders = res;
 
       if (res.variants && res.variants.length > 0) {
-          res.selectedVariant = res.variants[0];
-        }
+        res.selectedVariant = res.variants[0];
+      }
 
       this.orders = res.map(order => ({
         ...order,
@@ -86,7 +86,15 @@ export class OrdersComponent implements OnInit {
         this.snackBar.open('Status updated successfully', 'Ok', { duration: 3000 });
       },
       error: (error) => {
-        this.snackBar.open('Update failed', 'Error', { duration: 3000 });
+        console.log(error);
+        console.log(error.error);
+        console.log(error.error?.message);
+
+        let message = error.error?.message || 'Update failed';
+
+        this.snackBar.open(message, 'OK', {
+          duration: 4000
+        });
       }
 
 

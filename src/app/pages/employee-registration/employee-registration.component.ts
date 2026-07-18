@@ -109,8 +109,8 @@ export class EmployeeRegistrationComponent implements OnInit {
     try {
       this.empService.getAllEmployees().subscribe({
         next: (dataList: any) => {
-          console.log("getiinggg:",dataList);
-          
+          console.log("getiinggg:", dataList);
+
           if (dataList.length <= 0) {
             return;
           }
@@ -121,12 +121,12 @@ export class EmployeeRegistrationComponent implements OnInit {
 
         },
         error: (error) => {
-          this.snackBar.open(error.message, 'ERROR', { duration: 5000 })
+          this.snackBar.open(error.message, 'ERROR', { duration: 3000 })
         }
       });
     }
     catch (error) {
-      this.snackBar.open(error.message, 'ERROR', { duration: 5000 });
+      this.snackBar.open(error.message, 'ERROR', { duration: 3000 });
     }
 
   }
@@ -168,12 +168,15 @@ export class EmployeeRegistrationComponent implements OnInit {
             next: (response: any) => {
               console.log("RESPONSE:", payload);
               if (response.employeeId != null) {
-                this.snackBar.open('Employee added successfully', 'Ok', { duration: 5000 });
+                this.snackBar.open('Employee added successfully', 'Ok', { duration: 3000 });
                 this.refreshData();
               }
               else {
-                this.snackBar.open(response.message, 'ERROR', { duration: 5000 });
+                this.snackBar.open(response.message, 'ERROR', { duration: 3000 });
               }
+            },
+            error: (error) => {
+              this.snackBar.open(error.error?.message, 'ERROR', { duration: 3000 });
             }
           })
         }
@@ -203,13 +206,13 @@ export class EmployeeRegistrationComponent implements OnInit {
 
         this.empService.editData(this.selectedData.employeeId, payload).subscribe({
           next: (response: any) => {
-            this.snackBar.open('Employee details updated successfully', 'Ok', { duration: 5000 });
+            this.snackBar.open('Employee details updated successfully', 'Ok', { duration: 3000 });
             this.refreshData();
             this.closeForm();
 
           },
           error: (error) => {
-            this.snackBar.open('Update failed', 'Error', { duration: 5000 });
+            this.snackBar.open(error.error?.message || 'Update failed', 'Error', { duration: 3000 });
           }
         });
 
@@ -223,7 +226,17 @@ export class EmployeeRegistrationComponent implements OnInit {
 
     }
     catch (error) {
-      this.snackBar.open("Something went wrong ", "Error", { duration: 5000 })
+      let message = 'Something went wrong';
+
+      if (error.error) {
+        if (typeof error.error === 'string') {
+          message = error.error;
+        } else if (error.error.message) {
+          message = error.error.message;
+        }
+      }
+
+      this.snackBar.open(message, 'ERROR', { duration: 3000 });
     }
 
   }
@@ -274,19 +287,19 @@ export class EmployeeRegistrationComponent implements OnInit {
               this.dataSource.data.splice(index, 1);
             }
             this.dataSource = new MatTableDataSource(this.dataSource.data);
-            this.snackBar.open('Employee deleted successfully!', 'Close', { duration: 5000 });
+            this.snackBar.open('Employee deleted successfully!', 'Close', { duration: 3000 });
             this.refreshData();
 
           },
           error: (error) => {
             console.error("DELETE ERROR:", error);
-            this.snackBar.open(error?.error?.message || 'Delete failed', 'Close', { duration: 5000 });
+            this.snackBar.open(error?.error?.message || 'Delete failed', 'Close', { duration: 3000 });
           }
         });
       });
     }
     catch (error) {
-      this.snackBar.open('Action failed with error ' + error, 'Close', { duration: 5000 });
+      this.snackBar.open('Action failed with error ' + error, 'Close', { duration: 3000 });
     }
   }
 
@@ -294,10 +307,16 @@ export class EmployeeRegistrationComponent implements OnInit {
   public resetData(): void {
     this.EmpRegForm.reset();
     this.EmpRegForm.updateValueAndValidity();
-    this.saveButtonLabel = 'Save';
+    this.saveButtonLabel = this.mode === 'edit' ? 'Edit' : 'Save';
     this.EmpRegForm.enable();
     this.isButtonDisabled = false;
     this.submitted = false;
+
+    if(this.mode === 'edit' && this.selectedData){
+      this.EmpRegForm.patchValue({
+        ...this.selectedData
+      })
+    }
   }
 
   closeForm() {
@@ -328,13 +347,13 @@ export class EmployeeRegistrationComponent implements OnInit {
         next: (value: any) => {
           if (value) {
             this.snackBar.open(
-              'Login account created Successfully!', 'Ok', { duration: 5000 }
+              'Login account created Successfully!', 'Ok', { duration: 3000 }
             );
           }
         },
       });
     } catch (error: any) {
-      this.snackBar.open('Action Failed!', 'Close', { duration: 5000 });
+      this.snackBar.open('Action Failed!', 'Close', { duration: 3000 });
     }
   }
 

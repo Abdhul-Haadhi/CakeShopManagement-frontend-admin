@@ -281,10 +281,16 @@ export class CustomerRegistrationComponent implements OnInit {
   public resetData(): void {
     this.CustRegForm.reset();
     this.CustRegForm.updateValueAndValidity();
-    this.saveButtonLabel = 'Save';
+    this.saveButtonLabel = this.mode === 'edit' ? 'Edit' : 'Save';
     this.CustRegForm.enable();
     this.isButtonDisabled = false;
     this.submitted = false;
+
+    if(this.mode === 'edit' && this.selectedData){
+      this.CustRegForm.patchValue({
+        ...this.selectedData,
+      })
+    }
   }
 
   public refreshData(): void {

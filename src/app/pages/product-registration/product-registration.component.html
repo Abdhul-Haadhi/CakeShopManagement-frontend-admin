@@ -16,7 +16,7 @@
       </button>
 
       <button mat-raised-button color="primary" class="action-btn" (click)="onSubmit()"
-        [disabled]="ProdRegForm.invalid || variants.length === 0">
+        [disabled]="isButtonDisabled || ProdRegForm.invalid || variants.length === 0 || (mode === 'edit' && ProdRegForm.pristine)">
         <mat-icon>save</mat-icon>{{ saveButtonLabel }}
       </button>
 

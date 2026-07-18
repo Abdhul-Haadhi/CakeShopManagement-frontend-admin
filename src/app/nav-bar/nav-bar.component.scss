@@ -55,16 +55,20 @@ section {
   overflow: hidden !important;
 }
 
-.big-icon{
-  font-size: 50px;   /* increase size */
+.big-icon {
+  font-size: 50px;
+  /* increase size */
   width: 50px;
   height: 50px;
-  line-height: 43px;
+  line-height: 50px
 }
 
 button[mat-icon-button] {
   width: 70px;
   height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .example-label {
@@ -76,6 +80,8 @@ button[mat-icon-button] {
 .example-button-row {
   max-width: 600px;
   border-radius: 30px;
+  display: flex;
+  align-items: center;
 }
 
 button {
@@ -96,3 +102,85 @@ button {
 }
 
 // 
+
+
+/* --- Bell Icon Styling --- */
+.bell-icon {
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+
+::ng-deep .mat-badge-content {
+  font-weight: 600;
+}
+
+/* --- Notification Dropdown Styling --- */
+::ng-deep .notification-dropdown {
+  max-width: 380px !important;
+  min-width: 300px !important;
+  border-radius: 12px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  overflow: hidden !important;
+}
+
+.notification-header {
+  padding: 15px 20px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #eaeaea;
+  cursor: default;
+
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+  }
+}
+
+.notification-list {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.empty-state {
+  padding: 30px 20px;
+  text-align: center;
+  color: #888;
+  font-size: 0.95rem;
+}
+
+.notification-item {
+  height: auto !important;
+  /* Overrides strict mat-menu-item height */
+  line-height: normal !important;
+  padding: 12px 20px !important;
+  border-bottom: 1px solid #f0f0f0;
+  white-space: normal !important;
+  /* Allows text to wrap */
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.notif-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.notif-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1976d2;
+  /* Theme color */
+}
+
+.notif-message {
+  font-size: 0.85rem;
+  color: #555;
+  line-height: 1.4;
+}

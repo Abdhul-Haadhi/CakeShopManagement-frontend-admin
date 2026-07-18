@@ -586,15 +586,36 @@ export class ProductRegistrationComponent implements OnInit {
 
 
   public resetData(): void {
-    this.ProdRegForm.reset();
-    this.ProdRegForm.updateValueAndValidity();
-    this.saveButtonLabel = 'Save';
-    this.ProdRegForm.enable();
-    this.isButtonDisabled = false;
-    this.submitted = false;
-    this.existingImage = null;
+
     this.selectedFile = null;
-    this.ProdRegForm.get('productSku')?.enable();
+    this.imagePreview = null;
+    this.existingImage = null;
+    this.selectedCustomizations = [];
+
+    if (this.mode === 'add') {
+
+      this.ProdRegForm.reset();
+
+      this.variants.clear();
+      this.addVariant();
+
+      this.availableOptions.forEach(option => {
+        option.selected = false;
+        option.extraPrice = 0;
+      });
+
+      this.generateSKU();
+
+      return;
+    }
+
+    // EDIT MODE
+    this.availableOptions.forEach(option => {
+      option.selected = false;
+      option.extraPrice = 0;
+    });
+
+    this.editData(this.selectedData);
   }
 
 

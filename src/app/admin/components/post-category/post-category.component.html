@@ -9,7 +9,7 @@
 
         <ng-container *ngIf="showForm">
             <button mat-raised-button color="primary" class="action-btn" (click)="onSubmit()"
-                [disabled]="categoryForm.invalid">
+                [disabled]="categoryForm.invalid || (mode === 'edit' && categoryForm.pristine)">
                 <mat-icon>save</mat-icon>Add Category</button>
             <button mat-raised-button type="reset" color="basic" class="action-btn reset-btn" (click)="resetData()">
                 <mat-icon>restart_alt</mat-icon>Reset

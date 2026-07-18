@@ -11,7 +11,7 @@
         <ng-container *ngIf="showForm">
 
             <button mat-raised-button color="primary" class="action-btn" (click)="onSubmit()"
-                [disabled]="isButtonDisabled || CustRegForm.invalid">
+                [disabled]="isButtonDisabled || CustRegForm.invalid || (mode === 'edit' && CustRegForm.pristine)">
                 <mat-icon>save</mat-icon>{{ saveButtonLabel }}
             </button>
             <button mat-raised-button type="reset" color="secondary" class="action-btn reset-btn" (click)="resetData()">
