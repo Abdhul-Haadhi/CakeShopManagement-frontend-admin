@@ -127,7 +127,7 @@ export class SideBarComponent implements OnInit {
     {
       isHeading: true,
       label: 'Reports',
-      roles: ['ADMIN', 'EMPLOYEE']
+      roles: ['ADMIN']
     },
     {
       routeLink: 'inventory-report',

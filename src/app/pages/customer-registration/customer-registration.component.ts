@@ -157,7 +157,7 @@ export class CustomerRegistrationComponent implements OnInit {
                 this.refreshData();
               }
               else {
-                this.snackBar.open(response.message, 'ERROR', { duration: 3000 });
+                this.snackBar.open(response.error?.message, 'ERROR', { duration: 3000 });
               }
             },
             error: (error) => {

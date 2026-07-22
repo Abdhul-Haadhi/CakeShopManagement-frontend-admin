@@ -32,8 +32,10 @@ export class StockService {
     });
   }
 
+  
+
   private createAuthorizationHeader(): HttpHeaders {
-    return new HttpHeaders().set('Authorization', 'Bearer ' + UserStorageService.getToken())
+    return new HttpHeaders().set('Authorization', 'Bearer ' + UserStorageService.getToken());
   }
 
 }

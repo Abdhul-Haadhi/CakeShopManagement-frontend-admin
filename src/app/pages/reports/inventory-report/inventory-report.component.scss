@@ -7,6 +7,7 @@
     display: flex;
     flex-direction: column;
     gap: 25px;
+    margin-top: -40px;
 }
 
 /* --- Header Section --- */
@@ -212,10 +213,16 @@
         color: #b91c1c;
     }
 
+    &.badge-warning {
+        background: #fef3c7;
+        color: #ca8a04;
+    }
+
     &.badge-expired {
         background-color: #e2e8f0;
         color: #475569;
     }
+
 }
 
 .no-data-cell {
@@ -252,4 +259,19 @@
             border: 1px solid #e2e8f0 !important;
         }
     }
+}
+
+.qty-good{
+    color:#16a34a;
+    font-weight:700;
+}
+
+.qty-low{
+    color:#d97706;
+    font-weight:700;
+}
+
+.qty-zero{
+    color:#dc2626;
+    font-weight:700;
 }

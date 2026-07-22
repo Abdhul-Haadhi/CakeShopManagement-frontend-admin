@@ -24,6 +24,20 @@ export class OrderService {
     })
   }
 
+  getSalesReport(startDate?: string, endDate?: string) {
+    let params: any = {};
+    if (startDate) {
+      params.startDate = startDate;
+    }
+    if (endDate) {
+      params.endDate = endDate;
+    }
+    return this.http.get<any>(BASIC_URL + 'api/employee/sales-report', {
+      params,
+      headers: this.createAuthorizationHeader(),
+    })
+  }
+
   private createAuthorizationHeader(): HttpHeaders {
     return new HttpHeaders().set('Authorization', 'Bearer ' + UserStorageService.getToken())
   }
