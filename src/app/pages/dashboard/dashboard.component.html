@@ -1,46 +1,207 @@
-<form [formGroup]="searchProductForm" class="search-form" (submit)="onSubmit()">
-    <mat-form-field appearance="outline" class="search-input">
-        <mat-label>Enter keyword to search</mat-label>
-        <input matInput formControlName="title">
-        <button mat-button matSuffix color="primary" [disabled]="searchProductForm.invalid">
-            <mat-icon>search</mat-icon>
-        </button>
-    </mat-form-field>
-    <div class="refresh-button">
-        <button mat-icon-button color="primary" (click)="refreshData()">
-          <mat-icon>refresh</mat-icon>
-        </button>
-      </div>
-</form>
+<div class="page-container dashboard-container">
 
-<div class="product-list">
-    <mat-card class="product-card" *ngFor="let product of products">
-        <div class="product-image">
-            <img [src]="product.processedImage" alt="product-image">
+    <!-- Header & Quick Actions -->
+    <div class="dashboard-header">
+        <div class="title-section">
+            <h1 class="page-title">Dashboard Overview</h1>
+            <p class="page-subtitle">Welcome back! Here's what's happening today.</p>
         </div>
-        <div class="product-details">
-            <h2 class="product-name">{{product.productName}}</h2>
-            <p class="product-description">{{product.description}}</p>
-
-            <mat-divider></mat-divider>
-            <div class="product-info">
-                <div class="info-row">
-                    <span class="info-label">Price:</span>
-                    <span class="info-value">LKR {{product.price}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Category:</span>
-                    <span class="info-value">{{product.categoryName}}</span>
-                </div>
-            </div>
-
-            <mat-divider></mat-divider>
-
-            <div class="actions">
-                <button mat-raised-button color="primary" class="update-button" (click)="goToEdit(product)">Update</button>
-                <button mat-raised-button color="warn" class="delete-button"
-                    (click)="deleteProduct(product.productId)">Delete</button>
-            </div>
+        <div class="quick-actions">
+            <!-- <button mat-flat-button color="primary" (click)="navigate('/product-reg')">
+                <mat-icon>add</mat-icon> New Product
+            </button>
+            <button mat-stroked-button (click)="navigate('new-employee')">
+                <mat-icon>person_add</mat-icon> New Employee
+            </button> -->
+            <!-- <button mat-icon-button matTooltip="View Inventory" (click)="navigate('inventory')">
+                <mat-icon>inventory_2</mat-icon>
+            </button> -->
+            <!-- <button mat-icon-button matTooltip="View Orders" (click)="navigate('orders')">
+                <mat-icon>shopping_cart</mat-icon>
+            </button> -->
         </div>
-    </mat-card>
+    </div>
+
+    <!-- Top Summary Cards (KPIs) -->
+    <div class="kpi-grid">
+        <mat-card class="kpi-card blue">
+            <div class="kpi-icon"><mat-icon>shopping_bag</mat-icon></div>
+            <div class="kpi-content">
+                <span class="kpi-label">Today's Orders</span>
+                <span class="kpi-value">{{ todayOrders }}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="kpi-card green">
+            <div class="kpi-icon"><mat-icon>task_alt</mat-icon></div>
+            <div class="kpi-content">
+                <span class="kpi-label">Completed Orders</span>
+                <span class="kpi-value">{{completedOrders}}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="kpi-card orange">
+            <div class="kpi-icon"><mat-icon>pending_actions</mat-icon></div>
+            <div class="kpi-content">
+                <span class="kpi-label">Pending Orders</span>
+                <span class="kpi-value">{{ pendingOrders }}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="kpi-card purple">
+            <div class="kpi-icon"><mat-icon>account_balance_wallet</mat-icon></div>
+            <div class="kpi-content">
+                <span class="kpi-label">Today's Revenue</span>
+                <span class="kpi-value">Rs. {{ todayRevenue | number }}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="kpi-card cyan">
+            <div class="kpi-icon"><mat-icon>cake</mat-icon></div>
+            <div class="kpi-content">
+                <span class="kpi-label">No. of Available Products</span>
+                <span class="kpi-value">{{ availableProducts }}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="kpi-card red">
+            <div class="kpi-icon"><mat-icon>warning</mat-icon></div>
+            <div class="kpi-content">
+                <span class="kpi-label">Low Stock Items</span>
+                <span class="kpi-value">{{ lowStockCount }}</span>
+            </div>
+        </mat-card>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-grid">
+        <mat-card class="chart-card span-2">
+            <mat-card-header>
+                <mat-card-title>Sales Overview</mat-card-title>
+                <mat-card-subtitle>Daily sales performance</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content class="canvas-container">
+                <canvas #salesLineChart></canvas>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="chart-card">
+            <mat-card-header>
+                <mat-card-title>Order Status</mat-card-title>
+                <mat-card-subtitle>Current distribution</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content class="canvas-container">
+                <canvas #statusDoughnutChart></canvas>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="chart-card span-full">
+            <mat-card-header>
+                <mat-card-title>Revenue (Last 30 Days)</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="canvas-container-large">
+                <canvas #revenueBarChart></canvas>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Tables & Alerts Section -->
+    <div class="data-grid">
+        <!-- Recent Orders Table -->
+        <mat-card class="data-card">
+            <mat-card-header class="table-header">
+                <mat-card-title>Recent Orders</mat-card-title>
+                <button mat-button color="primary" (click)="viewAllOrders()">View All</button>
+            </mat-card-header>
+            <div class="table-responsive">
+                <table mat-table [dataSource]="recentOrders" class="w-100">
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef> Order ID </th>
+                        <td mat-cell *matCellDef="let order"> #{{order.orderId}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="customer">
+                        <th mat-header-cell *matHeaderCellDef> Customer </th>
+                        <td mat-cell *matCellDef="let order"> {{order.customerName}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="amount">
+                        <th mat-header-cell *matHeaderCellDef> Amount </th>
+                        <td mat-cell *matCellDef="let order" class="font-bold"> Rs. {{order.amount | number}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef> Status </th>
+                        <td mat-cell *matCellDef="let order">
+                            <span class="status-badge" [class]="order.status.toLowerCase()">{{order.status}}</span>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="recentOrdersColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: recentOrdersColumns;"></tr>
+                </table>
+            </div>
+        </mat-card>
+
+        <!-- Low Stock Alert List -->
+        <mat-card class="data-card alert-card">
+            <mat-card-header>
+                <div class="alert-title">
+                    <mat-icon class="text-red">error_outline</mat-icon>
+                    <mat-card-title>Low Stock Alerts</mat-card-title>
+                </div>
+            </mat-card-header>
+            <mat-card-content>
+
+                <div *ngIf="lowStockItems.length == 0" class="empty-stock">
+                    <mat-icon color="primary">check_circle</mat-icon>
+
+                    <h3>All items are sufficiently stocked</h3>
+
+                    <p>No inventory items are below the reorder level.</p>
+                </div>
+
+                <mat-list *ngIf="lowStockItems.length > 0">
+
+                    <mat-list-item *ngFor="let item of lowStockItems" class="stock-item">
+
+                        <mat-icon matListItemIcon class="text-orange">
+                            inventory
+                        </mat-icon>
+
+                        <div matListItemTitle>
+                            {{item.itemName}}
+                        </div>
+
+                        <div matListItemLine>
+                            Only {{item.currentQuantity}} left in stock!
+                        </div>
+
+                    </mat-list-item>
+
+                </mat-list>
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Reports Shortcuts -->
+    <h2 class="section-title">Quick Reports</h2>
+    <div class="reports-grid">
+        <mat-card class="report-shortcut" (click)="salesReport()">
+            <mat-icon color="primary">trending_up</mat-icon>
+            <h3>Sales Report</h3>
+            <p>View detailed sales analysis</p>
+        </mat-card>
+        <mat-card class="report-shortcut" (click)="inventoryReport()">
+            <mat-icon color="accent">category</mat-icon>
+            <h3>Inventory Report</h3>
+            <p>Check stock levels and value</p>
+        </mat-card>
+        <mat-card class="report-shortcut" (click)="customerReport()">
+            <mat-icon color="warn">badge</mat-icon>
+            <h3>Customer Report</h3>
+            <p>Check the customer report</p>
+        </mat-card>
+    </div>
 </div>

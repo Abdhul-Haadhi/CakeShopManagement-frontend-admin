@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpService } from '../http.service';
 import { Observable } from 'rxjs';
 import { UserStorageService } from '../storage/user-storage.service';
+import { DashboardDto } from '../../pages/dashboard/dashboard.model';
 
 const BASIC_URL = "http://localhost:8080/"
 
@@ -15,14 +16,20 @@ export class DashboardService {
 
 
 
-  getAllProductsByName(productName: any): Observable<any> {
-    return this.http.get(BASIC_URL + `api/employee/search/${productName}`, {
-      headers: this.createAuthorizationHeader(),
-    })
-  }
+  // getAllProductsByName(productName: any): Observable<any> {
+  //   return this.http.get(BASIC_URL + `api/employee/search/${productName}`, {
+  //     headers: this.createAuthorizationHeader(),
+  //   })
+  // }
 
-  deleteProduct(productId: any): Observable<any> {
-    return this.http.delete(BASIC_URL + `api/employee/product/${productId}`, {
+  // deleteProduct(productId: any): Observable<any> {
+  //   return this.http.delete(BASIC_URL + `api/employee/product/${productId}`, {
+  //     headers: this.createAuthorizationHeader(),
+  //   })
+  // }
+
+  getDashboard() {
+    return this.http.get<DashboardDto>(BASIC_URL + "api/admin/dashboard", {
       headers: this.createAuthorizationHeader(),
     })
   }

@@ -6,16 +6,18 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { AngularMaterailModules } from "../../../AngularMeterialModules";
 import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
+import { CustomerRegistrationService } from '../../../services/customerRegistration/customer-registration.service';
 
 
 
 export interface CustomerData {
   customerId: string;
-  name: string;
+  customerName: string;
   phone: string;
   totalOrders: number;
   totalSpent: number;
   lastOrderDate: Date;
+  firstOrderDate: Date;
   status?: string;
 }
 
@@ -27,10 +29,10 @@ export interface CustomerData {
   templateUrl: './customer-report.component.html',
   styleUrl: './customer-report.component.scss'
 })
-export class CustomerReportComponent implements OnInit, AfterViewInit {
+export class CustomerReportComponent implements OnInit{
 
   displayedColumns: string[] = [
-    'name',
+    'customerName',
     'phone',
     'totalOrders',
     'totalSpent',
@@ -47,61 +49,92 @@ export class CustomerReportComponent implements OnInit, AfterViewInit {
   totalCustomers = 0;
   newCustomersThisMonth = 0;
   activeCustomers = 0;
-  vipCustomers = 0;
+  regularCustomers = 0;
 
-  customers: CustomerData[] = [
-    { customerId: 'C-001', name: 'Perera', phone: '0771234567', totalOrders: 12, totalSpent: 45000, lastOrderDate: new Date('2026-07-10') },
-    { customerId: 'C-002', name: 'Michael', phone: '0719876543', totalOrders: 2, totalSpent: 8500, lastOrderDate: new Date('2026-07-12') },
-    { customerId: 'C-003', name: 'Smith', phone: '0764567890', totalOrders: 1, totalSpent: 3000, lastOrderDate: new Date('2025-12-15') },
-    { customerId: 'C-004', name: 'David', phone: '0701112222', totalOrders: 25, totalSpent: 125000, lastOrderDate: new Date('2026-07-01') },
-    { customerId: 'C-005', name: 'Silva', phone: '0773334444', totalOrders: 5, totalSpent: 18000, lastOrderDate: new Date('2026-06-28') },
-    { customerId: 'C-006', name: 'Amanda', phone: '0773334444', totalOrders: 7, totalSpent: 22000, lastOrderDate: new Date('2026-06-29') },
-    { customerId: 'C-007', name: 'Stefan', phone: '0773334444', totalOrders: 6, totalSpent: 20000, lastOrderDate: new Date('2026-06-30') },
-  ];
+  customers: CustomerData[] = [];
+
+  constructor(private customerService: CustomerRegistrationService) {
+
+  }
 
   ngOnInit(): void {
-    this.processCustomerData();
+    this.customerService.getCustomerReport().subscribe((res: any) => {
+      console.log("getting:",res);
+      
+      this.customers = res;
+      this.processCustomerData();
+    });
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
+  // ngAfterViewInit() {
+  //   this.dataSource.paginator = this.paginator;
+  //   this.dataSource.sort = this.sort;
+  // }
+
+  // processCustomerData() {
+  //   const today = new Date();
+  //   const currentMonth = today.getMonth();
+  //   const currentYear = today.getFullYear();
+  //   const thirtyDaysAgo = new Date(today.setDate(today.getDate() - 30));
+
+
+  //   this.customers.forEach(customer => {
+  //     if (customer.totalSpent >= 40000) {
+  //       customer.status = 'VIP';
+  //       this.vipCustomers++;
+  //       this.activeCustomers++;
+  //     }
+  //     else if (customer.lastOrderDate >= thirtyDaysAgo) {
+  //       customer.status = 'Active';
+  //       this.activeCustomers++;
+  //     }
+  //     else {
+  //       customer.status = 'Inactive';
+  //     }
+
+  //     if (customer.lastOrderDate.getMonth() === currentMonth && customer.lastOrderDate.getFullYear() === currentYear && customer.totalOrders === 1) {
+  //       this.newCustomersThisMonth++;
+  //     }
+
+  //   });
+
+  //   this.totalCustomers = this.customers.length;
+
+  //   if (this.newCustomersThisMonth === 0) {
+  //     this.newCustomersThisMonth = 7;
+  //   }
+
+  //   this.dataSource = new MatTableDataSource(this.customers);
+
+  // }
 
   processCustomerData() {
     const today = new Date();
     const currentMonth = today.getMonth();
     const currentYear = today.getFullYear();
-    const thirtyDaysAgo = new Date(today.setDate(today.getDate() - 30));
-
-
-    this.customers.forEach(customer => {
-      if (customer.totalSpent >= 40000) {
-        customer.status = 'VIP';
-        this.vipCustomers++;
-        this.activeCustomers++;
-      }
-      else if (customer.lastOrderDate >= thirtyDaysAgo) {
-        customer.status = 'Active';
-        this.activeCustomers++;
-      }
-      else {
-        customer.status = 'Inactive';
-      }
-
-      if (customer.lastOrderDate.getMonth() === currentMonth && customer.lastOrderDate.getFullYear() === currentYear && customer.totalOrders === 1) {
-        this.newCustomersThisMonth++;
-      }
-
-    });
 
     this.totalCustomers = this.customers.length;
 
-    if (this.newCustomersThisMonth === 0) {
-      this.newCustomersThisMonth = 7;
-    }
+    this.activeCustomers = this.customers.filter(c =>
+      c.status === 'Active' || c.status === 'Regular'
+    ).length;
+
+    this.regularCustomers = this.customers.filter(c =>
+      c.status === 'Regular'
+    ).length;
+
+    this.newCustomersThisMonth = this.customers.filter(c => {
+      const firstOrder = new Date(c.firstOrderDate);
+
+      return (
+        firstOrder.getMonth() === currentMonth &&
+        firstOrder.getFullYear() === currentYear
+      );
+    }).length;
 
     this.dataSource = new MatTableDataSource(this.customers);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
 
   }
 
@@ -128,7 +161,7 @@ export class CustomerReportComponent implements OnInit, AfterViewInit {
 
     // Table mapping
     const bodyData = this.dataSource.filteredData.map(c => [
-      c.name,
+      c.customerName,
       c.phone,
       c.totalOrders.toString(),
       `Rs. ${c.totalSpent.toLocaleString()}`,
@@ -144,7 +177,7 @@ export class CustomerReportComponent implements OnInit, AfterViewInit {
       headStyles: { fillColor: [3, 74, 156] },
       didParseCell: function (data) {
         if (data.section === 'body' && data.column.index === 5) {
-          if (data.cell.raw === 'VIP') data.cell.styles.textColor = [147, 51, 234]; // Purple
+          if (data.cell.raw === 'Regular') data.cell.styles.textColor = [147, 51, 234]; // Purple
           if (data.cell.raw === 'Active') data.cell.styles.textColor = [22, 163, 74]; // Green
           if (data.cell.raw === 'Inactive') data.cell.styles.textColor = [100, 116, 139]; // Gray
         }

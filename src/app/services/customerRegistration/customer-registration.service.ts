@@ -26,6 +26,12 @@ export class CustomerRegistrationService {
     });
   }
 
+  getCustomerReport(): Observable<any> {
+    return this.http.get(BASIC_URL + 'api/admin/customer-report', {
+      headers: this.createAuthorizationHeader(),
+    })
+  }
+
   editData(customerId: any, customerDto: any): Observable<any> {
     return this.http.put(BASIC_URL + `api/employee/customer/${customerId}`, customerDto, {
       headers: this.createAuthorizationHeader(),

@@ -121,15 +121,16 @@ export class InventoryReportComponent implements OnInit {
         expiryDate: item.expiryDate ? new Date(item.expiryDate) : null
       }));
       this.processInventoryData();
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
+  // ngAfterViewInit() {
+  //   this.dataSource.paginator = this.paginator;
+  //   this.dataSource.sort = this.sort;
+  // }
 
 
   applyFilter(event: Event) {
