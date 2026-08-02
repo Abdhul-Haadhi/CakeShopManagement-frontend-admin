@@ -361,7 +361,7 @@ export class ProductRegistrationComponent implements OnInit {
               console.log("RESPONSE:", formData);
               if (response.productId != null) {
                 this.snackBar.open('Product added successfully', 'Ok', { duration: 5000 });
-                this.router.navigateByUrl('/dashboard');
+                // this.router.navigateByUrl('/dashboard');
               }
               else {
                 this.snackBar.open(response.message, 'ERROR', { duration: 5000 });

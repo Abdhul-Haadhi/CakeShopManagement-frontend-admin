@@ -32,10 +32,17 @@ export class InventoryService {
   }
 
   getInventoryReport(): Observable<any> {
-    return this.http.get(BASIC_URL + 'api/employee/inventory/report', {
+    return this.http.get(BASIC_URL + 'api/employee/inventory/batch-report', {
       headers: this.createAuthorizationHeader(),
     });
   }
+
+  getInventorySummaryReport(): Observable<any> {
+    return this.http.get(BASIC_URL + 'api/employee/inventory/summary-report', {
+      headers: this.createAuthorizationHeader(),
+    })
+  }
+
 
   editInventory(inventoryId: any, inventoryDto: any): Observable<any> {
     return this.http.put(BASIC_URL + `api/employee/inventory/${inventoryId}`, inventoryDto, {

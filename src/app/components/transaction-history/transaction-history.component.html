@@ -1,0 +1,93 @@
+<h2 mat-dialog-title>
+    Stock Transaction History
+</h2>
+
+<mat-dialog-content>
+
+    <h3>{{ item.itemName }}</h3>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+
+        <!-- Date -->
+        <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef>
+                Date
+            </th>
+
+            <td mat-cell *matCellDef="let row">
+                {{ row.transactionDate }}
+            </td>
+        </ng-container>
+
+        <!-- Type -->
+        <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>
+                Type
+            </th>
+
+            <td mat-cell *matCellDef="let row">
+
+                <span class="status-chip" [ngClass]="getChipClass(row.transactionType)">
+
+                    {{ row.transactionType }}
+
+                </span>
+
+            </td>
+        </ng-container>
+
+        <!-- Quantity -->
+        <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef>
+                Quantity
+            </th>
+
+            <td mat-cell *matCellDef="let row">
+                {{ row.quantity | number:'1.0-2' }} {{ item.unit }}
+            </td>
+        </ng-container>
+
+        <!-- Batch -->
+        <ng-container matColumnDef="batch">
+            <th mat-header-cell *matHeaderCellDef>
+                Batch
+            </th>
+
+            <td mat-cell *matCellDef="let row">
+                {{ row.batchNumber }}
+            </td>
+        </ng-container>
+
+        <!-- Reference -->
+        <ng-container matColumnDef="reference">
+            <th mat-header-cell *matHeaderCellDef>
+                Reference
+            </th>
+
+            <td mat-cell *matCellDef="let row">
+                {{ row.reference }}
+            </td>
+        </ng-container>
+
+        <!-- Remark -->
+        <ng-container matColumnDef="remark">
+            <th mat-header-cell *matHeaderCellDef>
+                Remark
+            </th>
+
+            <td mat-cell *matCellDef="let row">
+                {{ row.remark }}
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    </table>
+
+    <div class="empty-message" *ngIf="dataSource.data.length == 0">
+        No transactions found.
+    </div>
+
+</mat-dialog-content>

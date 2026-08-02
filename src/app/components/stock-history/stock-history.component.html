@@ -7,7 +7,11 @@
         {{item.itemName}}
     </h3>
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+    <mat-divider></mat-divider>
+
+    <h3>Select Batch</h3>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 batch-table">
         <ng-container matColumnDef="batch">
             <th mat-header-cell *matHeaderCellDef>
                 Batch
@@ -62,8 +66,85 @@
             </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row;columns:displayedColumns"></tr>
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Expiry Status</th>
+            <td mat-cell *matCellDef="let row">
+                <span class="status-chip text-chip-green" *ngIf="getExpiryStatus(row.expiryDate)=='Good'">
+                    Good
+                </span>
+                <span class="status-chip text-chip-orange" *ngIf="getExpiryStatus(row.expiryDate)=='Expiring Soon'">
+                    Expiring Soon
+                </span>
+                <span class="status-chip text-chip-red" *ngIf="getExpiryStatus(row.expiryDate)=='Expired'">
+                    Expired
+                </span>
+                <span class="status-chip text-chip-grey" *ngIf="getExpiryStatus(row.expiryDate)=='No Expiry'">
+                    No Expiry
+                </span>
+            </td>
+        </ng-container>
 
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row;columns:displayedColumns" (click)="selectBatch(row)"
+            [class.selected-row]="selectedBatch?.stockId==row.stockId"></tr>
+
+    </table>
+
+    <!-- Wrap the section in an ngIf to only show when a batch is selected -->
+    <ng-container *ngIf="selectedBatch">
+        <h3>Deduct Stock (Batch: {{selectedBatch.batchNumber}})</h3>
+        <form [formGroup]="deductForm">
+            <mat-form-field appearance="outline">
+                <mat-label>Quantity</mat-label>
+                <!-- Fixed the duplicated input field here -->
+                <input matInput type="number" formControlName="quantity">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Reason</mat-label>
+                <input matInput formControlName="reason">
+            </mat-form-field>
+
+            <button mat-raised-button color="warn" (click)="deductStock()">
+                Deduct Stock
+            </button>
+            
+        </form>
+
+        <mat-divider></mat-divider>
+    </ng-container>
+
+    <mat-divider></mat-divider>
+
+    <h3>Transaction History</h3>
+
+    <table mat-table [dataSource]="transactionData">
+        <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef>Date</th>
+            <td mat-cell *matCellDef="let r">{{r.transactionDate}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let r">{{r.transactionType}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="qty">
+            <th mat-header-cell *matHeaderCellDef>Qty</th>
+            <td mat-cell *matCellDef="let r">{{r.quantity}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="batch">
+            <th mat-header-cell *matHeaderCellDef>Batch</th>
+            <td mat-cell *matCellDef="let r">{{r.batchNumber}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="reason">
+            <th mat-header-cell *matHeaderCellDef>Reason</th>
+            <td mat-cell *matCellDef="let r">{{r.reason}}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['date','type','qty','batch','reason']"></tr>
+        <tr mat-row *matRowDef="let row;columns:['date','type','qty','batch','reason']"></tr>
     </table>
 </mat-dialog-content>

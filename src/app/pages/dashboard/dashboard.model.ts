@@ -5,6 +5,8 @@ export interface DashboardDto {
     todayRevenue: number;
     availableProducts: number;
     lowStockCount: number;
+    expiringItemsCount: number;
+    expiredItemsCount: number;
 
     orderStatus: OrderStatusDto[];
     revenueChart: RevenueChartDto[];

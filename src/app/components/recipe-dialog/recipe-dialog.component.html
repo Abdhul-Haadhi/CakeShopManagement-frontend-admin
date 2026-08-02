@@ -1,5 +1,19 @@
 <h2 mat-dialog-title class="dialog-title">
-    {{data.productName}}<span>{{data.weight}}</span> <span class="subtitle">Recipe</span>
+
+    {{data.productName}}
+
+    <span class="subtitle">
+        (
+        <ng-container *ngIf="data.variantType=='WEIGHT'">
+            {{data.weight}} g
+        </ng-container>
+
+        <ng-container *ngIf="data.variantType=='PIECE'">
+            {{data.pieces}} pcs
+        </ng-container>
+        )
+    </span>
+
 </h2>
 
 <mat-dialog-content class="dialog-content">

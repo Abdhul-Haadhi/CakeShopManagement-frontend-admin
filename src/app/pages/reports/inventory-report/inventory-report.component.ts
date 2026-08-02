@@ -39,7 +39,7 @@ export class InventoryReportComponent implements OnInit {
     'quantity',
     'expiryDate',
     // 'status'
-    'stockStatus',
+    // 'stockStatus',
     'expiryStatus'
   ]
 
@@ -151,6 +151,7 @@ export class InventoryReportComponent implements OnInit {
     doc.setFontSize(11);
     doc.setTextColor(100);
     doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
+    doc.text(`Total Batches: ${this.totalItems}`, 14, 36);
 
 
     const bodyData = this.dataSource.filteredData.map(item => [
@@ -159,13 +160,13 @@ export class InventoryReportComponent implements OnInit {
       item.batchNo,
       item.quantity.toString(),
       item.expiryDate.toLocaleDateString(),
-      item.stockStatus,
+      // item.stockStatus,
       item.expiryStatus
     ]);
 
     autoTable(doc, {
-      startY: 36,
-      head: [['ID', 'Item Name', 'Batch No', 'Qty', 'Expiry Date', 'Stock Status', 'Expiry Status']],
+      startY: 38,
+      head: [['ID', 'Item Name', 'Batch No', 'Qty', 'Expiry Date', 'Expiry Status']],
       body: bodyData,
       theme: 'grid',
       headStyles: { fillColor: [3, 74, 156] },

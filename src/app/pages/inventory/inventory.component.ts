@@ -64,7 +64,7 @@ export class InventoryComponent implements OnInit {
     'reorderLevel',
     'currentQuantity',
     'stockStatus',
-    'expiryStatus',
+    // 'expiryStatus',
     'actions',
   ];
 
@@ -169,10 +169,17 @@ export class InventoryComponent implements OnInit {
 
   openHistory(item: any) {
     this.dialog.open(StockHistoryComponent, {
-      width: '700px',
+      width: '900px',
       data: item,
     });
   }
+
+  // openTransactions(item:any){
+  //   this.dialog.open(TransactionHistoryComponent,{
+  //     width:'800px',
+  //     data:item
+  //   })
+  // }
 
 
   onSubmit(): void {

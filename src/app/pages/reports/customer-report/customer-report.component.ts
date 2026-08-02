@@ -29,7 +29,7 @@ export interface CustomerData {
   templateUrl: './customer-report.component.html',
   styleUrl: './customer-report.component.scss'
 })
-export class CustomerReportComponent implements OnInit{
+export class CustomerReportComponent implements OnInit {
 
   displayedColumns: string[] = [
     'customerName',
@@ -48,8 +48,8 @@ export class CustomerReportComponent implements OnInit{
 
   totalCustomers = 0;
   newCustomersThisMonth = 0;
-  activeCustomers = 0;
-  regularCustomers = 0;
+  registeredCustomers = 0;
+  guestCustomers = 0;
 
   customers: CustomerData[] = [];
 
@@ -59,9 +59,17 @@ export class CustomerReportComponent implements OnInit{
 
   ngOnInit(): void {
     this.customerService.getCustomerReport().subscribe((res: any) => {
-      console.log("getting:",res);
-      
-      this.customers = res;
+      console.log("getting:", res);
+
+      this.customers = res.map((customer: any) => ({
+        ...customer,
+        lastOrderDate: customer.lastOrderDate
+          ? new Date(customer.lastOrderDate)
+          : null,
+        firstOrderDate: customer.firstOrderDate
+          ? new Date(customer.firstOrderDate)
+          : null
+      }));
       this.processCustomerData();
     });
   }
@@ -108,32 +116,68 @@ export class CustomerReportComponent implements OnInit{
 
   // }
 
+  // processCustomerData() {
+  //   const today = new Date();
+  //   const currentMonth = today.getMonth();
+  //   const currentYear = today.getFullYear();
+
+  //   this.totalCustomers = this.customers.length;
+
+  //   this.activeCustomers = this.customers.filter(c =>
+  //     c.status === 'Active' || c.status === 'Regular'
+  //   ).length;
+
+  //   this.regularCustomers = this.customers.filter(c =>
+  //     c.status === 'Regular'
+  //   ).length;
+
+  //   this.newCustomersThisMonth = this.customers.filter(c => {
+  //     const firstOrder = new Date(c.firstOrderDate);
+
+  //     return (
+  //       firstOrder.getMonth() === currentMonth &&
+  //       firstOrder.getFullYear() === currentYear
+  //     );
+  //   }).length;
+
+  //   this.dataSource = new MatTableDataSource(this.customers);
+  //   this.dataSource.paginator = this.paginator;
+  //   this.dataSource.sort = this.sort;
+
+  // }
+
+
   processCustomerData() {
+
     const today = new Date();
     const currentMonth = today.getMonth();
     const currentYear = today.getFullYear();
 
     this.totalCustomers = this.customers.length;
 
-    this.activeCustomers = this.customers.filter(c =>
-      c.status === 'Active' || c.status === 'Regular'
+    this.registeredCustomers = this.customers.filter(c =>
+      c.status === 'Registered'
     ).length;
 
-    this.regularCustomers = this.customers.filter(c =>
-      c.status === 'Regular'
+    this.guestCustomers = this.customers.filter(c =>
+      c.status === 'Guest'
     ).length;
 
     this.newCustomersThisMonth = this.customers.filter(c => {
+
       const firstOrder = new Date(c.firstOrderDate);
 
       return (
         firstOrder.getMonth() === currentMonth &&
         firstOrder.getFullYear() === currentYear
       );
+
     }).length;
 
     this.dataSource = new MatTableDataSource(this.customers);
+
     this.dataSource.paginator = this.paginator;
+
     this.dataSource.sort = this.sort;
 
   }
@@ -177,9 +221,8 @@ export class CustomerReportComponent implements OnInit{
       headStyles: { fillColor: [3, 74, 156] },
       didParseCell: function (data) {
         if (data.section === 'body' && data.column.index === 5) {
-          if (data.cell.raw === 'Regular') data.cell.styles.textColor = [147, 51, 234]; // Purple
-          if (data.cell.raw === 'Active') data.cell.styles.textColor = [22, 163, 74]; // Green
-          if (data.cell.raw === 'Inactive') data.cell.styles.textColor = [100, 116, 139]; // Gray
+          if (data.cell.raw === 'Registered') data.cell.styles.textColor = [22, 163, 74];
+          if (data.cell.raw === 'Guest') data.cell.styles.textColor = [239, 68, 68];
         }
       }
     });

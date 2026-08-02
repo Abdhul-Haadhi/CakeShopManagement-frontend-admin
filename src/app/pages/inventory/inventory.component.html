@@ -9,7 +9,7 @@
         </button>
 
         <ng-container *ngIf="showForm">
-            
+
             <button mat-raised-button color="primary" class="action-btn" (click)="onSubmit()"
                 [disabled]="isButtonDisabled || ItemRegForm.invalid || (mode === 'edit' && ItemRegForm.pristine)">
                 <mat-icon>save</mat-icon> {{ saveButtonLabel }}
@@ -148,7 +148,7 @@
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="expiryStatus">
+                <!-- <ng-container matColumnDef="expiryStatus">
                     <th mat-header-cell *matHeaderCellDef>Expiry Status</th>
                     <td mat-cell *matCellDef="let item">
                         <span class="status-chip text-chip-green" *ngIf="item.expiryStatus === 'Good'">Good</span>
@@ -158,7 +158,7 @@
                         <span class="status-chip text-chip-grey"
                             *ngIf="item.expiryStatus === 'No Expiry' || !item.expiryStatus">No Expiry</span>
                     </td>
-                </ng-container>
+                </ng-container> -->
 
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef>Actions</th>
@@ -178,8 +178,8 @@
                                 <mat-icon>add_circle</mat-icon>
                             </button>
                             <button mat-icon-button class="action-icon-btn history-icon" (click)="openHistory(item)"
-                                matTooltip="View Stock Audit Logs">
-                                <mat-icon>history</mat-icon>
+                                matTooltip="Manage Stock">
+                                <mat-icon>inventory_2</mat-icon>
                             </button>
                         </div>
                     </td>

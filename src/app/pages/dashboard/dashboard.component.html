@@ -71,6 +71,22 @@
                 <span class="kpi-value">{{ lowStockCount }}</span>
             </div>
         </mat-card>
+
+        <mat-card class="kpi-card red">
+            <div class="kpi-icon"><mat-icon>event_busy</mat-icon></div>
+            <div class="kpi-content">
+                <span class="kpi-label">Expiring Items</span>
+                <span class="kpi-value">{{ expiringItemsCount }}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="kpi-card red">
+            <div class="kpi-icon"><mat-icon>event_busy</mat-icon></div>
+            <div class="kpi-content">
+                <span class="kpi-label">Expired Items</span>
+                <span class="kpi-value">{{ expiredItemsCount }}</span>
+            </div>
+        </mat-card>
     </div>
 
     <!-- Charts Section -->

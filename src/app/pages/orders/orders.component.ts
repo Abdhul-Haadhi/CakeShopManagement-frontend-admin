@@ -107,7 +107,7 @@ export class OrdersComponent implements OnInit {
         return ['PENDING', 'CONFIRMED', 'CANCELLED'];
 
       case 'CONFIRMED':
-        return ['CONFIRMED', 'BAKING'];
+        return ['CONFIRMED', 'BAKING', 'CANCELLED'];
 
       case 'BAKING':
         return ['BAKING', 'OUT FOR DELIVERY', 'DELIVERED',];

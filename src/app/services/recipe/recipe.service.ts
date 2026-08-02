@@ -2,6 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserStorageService } from '../storage/user-storage.service';
 import { Observable } from 'rxjs';
+import { RecipeDetailsDto } from './recipe-details.dto';
+
 
 
 const BASIC_URL = "http://localhost:8080/";
@@ -31,10 +33,14 @@ export class RecipeService {
     });
   }
 
-  getRecipeByProduct(productId: number): Observable<any> {
-    return this.http.get(BASIC_URL + `api/admin/recipe/${productId}`, {
-      headers: this.createAuthorizationHeader(),
-    });
+
+  getRecipeByProduct(productId: number) {
+    return this.http.get<RecipeDetailsDto>(
+      BASIC_URL + `api/admin/recipe/${productId}`,
+      {
+        headers: this.createAuthorizationHeader()
+      }
+    );
   }
 
   // deleteRecipe(recipeId: number): Observable<any> {

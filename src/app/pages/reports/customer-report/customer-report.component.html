@@ -35,16 +35,16 @@
         <mat-card class="summary-card active">
             <div class="card-icon"><mat-icon>how_to_reg</mat-icon></div>
             <div class="card-content">
-                <span class="card-label">Active (30 Days)</span>
-                <span class="card-value">{{activeCustomers}}</span>
+                <span class="card-label">Registered Customers</span>
+                <span class="card-value">{{registeredCustomers}}</span>
             </div>
         </mat-card>
 
         <mat-card class="summary-card vip">
             <div class="card-icon"><mat-icon>workspace_premium</mat-icon></div>
             <div class="card-content">
-                <span class="card-label">Regular Customers</span>
-                <span class="card-value">{{regularCustomers}}</span>
+                <span class="card-label">Guest Customers</span>
+                <span class="card-value">{{guestCustomers}}</span>
             </div>
         </mat-card>
     </div>
@@ -99,9 +99,8 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center"> Status </th>
                     <td mat-cell *matCellDef="let row" class="text-center">
                         <span class="status-badge" [ngClass]="{
-                            'badge-regular': row.status === 'Regular',
-                            'badge-active': row.status === 'Active',
-                            'badge-inactive': row.status === 'Inactive'
+                            'badge-active': row.status === 'Registered',
+                            'badge-inactive': row.status === 'Guest'
                         }">
                             {{row.status}}
                         </span>

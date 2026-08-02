@@ -130,9 +130,15 @@ export class SideBarComponent implements OnInit {
       roles: ['ADMIN']
     },
     {
+      routeLink: 'inventory-summary-report',
+      icon: 'fas fa-clipboard-check',
+      label: 'Inventory Summary Report',
+      roles: ['ADMIN'],
+    },
+    {
       routeLink: 'inventory-report',
       icon: 'fas fa-clipboard-check',
-      label: 'Inventory Report',
+      label: 'Inventory Batch Report',
       roles: ['ADMIN'],
     },
     {

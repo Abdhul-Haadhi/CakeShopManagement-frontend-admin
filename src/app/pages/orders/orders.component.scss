@@ -113,3 +113,27 @@ button {
   margin-top: 10px;
   padding-left: 10px;
 }
+
+.orders-table {
+  width: 100%;
+  margin-top: 20px;
+
+  // Add this inside or alongside .orders-table styling
+  tr.delivered-row {
+    background-color: #ddf3df; // Light green background
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #c7eac8; // Slightly darker green when hovering over the row
+    }
+  }
+
+  tr.cancelled-row {
+    background-color: #ff8d8d; // Light red background
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #fd8282; // Slightly darker green when hovering over the row
+    }
+  }
+}

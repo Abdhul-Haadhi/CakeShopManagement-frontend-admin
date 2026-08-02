@@ -34,6 +34,8 @@ export class DashboardComponent implements OnInit {
   availableProducts = 0;
   lowStockCount = 0;
   completedOrders = 0;
+  expiringItemsCount = 0;
+  expiredItemsCount = 0;
 
   recentOrdersColumns: string[] = ['id', 'customer', 'amount', 'status'];
 
@@ -63,6 +65,8 @@ export class DashboardComponent implements OnInit {
         this.todayRevenue = res.todayRevenue;
         this.availableProducts = res.availableProducts;
         this.lowStockCount = res.lowStockCount;
+        this.expiringItemsCount = res.expiringItemsCount;
+        this.expiredItemsCount = res.expiredItemsCount;
 
         this.recentOrders.data = res.recentOrders;
 
@@ -85,7 +89,7 @@ export class DashboardComponent implements OnInit {
 
     const revenueLabels = this.dashboardData.revenueChart.map((x: any) => x.label);
     const revenueValues = this.dashboardData.revenueChart.map((x: any) => x.revenue);
-    
+
 
     // 1. Sales Overview (Line Chart)
     new Chart(this.salesLineCanvas.nativeElement, {

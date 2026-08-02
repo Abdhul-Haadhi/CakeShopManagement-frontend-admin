@@ -34,7 +34,7 @@ export class InventoryStockComponent implements OnInit {
   ngOnInit(): void {
 
     this.stockForm = this.fb.group({
-      quantityAdded: [0, [Validators.required, Validators.min(0.01)]],
+      quantityAdded: ['', [Validators.required, Validators.min(0.01)]],
       expiryDate: [''],
       batchNumber: ['Loading...'],
     });

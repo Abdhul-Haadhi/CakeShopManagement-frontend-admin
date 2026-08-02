@@ -32,7 +32,18 @@ export class StockService {
     });
   }
 
-  
+  getStockTransactions(inventoryId: number) {
+    return this.http.get(BASIC_URL + "api/employee/stock/transactions/" + inventoryId, {
+      headers: this.createAuthorizationHeader(),
+    })
+  }
+
+  deductStock(stockId: number, data: any) {
+    return this.http.put(BASIC_URL + "api/employee/stock/deduct/" + stockId, data, {
+      headers: this.createAuthorizationHeader(),
+    })
+  }
+
 
   private createAuthorizationHeader(): HttpHeaders {
     return new HttpHeaders().set('Authorization', 'Bearer ' + UserStorageService.getToken());

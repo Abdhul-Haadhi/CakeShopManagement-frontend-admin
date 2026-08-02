@@ -68,7 +68,7 @@ export class RecipeManagementComponent implements OnInit {
       productId: ['', Validators.required],
       inventoryId: ['', Validators.required],
       quantityRequired: ['', [Validators.required, Validators.min(0.01)]],
-      variantId:['',Validators.required],
+      variantId: ['', Validators.required],
     });
 
     this.loadProducts();
@@ -135,7 +135,7 @@ export class RecipeManagementComponent implements OnInit {
     const payload = {
       productId: this.recipeForm.value.productId,
       ingredients: this.recipeItems,
-      variantId:this.recipeForm.value.variantId,
+      variantId: this.recipeForm.value.variantId,
     };
 
     this.recipeService.addRecipe(payload).subscribe({
@@ -172,10 +172,10 @@ export class RecipeManagementComponent implements OnInit {
     });
   }
 
-  onProductChange(){
+  onProductChange() {
     const productId = this.recipeForm.value.productId;
 
-    if(productId){
+    if (productId) {
       this.loadVariants(productId);
     }
   }
@@ -211,18 +211,23 @@ export class RecipeManagementComponent implements OnInit {
   }
 
 
-  viewRecipe(productId: number, productName: string) {
+  viewRecipe(productId: number) {
+
     this.recipeService.getRecipeByProduct(productId).subscribe({
-      next: (ingredients) => {
+
+      next: (recipe) => {
+
+        console.log(recipe);
+
         this.dialog.open(RecipeDialogComponent, {
           width: '500px',
-          data: {
-            productName,
-            ingredients
-          }
+          data: recipe
         });
+
       }
+
     });
+
   }
 
 

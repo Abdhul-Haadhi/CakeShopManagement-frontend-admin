@@ -61,7 +61,7 @@ export class AuthService {
   }
 
   startAutoLogoutTimer() {
-    const expiryTime = 1000 * 60 * 60 * 5; // 5hrs
+    const expiryTime = 1000 * 60 * 60 * 15; // 15hrs
 
     setTimeout(() => {
       UserStorageService.signOut();
