@@ -142,6 +142,12 @@ export class SideBarComponent implements OnInit {
       roles: ['ADMIN'],
     },
     {
+      routeLink: 'stock-transaction-report',
+      icon: 'fas fa-clipboard-check',
+      label: 'Stock Transactions',
+      roles: ['ADMIN'],
+    },
+    {
       routeLink: 'sales-report',
       icon: 'fas fa-chart-line',
       label: 'Sales Report',

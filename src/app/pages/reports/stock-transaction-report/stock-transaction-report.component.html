@@ -1,0 +1,148 @@
+<div class="page-container">
+
+    <div class="report-header no-print">
+        <div class="title-section">
+            <h1 class="page-title">Stock Transaction Report</h1>
+            <p class="page-subtitle">Track inventory movements, batches, and history</p>
+        </div>
+        <div class="action-buttons">
+            <button mat-flat-button color="primary" class="pdf-btn" (click)="exportToPDF()">
+                <mat-icon>picture_as_pdf</mat-icon> Export PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-grid no-print">
+        <mat-card class="summary-card total">
+            <div class="card-icon"><mat-icon>receipt_long</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">Total Transactions</span>
+                <span class="card-value">{{totalTransactions}}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="summary-card in">
+            <div class="card-icon"><mat-icon>add_circle</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">Stock In (All Time)</span>
+                <span class="card-value">{{stockInCount}}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="summary-card out">
+            <div class="card-icon"><mat-icon>remove_circle</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">Stock Out (All Time)</span>
+                <span class="card-value">{{stockOutCount}}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="summary-card today">
+            <div class="card-icon"><mat-icon>today</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">Today's Transactions</span>
+                <span class="card-value">{{todaysTransactions}}</span>
+            </div>
+        </mat-card>
+    </div>
+
+    <!-- Table Section -->
+    <mat-card class="table-card">
+        <div class="table-header no-print">
+            <mat-form-field appearance="outline" class="search-bar">
+                <mat-label>Search Transactions</mat-label>
+                <mat-icon matPrefix>search</mat-icon>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Search by item, batch, or employee...">
+            </mat-form-field>
+        </div>
+
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" matSort class="transaction-table">
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="transactionId">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                    <td mat-cell *matCellDef="let row"> #{{row.transactionId}} </td>
+                </ng-container>
+
+                <!-- Date Column -->
+                <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                    <td mat-cell *matCellDef="let row"> {{row.transactionDate | date:'mediumDate'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="itemSku">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Item SKU</th>
+                    <td mat-cell *matCellDef="let row" class="sku-text">{{ row.itemSku }}</td>
+                </ng-container>
+
+                <!-- Item Column -->
+                <ng-container matColumnDef="itemName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
+                    <td mat-cell *matCellDef="let row">
+                        <strong>{{row.itemName}}</strong>
+                    </td>
+                </ng-container>
+
+                <!-- Batch Number Column -->
+                <ng-container matColumnDef="batchNumber">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Batch No. </th>
+                    <td mat-cell *matCellDef="let row">
+                        <span class="batch-badge">{{row.batchNumber}}</span>
+                    </td>
+                </ng-container>
+
+                <!-- Type Column -->
+                <ng-container matColumnDef="transactionType">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center"> Type </th>
+                    <td mat-cell *matCellDef="let row" class="text-center">
+                        <span class="status-badge" [ngClass]="{
+                            'badge-in': row.transactionType === 'Stock In',
+                            'badge-out': row.transactionType === 'Stock Out'
+                        }">
+                            {{row.transactionType}}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <!-- Quantity Column -->
+                <ng-container matColumnDef="quantity">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-right"> Qty </th>
+                    <td mat-cell *matCellDef="let row" class="text-right font-bold">
+                        <span class="qty" [ngClass]="{
+                        'text-green':row.transactionType==='Stock In',
+                        'text-red':row.transactionType==='Stock Out'
+                        }">
+                            {{row.quantity | number:'1.0-2'}}
+                        </span>
+                    </td>
+
+                </ng-container>
+
+                <!-- Remaining Quantity Column -->
+                <ng-container matColumnDef="remainingQuantity">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center"> Remaining </th>
+                    <td mat-cell *matCellDef="let row" class="text-center"> {{row.remainingQuantity}} </td>
+                </ng-container>
+
+                <!-- Employee Column -->
+                <ng-container matColumnDef="employeeName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Employee </th>
+                    <td mat-cell *matCellDef="let row"> {{row.employeeName}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <!-- No Data Row -->
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell no-data-cell" colspan="8">No transactions found matching your search.</td>
+                </tr>
+            </table>
+        </div>
+
+        <mat-paginator [pageSizeOptions]="[10, 25, 50]" aria-label="Select page of transactions"
+            class="no-print"></mat-paginator>
+    </mat-card>
+</div>

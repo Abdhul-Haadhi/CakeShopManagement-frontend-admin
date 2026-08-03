@@ -16,6 +16,7 @@ import { InventoryReportComponent } from './pages/reports/inventory-report/inven
 import { SalesReportComponent } from './pages/reports/sales-report/sales-report.component';
 import { CustomerReportComponent } from './pages/reports/customer-report/customer-report.component';
 import { InventorySummaryReportComponent } from './pages/reports/inventory-summary-report/inventory-summary-report.component';
+import { StockTransactionReportComponent } from './pages/reports/stock-transaction-report/stock-transaction-report.component';
 
 
 
@@ -35,5 +36,6 @@ export const routes: Routes = [
     { path: "inventory-summary-report", component: InventorySummaryReportComponent, canActivate: [authGuard] },
     { path: "sales-report", component: SalesReportComponent, canActivate: [authGuard] },
     { path: "customer-report", component: CustomerReportComponent, canActivate: [authGuard] },
+    { path: "stock-transaction-report", component: StockTransactionReportComponent, canActivate: [authGuard] },
 
 ];

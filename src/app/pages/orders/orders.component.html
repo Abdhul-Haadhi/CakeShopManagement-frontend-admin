@@ -57,39 +57,40 @@
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef> Actions </th>
             <td mat-cell *matCellDef="let order">
+                <div class="action-flex-container">
+                    <!-- <select class="select-value" [(ngModel)]="order.status">
+                        <option *ngFor="let status of statuses" [value]="status">
+                            {{status}}
+                        </option>
+                    </select> -->
 
-                <!-- <select class="select-value" [(ngModel)]="order.status">
-                    <option *ngFor="let status of statuses" [value]="status">
-                        {{status}}
-                    </option>
-                </select> -->
+                    <select class="select-value" [(ngModel)]="order.status">
+                        <option *ngFor="let status of getAllowedStatuses(order.originalStatus)" [value]="status">
+                            {{status}}
+                        </option>
+                    </select>
 
-                <select class="select-value" [(ngModel)]="order.status">
-                    <option *ngFor="let status of getAllowedStatuses(order.originalStatus)" [value]="status">
-                        {{status}}
-                    </option>
-                </select>
+                    <button class="update-btn" (click)="changeStatus(order.orderId, order.status)"
+                        [disabled]="order.status === order.originalStatus">
+                        Update
+                    </button>
 
-                <button class="update-btn" (click)="changeStatus(order.orderId, order.status)"
-                    [disabled]="order.status === order.originalStatus">
-                    Update
-                </button>
+                    <!-- <button class="view-btn" (click)="toggleItems(order.orderId)">
+                        {{ expandedOrderId === order.orderId ? 'Hide Details' : 'View Details' }}
+                    </button> -->
 
-                <!-- <button class="view-btn" (click)="toggleItems(order.orderId)">
-                    {{ expandedOrderId === order.orderId ? 'Hide Details' : 'View Details' }}
-                </button> -->
-
-                <button class="view-btn" (click)="viewDetails(order)">
-                    View Details
-                </button>
+                    <button class="view-btn" (click)="viewDetails(order)">
+                        View Details
+                    </button>
+                </div>
 
             </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <!-- <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr> -->
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-            [class.delivered-row]="row.status === 'DELIVERED'" [class.cancelled-row]=" row.status==='CANCELLED'"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" [class.delivered-row]="row.status === 'DELIVERED'"
+            [class.cancelled-row]=" row.status==='CANCELLED'"></tr>
 
     </table>
 

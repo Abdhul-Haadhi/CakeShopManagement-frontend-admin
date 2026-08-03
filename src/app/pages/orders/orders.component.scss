@@ -45,12 +45,31 @@
   font-size: 12px;
 }
 
+/* 1. Flexbox container inside the cell (leaves the table-cell layout intact) */
+.action-flex-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Perfect spacing between items */
+}
+
+/* 2. Fixed width for the select dropdown */
+.select-value {
+  width: 130px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+/* 3. Base button styles (removed old margins since 'gap' handles it) */
 button {
-  margin-right: 8px;
   padding: 8px 14px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  margin: 0;
+  /* Forces old margins to reset */
 }
 
 // .update-btn {
@@ -59,26 +78,24 @@ button {
 //   margin-left: 10px;
 // }
 
-.view-btn {
-  background: #673ab7;
-  color: white;
-}
-
+/* 4. Update Button */
 .update-btn {
   background: #1976d2;
   color: white;
-  margin-left: 10px;
   transition: all 0.2s ease;
-  /* Makes the color change smooth */
 
-  /* Add this specific targeting for the disabled state */
   &:disabled {
     background: #b0bec5;
-    /* Light grey */
     color: #ffffff;
-    // cursor: not-allowed;
     opacity: 0.7;
+    cursor: not-allowed;
   }
+}
+
+/* 5. View Details Button */
+.view-btn {
+  background: #673ab7;
+  color: white;
 }
 
 .details-panel {

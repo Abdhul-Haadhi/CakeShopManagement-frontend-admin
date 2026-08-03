@@ -38,6 +38,12 @@ export class StockService {
     })
   }
 
+  getStockTransactionReport(): Observable<any> {
+    return this.http.get(BASIC_URL + "api/employee/stock/transaction-report", {
+      headers: this.createAuthorizationHeader(),
+    });
+  }
+
   deductStock(stockId: number, data: any) {
     return this.http.put(BASIC_URL + "api/employee/stock/deduct/" + stockId, data, {
       headers: this.createAuthorizationHeader(),
