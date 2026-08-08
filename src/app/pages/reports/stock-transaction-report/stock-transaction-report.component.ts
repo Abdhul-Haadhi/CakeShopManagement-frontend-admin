@@ -89,11 +89,11 @@ export class StockTransactionReportComponent implements OnInit {
     this.totalTransactions = this.transactions.length;
 
     this.stockInCount = this.transactions.filter(t =>
-      t.transactionType === 'Stock In'
+      t.transactionType === 'IN'
     ).length;
 
     this.stockOutCount = this.transactions.filter(t =>
-      t.transactionType === 'Stock Out'
+      t.transactionType === 'OUT'
     ).length;
 
     this.todaysTransactions = this.transactions.filter(t => {

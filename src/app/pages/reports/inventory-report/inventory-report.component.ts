@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,7 +16,7 @@ export interface InventoryItem {
   quantity: number;
   unit: string;
   reorderLevel: number;
-  expiryDate: Date;
+  expiryDate: Date | null;
   // status?: string;
   stockStatus?: string;
   expiryStatus?: string;
@@ -29,7 +29,7 @@ export interface InventoryItem {
   templateUrl: './inventory-report.component.html',
   styleUrl: './inventory-report.component.scss'
 })
-export class InventoryReportComponent implements OnInit {
+export class InventoryReportComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [
     'id',
@@ -67,6 +67,13 @@ export class InventoryReportComponent implements OnInit {
     this.loadReport();
   }
 
+  ngAfterViewInit(): void {
+    if (this.dataSource) {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    }
+  }
+
   processInventoryData() {
     this.totalItems = 0;
     this.lowStockItems = 0;
@@ -74,6 +81,7 @@ export class InventoryReportComponent implements OnInit {
     this.expiredItems = 0;
 
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     this.totalItems = this.inventoryData.length;
 
@@ -90,18 +98,45 @@ export class InventoryReportComponent implements OnInit {
         item.stockStatus = "In Stock";
       }
 
-      const diffDays =
-        Math.ceil(
-          (new Date(item.expiryDate).getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+      // 
 
-      if (diffDays < 0)
-        item.expiryStatus = "Expired";
+      if (!item.expiryDate) {
 
-      else if (diffDays <= 7)
-        item.expiryStatus = "Expiring Soon";
+        item.expiryStatus = "No Expiry";
 
-      else
-        item.expiryStatus = "Good";
+      }
+      else {
+
+        const expiry = new Date(item.expiryDate);
+        expiry.setHours(0, 0, 0, 0);
+
+        const diffDays = Math.ceil(
+          (expiry.getTime() - today.getTime()) /
+          (1000 * 60 * 60 * 24)
+        );
+
+        if (diffDays < 0) {
+
+          item.expiryStatus = "Expired";
+
+          // Count only expired stock that still exists
+          if (item.quantity > 0) {
+            this.expiredItems++;
+          }
+
+        }
+        else if (diffDays <= 7) {
+
+          item.expiryStatus = "Expiring Soon";
+
+        }
+        else {
+
+          item.expiryStatus = "Good";
+
+        }
+
+      }
     });
 
 
@@ -121,8 +156,8 @@ export class InventoryReportComponent implements OnInit {
         expiryDate: item.expiryDate ? new Date(item.expiryDate) : null
       }));
       this.processInventoryData();
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      // this.dataSource.paginator = this.paginator;
+      // this.dataSource.sort = this.sort;
     });
 
   }

@@ -25,7 +25,9 @@ import { Subscription } from 'rxjs';
 export class NavBarComponent implements OnInit, OnDestroy {
 
 
-  isLoggedIn: boolean = UserStorageService.isAdminLoggedIn() || UserStorageService.isEmployeeLoggedIn();
+  // isLoggedIn: boolean = UserStorageService.isAdminLoggedIn() || UserStorageService.isEmployeeLoggedIn();
+
+  isLoggedIn: boolean = UserStorageService.isUserLoggedIn();
 
   notifications: any[] = [];
   unreadCount: number = 0;
@@ -42,7 +44,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
     this.handleWebSocketConnection(this.isLoggedIn);
 
     this.router.events.subscribe(() => {
-      const currentlyLoggedIn = UserStorageService.isAdminLoggedIn() || UserStorageService.isEmployeeLoggedIn();
+      const currentlyLoggedIn = UserStorageService.isUserLoggedIn();
 
       if (currentlyLoggedIn !== this.isLoggedIn) {
         this.isLoggedIn = currentlyLoggedIn;
@@ -53,7 +55,8 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
 
   private handleWebSocketConnection(loggedIn: boolean) {
-    if (loggedIn && UserStorageService.isAdminLoggedIn()) {
+    // if (loggedIn && UserStorageService.isAdminLoggedIn()) {
+    if (loggedIn && UserStorageService.hasPermission('PERMISSION_MANAGEMENT')) {
 
       // 1. Fetch missed historical notifications from the database
       this.webSocketService.getUnreadNotifications().subscribe((missedNotifs: any[]) => {

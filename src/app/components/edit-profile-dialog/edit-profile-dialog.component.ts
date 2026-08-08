@@ -38,15 +38,53 @@ export class EditProfileDialogComponent implements OnInit {
       confirmPassword: ['', Validators.required],
     });
   }
+  // ngOnInit(): void {
+
+  //   const role = UserStorageService.getUserRole();
+
+  //   if (role === 'EMPLOYEE') {
+
+  //     this.profileForm.get('email')?.disable();
+
+  //     const employeeId = this.data.employeeId;
+
+  //     this.editProfileSevice.getEmployeeById(employeeId).subscribe({
+  //       next: (res: any) => {
+  //         this.profileForm.patchValue({
+  //           email: res.email
+  //         });
+  //       }
+  //     });
+  //   }
+  //   else if (role === 'ADMIN') {
+  //     this.profileForm.get('email')?.enable();
+
+  //     this.profileForm.patchValue({
+  //       email: UserStorageService.getUser()?.email
+  //     });
+  //   }
+
+  //   // const employeeId=this.data.employeeId;
+
+  //   // console.log("Employee ID::::", employeeId);
+
+  //   // this.editProfileSevice.getEmployeeById(employeeId).subscribe({
+  //   //   next:(res:any)=>{
+  //   //     console.log("getting:::",res);
+
+  //   //     this.profileForm.patchValue({
+  //   //       email:res.email
+  //   //     });
+  //   //   }
+  //   // })
+  // }
+
   ngOnInit(): void {
+    const employeeId = this.data?.employeeId;
 
-    const role = UserStorageService.getUserRole();
-
-    if (role === 'EMPLOYEE') {
-
+    // If an employeeId exists, this is a staff member (Employee, Cashier, etc.)
+    if (employeeId) {
       this.profileForm.get('email')?.disable();
-
-      const employeeId = this.data.employeeId;
 
       this.editProfileSevice.getEmployeeById(employeeId).subscribe({
         next: (res: any) => {
@@ -56,49 +94,88 @@ export class EditProfileDialogComponent implements OnInit {
         }
       });
     }
-    else if (role === 'ADMIN') {
+    // If no employeeId, it's the main Admin
+    else {
       this.profileForm.get('email')?.enable();
-      
+
       this.profileForm.patchValue({
         email: UserStorageService.getUser()?.email
       });
     }
-
-    // const employeeId=this.data.employeeId;
-
-    // console.log("Employee ID::::", employeeId);
-
-    // this.editProfileSevice.getEmployeeById(employeeId).subscribe({
-    //   next:(res:any)=>{
-    //     console.log("getting:::",res);
-
-    //     this.profileForm.patchValue({
-    //       email:res.email
-    //     });
-    //   }
-    // })
   }
+
+
 
   togglePasswordVisibility() {
     this.hidePassword = !this.hidePassword;
   }
 
 
+  // updateProfile() {
+  //   if (this.profileForm.valid) {
+
+  //     const formData = this.profileForm.getRawValue();
+
+  //     if (formData.newPassword !== formData.confirmPassword) {
+  //       // alert('Passwords do not match');
+  //       this.snackBar.open("Password does not match", 'Ok', { duration: 5000 });
+  //       return;
+  //     }
+  //     console.log(formData);
+
+  //     const role = UserStorageService.getUserRole();
+
+  //     if (role === 'EMPLOYEE') {
+  //       const payload = {
+  //         email: formData.email,
+  //         currentPassword: formData.currentPassword,
+  //         newPassword: formData.newPassword
+  //       }
+
+  //       this.editProfileSevice.changeEmployeePassword(payload).subscribe({
+  //         next: (response: any) => {
+  //           this.snackBar.open(response, 'Ok', { duration: 5000 });
+  //           this.logout();
+  //         },
+  //         error: (error) => {
+  //           this.snackBar.open(error.error, 'Error', { duration: 5000 });
+  //         }
+  //       });
+  //     }
+
+  //     // Call backend API here
+  //     else if (role === 'ADMIN') {
+  //       this.editProfileSevice.editProfile(formData).subscribe({
+  //         next: (response: any) => {
+  //           console.log("getting:", response);
+
+  //           this.snackBar.open(response || 'Admin details updated successfully', 'Ok', { duration: 5000 });
+  //           this.logout();
+  //         },
+  //         error: (error) => {
+  //           console.log(error);
+
+  //           this.snackBar.open('Update failed', 'Error', { duration: 5000 });
+  //         }
+  //       });
+  //     }
+  //     this.dialogRef.close();
+  //   }
+  // }
+
   updateProfile() {
     if (this.profileForm.valid) {
-
       const formData = this.profileForm.getRawValue();
 
       if (formData.newPassword !== formData.confirmPassword) {
-        // alert('Passwords do not match');
         this.snackBar.open("Password does not match", 'Ok', { duration: 5000 });
         return;
       }
-      console.log(formData);
 
-      const role = UserStorageService.getUserRole();
+      const employeeId = this.data?.employeeId;
 
-      if (role === 'EMPLOYEE') {
+      // Update Staff (Employee, Cashier, etc.)
+      if (employeeId) {
         const payload = {
           email: formData.email,
           currentPassword: formData.currentPassword,
@@ -115,19 +192,14 @@ export class EditProfileDialogComponent implements OnInit {
           }
         });
       }
-
-      // Call backend API here
-      else if (role === 'ADMIN') {
+      // Update main Admin
+      else {
         this.editProfileSevice.editProfile(formData).subscribe({
           next: (response: any) => {
-            console.log("getting:", response);
-
             this.snackBar.open(response || 'Admin details updated successfully', 'Ok', { duration: 5000 });
             this.logout();
           },
           error: (error) => {
-            console.log(error);
-
             this.snackBar.open('Update failed', 'Error', { duration: 5000 });
           }
         });

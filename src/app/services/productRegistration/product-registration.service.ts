@@ -1,10 +1,11 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpService } from '../http.service';
 import { Observable } from 'rxjs';
 import { UserStorageService } from '../storage/user-storage.service';
+import { ProductReportDto } from './ProductReportDto.model';
 
 
 const BASIC_URL = "http://localhost:8080/"
@@ -53,6 +54,18 @@ export class ProductRegistrationService {
     return this.http.get(BASIC_URL + 'api/employee/next-product-sku', {
       headers: this.createAuthorizationHeader(),
       responseType: 'text'
+    });
+  }
+
+  getProductReport(categoryId?: number): Observable<ProductReportDto[]> {
+    let params = new HttpParams();
+    if (categoryId != null) {
+      params = params.set('categoryId', categoryId.toString());
+    }
+
+    return this.http.get<ProductReportDto[]>(BASIC_URL + 'api/employee/product-report', {
+      headers: this.createAuthorizationHeader(),
+      params: params
     });
   }
 

@@ -19,50 +19,70 @@ import { ProductRegistrationComponent } from './pages/product-registration/produ
   selector: 'app-root',
   standalone: true,
   imports: [SideBarComponent, MainComponent, RouterOutlet, RouterLink, MatToolbarModule,
-    MatButtonModule, MatIconModule, MatDividerModule, FormsModule, ReactiveFormsModule, 
+    MatButtonModule, MatIconModule, MatDividerModule, FormsModule, ReactiveFormsModule,
     HttpClientModule, NgIf, RouterLinkActive, NavBarComponent, ProductRegistrationComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 
 
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   title = 'CakeShop-frontend-user';
 
   isSidebarCollapsed = signal<boolean>(false);
   screenWidth = signal<number>(window.innerWidth);
 
   @HostListener('window:resize')
-  onResize(){
+  onResize() {
     this.screenWidth.set(window.innerWidth);
-    if(this.screenWidth() < 768){
+    if (this.screenWidth() < 768) {
       this.isSidebarCollapsed.set(true);
     }
-    else{
+    else {
       this.isSidebarCollapsed.set(false);
     }
   }
 
   // isCustomerLoggedIn : boolean = UserStorageService.isCustomerLoggedIn();
-  isAdminLoggedIn : boolean = UserStorageService.isAdminLoggedIn();
+  isAdminLoggedIn: boolean = UserStorageService.isUserLoggedIn();
 
   constructor(private router: Router) { }
 
-  ngOnInit(): void {
+  // ngOnInit(): void {
 
-    if(UserStorageService.isAdminLoggedIn()){
+  //   if(UserStorageService.isAdminLoggedIn()){
+  //     this.router.navigate(['/dashboard']);
+  //   }
+  //   else{
+  //     this.router.navigate(['/login']);
+  //   }
+
+
+  //   this.isSidebarCollapsed.set(this.screenWidth() < 768);
+
+  //   this.router.events.subscribe(event => {
+  //     // this.isCustomerLoggedIn = UserStorageService.isCustomerLoggedIn();
+  //     this.isAdminLoggedIn = UserStorageService.isUserLoggedIn();
+  //   })
+  // }
+
+  ngOnInit(): void {
+    // Change this to check if ANY user is logged in
+    if (UserStorageService.isUserLoggedIn() && UserStorageService.hasPermission("DASHBOARD_MANAGEMENT")) {
       this.router.navigate(['/dashboard']);
     }
-    else{
+    else if(UserStorageService.isUserLoggedIn()){
+      this.router.navigate(['/about']);
+    }
+    else {
       this.router.navigate(['/login']);
     }
-
 
     this.isSidebarCollapsed.set(this.screenWidth() < 768);
 
     this.router.events.subscribe(event => {
-      // this.isCustomerLoggedIn = UserStorageService.isCustomerLoggedIn();
-      this.isAdminLoggedIn = UserStorageService.isAdminLoggedIn();
+      // Keep this generic as well
+      this.isAdminLoggedIn = UserStorageService.isUserLoggedIn();
     })
   }
 
@@ -72,7 +92,7 @@ export class AppComponent implements OnInit{
   // }
 
 
-  changeIsSidebarCollapsed(isSidebarCollapsed: boolean): void{
+  changeIsSidebarCollapsed(isSidebarCollapsed: boolean): void {
     this.isSidebarCollapsed.set(isSidebarCollapsed);
   }
 

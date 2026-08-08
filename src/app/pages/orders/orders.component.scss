@@ -21,6 +21,33 @@
     letter-spacing: 0.5px;
   }
 
+  .action-btn {
+    margin-left: 12px;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 0 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    &[disabled] {
+      opacity: 0.6 !important;
+      background-color: #b0bec5 !important;
+      color: #ffffff !important;
+    }
+  }
+
+}
+
+.example-spacer {
+    flex: 1 1 auto;
 }
 
 .orders-table {

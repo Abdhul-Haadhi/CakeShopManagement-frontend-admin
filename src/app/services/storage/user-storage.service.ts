@@ -21,12 +21,32 @@ export class UserStorageService {
     window.localStorage.setItem(USER, JSON.stringify(user));
   }
 
+  static getPermissions(): string[] {
+    const user = this.getUser();
+
+    if (!user || !user.permissions) {
+      return [];
+    }
+
+    return user.permissions;
+  }
+
+  static hasPermission(permission: string): boolean {
+    return this.getPermissions().includes(permission);
+  }
+
   static getToken(): string | null {
     return localStorage.getItem(TOKEN);
   }
 
   static getUser(): any {
-    return JSON.parse(localStorage.getItem(USER));
+    const user = localStorage.getItem(USER);
+
+    if (!user) {
+      return null;
+    }
+
+    return JSON.parse(user);
   }
 
   static getUserId(): string {
@@ -53,23 +73,27 @@ export class UserStorageService {
     return user.role;
   }
 
+  static isUserLoggedIn(): boolean {
+    return this.getToken() !== null;
+  }
+
   static isAdminLoggedIn(): boolean {
-    if (this.getToken() === null) {
+
+    if (!this.getToken()) {
       return false;
     }
 
-    const role: string = this.getUserRole();
-    return role == 'ADMIN';
+    return this.getUserRole() === 'ADMIN';
   }
 
 
   static isEmployeeLoggedIn(): boolean {
-    if (this.getToken() === null) {
+
+    if (!this.getToken()) {
       return false;
     }
 
-    const role: string = this.getUserRole();
-    return role == 'EMPLOYEE';
+    return this.getUserRole() === 'EMPLOYEE';
   }
 
   static signOut(): void {

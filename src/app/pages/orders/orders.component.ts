@@ -6,11 +6,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { OrderDetailsDialogComponent } from '../../components/order-details-dialog/order-details-dialog.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [DatePipe, NgFor, NgIf, AngularMaterailModules, FormsModule],
+  imports: [DatePipe, NgFor, NgIf, AngularMaterailModules, FormsModule, RouterLink],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss'
 })

@@ -37,7 +37,7 @@ export class RegDialogComponent implements OnInit {
       userName: new FormControl({ value: '', disabled: true }),
       email: new FormControl({ value: '', disabled: true }),
       password: new FormControl('', [Validators.required]),
-      role: new FormControl(''),
+      roleId: new FormControl(''),
     });
   }
 
@@ -47,7 +47,7 @@ export class RegDialogComponent implements OnInit {
       employeeId: this.data.employeeId,
       userName: this.data.employeeName,
       email: this.data.email,
-      role: this.data.role
+      roleId: this.data.roleId
     });
   }
 
@@ -115,7 +115,8 @@ export class RegDialogComponent implements OnInit {
         userName: formData.userName,
         email: formData.email,
         password: formData.password,
-        role: formData.role
+        roleId: formData.roleId,
+        userId: formData.userId,
       };
 
       console.log("Dialog data:", this.data);

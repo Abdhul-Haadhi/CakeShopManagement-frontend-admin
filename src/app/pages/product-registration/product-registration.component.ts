@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ManageCustomizationDialogComponent } from '../../components/manage-customization-dialog/manage-customization-dialog.component';
 import { FormArray } from '@angular/forms';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 
 @Component({
@@ -27,7 +28,14 @@ import { FormArray } from '@angular/forms';
   imports: [AngularMaterailModules, FormsModule, MatToolbar, DecimalPipe, MatCheckboxModule, MatFormFieldModule, MatCard, MatFormField, ReactiveFormsModule, NgIf, NgForOf, DatePipe],
   templateUrl: './product-registration.component.html',
   providers: [provideNativeDateAdapter()],
-  styleUrl: './product-registration.component.scss'
+  styleUrl: './product-registration.component.scss',
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 
 
@@ -77,11 +85,14 @@ export class ProductRegistrationComponent implements OnInit {
     'productName',
     'byteImage',
     'description',
-    'size',
-    'price',
+    // 'size',
+    // 'price',
     'addedDate',
     'actions',
+    'expand'
   ];
+
+  expandedElement: any | null = null;
 
 
 

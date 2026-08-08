@@ -50,7 +50,7 @@ export class AuthService {
         const user = res.body;
         if (token && user) {
           this.userStorageService.saveToken(token);
-          this.userStorageService.saveUser(user);
+          this.userStorageService.saveUser(res.body);
 
           this.startAutoLogoutTimer();
           return true;

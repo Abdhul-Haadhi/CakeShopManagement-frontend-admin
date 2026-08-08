@@ -98,17 +98,23 @@
                 <mat-label>Quantity</mat-label>
                 <!-- Fixed the duplicated input field here -->
                 <input matInput type="number" formControlName="quantity">
+                <mat-error class="text-danger" *ngIf="(deductForm.get('quantity')?.errors)!['required']">
+                    Quantity is required
+                </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>Reason</mat-label>
                 <input matInput formControlName="reason">
+                <mat-error class="text-danger" *ngIf="(deductForm.get('reason')?.errors)!['required']">
+                    Give a reason
+                </mat-error>
             </mat-form-field>
 
-            <button mat-raised-button color="warn" (click)="deductStock()">
+            <button mat-raised-button color="warn" [disabled]="deductForm.invalid" (click)="deductStock()">
                 Deduct Stock
             </button>
-            
+
         </form>
 
         <mat-divider></mat-divider>

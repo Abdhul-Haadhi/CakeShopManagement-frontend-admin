@@ -221,7 +221,7 @@ export class SalesReportComponent implements OnInit, AfterViewInit {
     doc.setFontSize(11);
     doc.setTextColor(100);
     doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
-    doc.text(`Total sales: ${this.totalOrders}`, 14, 36);
+    doc.text(`Total sales: ${this.totalItemsSold}`, 14, 36);
 
 
     const bodyData = this.dataSource.filteredData.map(sales => [

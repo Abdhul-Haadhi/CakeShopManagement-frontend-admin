@@ -13,9 +13,15 @@ import { UserStorageService } from '../services/storage/user-storage.service';
 })
 export class SideBarComponent implements OnInit {
 
-  isLoggedIn: boolean = UserStorageService.isAdminLoggedIn() || UserStorageService.isEmployeeLoggedIn();
+  // isLoggedIn: boolean = UserStorageService.isAdminLoggedIn() || UserStorageService.isEmployeeLoggedIn();
 
+  // currentRole: string = '';
+
+  isLoggedIn: boolean = UserStorageService.isUserLoggedIn();
   currentRole: string = '';
+
+
+
 
 
   constructor(public auth: AuthService,
@@ -31,8 +37,8 @@ export class SideBarComponent implements OnInit {
     this.auth.canAccess();
 
     this.router.events.subscribe(() => {
-      this.isLoggedIn = UserStorageService.isAdminLoggedIn() || UserStorageService.isEmployeeLoggedIn();
-
+      // this.isLoggedIn = UserStorageService.isAdminLoggedIn() || UserStorageService.isEmployeeLoggedIn();
+      this.isLoggedIn = UserStorageService.isUserLoggedIn();
       this.currentRole = UserStorageService.getUserRole();
     });
 
@@ -52,115 +58,140 @@ export class SideBarComponent implements OnInit {
     return UserStorageService.getUserRole() === 'EMPLOYEE';
   }
 
+  hasPermission(permission: string): boolean {
+    return UserStorageService.hasPermission(permission);
+  }
+
+
+
 
   items: any[] = [
     {
       isHeading: true,
       label: 'Daily Operations',
-      roles: ['ADMIN', 'EMPLOYEE']
+      permission: 'DASHBOARD_MANAGEMENT'
     },
     {
       routeLink: 'dashboard',
-      // icon: 'far fa-tachometer-alt-average',
       icon: 'far fa-home',
       label: 'Home',
-      roles: ['ADMIN', 'EMPLOYEE'],
+      permission: 'DASHBOARD_MANAGEMENT',
     },
     {
       routeLink: 'orders',
       icon: 'fas fa-receipt',
       label: 'Orders',
-      roles: ['ADMIN', 'EMPLOYEE'],
+      permission: 'ORDER_MANAGEMENT',
     },
-
+    
 
     {
       isHeading: true,
       label: 'Catalog & Inventory',
-      roles: ['ADMIN', 'EMPLOYEE']
+      permission: 'CATEGORY_MANAGEMENT'
     },
     {
       routeLink: 'category',
       icon: 'fas fa-layer-group',
       label: 'Category',
-      roles: ['ADMIN', 'EMPLOYEE'],
+      permission: 'CATEGORY_MANAGEMENT',
     },
     {
       routeLink: 'product-reg',
       icon: 'fas fa-birthday-cake',
       label: 'Products',
-      roles: ['ADMIN', 'EMPLOYEE'],
+      permission: 'PRODUCT_MANAGEMENT'
     },
     {
       routeLink: 'inventory',
       icon: 'fas fa-boxes',
       label: 'Inventory Items',
-      roles: ['ADMIN', 'EMPLOYEE'],
+      permission: 'INVENTORY_MANAGEMENT'
     },
     {
       routeLink: 'recipe',
       icon: 'fas fa-book-open',
       label: 'Manage Recipe',
-      roles: ['ADMIN'],
+      permission: 'RECIPE_MANAGEMENT'
     },
-
 
     {
       isHeading: true,
       label: 'People & HR',
-      roles: ['ADMIN', 'EMPLOYEE']
+      permission: 'EMPLOYEE_MANAGEMENT'
     },
     {
       routeLink: 'employee-reg',
       icon: 'fas fa-user-tie',
       label: 'Employees',
-      roles: ['ADMIN'],
+      permission: 'EMPLOYEE_MANAGEMENT'
     },
     {
       routeLink: 'customer-reg',
       icon: 'fas fa-users',
       label: 'Customers',
-      roles: ['ADMIN', 'EMPLOYEE'],
+      permission: 'CUSTOMER_MANAGEMENT'
     },
-
+    {
+      routeLink: 'permission',
+      icon: 'fas fa-key', // Replaced duplicated receipt
+      label: 'Permission',
+      permission: 'PERMISSION_MANAGEMENT'
+    },
+    {
+      routeLink: 'role',
+      icon: 'fas fa-id-badge', // Replaced duplicated receipt
+      label: 'Roles',
+      permission: 'ROLE_MANAGEMENT'
+    },
 
     {
       isHeading: true,
       label: 'Reports',
-      roles: ['ADMIN']
+      permission: 'REPORT_MANAGEMENT'
     },
     {
       routeLink: 'inventory-summary-report',
       icon: 'fas fa-clipboard-check',
       label: 'Inventory Summary Report',
-      roles: ['ADMIN'],
+      permission: 'REPORT_MANAGEMENT'
     },
     {
       routeLink: 'inventory-report',
-      icon: 'fas fa-clipboard-check',
+      icon: 'fas fa-file-alt', // Replaced duplicated clipboard
       label: 'Inventory Batch Report',
-      roles: ['ADMIN'],
+      permission: 'REPORT_MANAGEMENT'
     },
     {
       routeLink: 'stock-transaction-report',
-      icon: 'fas fa-clipboard-check',
+      icon: 'fas fa-exchange-alt', // Replaced duplicated clipboard
       label: 'Stock Transactions',
-      roles: ['ADMIN'],
+      permission: 'REPORT_MANAGEMENT'
     },
     {
       routeLink: 'sales-report',
       icon: 'fas fa-chart-line',
       label: 'Sales Report',
-      roles: ['ADMIN'],
+      permission: 'REPORT_MANAGEMENT'
+    },
+    {
+      routeLink: 'product-report',
+      icon: 'fas fa-chart-line',
+      label: 'Products Report',
+      permission: 'REPORT_MANAGEMENT'
     },
     {
       routeLink: 'customer-report',
       icon: 'fas fa-user-tag',
       label: 'Customer Report',
-      roles: ['ADMIN'],
+      permission: 'REPORT_MANAGEMENT'
     },
-
-
+    {
+      routeLink: 'employee-report',
+      icon: 'fas fa-user-tag',
+      label: 'Employee Report',
+      permission: 'REPORT_MANAGEMENT'
+    },
   ]
 
   toggleCollapse(): void {

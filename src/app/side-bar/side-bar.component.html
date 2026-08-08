@@ -33,7 +33,7 @@
         </div> -->
         <div class="sidenav-nav">
             @for (item of items; track $index) {
-            @if (item.roles.includes(currentRole)) {
+            @if (!item.permission || hasPermission(item.permission)) {
 
             @if (item.isHeading) {
             @if (!isSidebarCollapsed()) {

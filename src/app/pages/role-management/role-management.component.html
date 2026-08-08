@@ -1,0 +1,161 @@
+<div class="container-bar">
+    <!-- Toolbar Section -->
+    <mat-toolbar class="heading-bar mat-elevation-z2">
+        <span class="heading-text">Role Management</span>
+        <span class="example-spacer"></span>
+
+        <!-- Add Button (Shows when form is hidden) -->
+        <button class="action-btn header-add-btn" mat-raised-button color="accent" (click)="showForm = true"
+            *ngIf="!showForm">
+            <mat-icon>add</mat-icon>Add Role
+        </button>
+
+        <!-- Form Actions (Shows when form is active) -->
+        <ng-container *ngIf="showForm">
+            <button mat-raised-button color="primary" class="action-btn" (click)="saveRole()"
+                [disabled]="roleForm.invalid">
+                <mat-icon>save</mat-icon>{{isEditMode ? 'Update' : 'Save'}}
+            </button>
+            <button mat-raised-button type="button" color="warn" class="action-btn cancel-btn"
+                (click)="cancelEdit(); showForm = false">
+                <mat-icon>close</mat-icon>Cancel
+            </button>
+        </ng-container>
+    </mat-toolbar>
+
+    <!-- Form Section -->
+    <div *ngIf="showForm" class="form-section card-wrapper mat-elevation-z3 animate-fade-in">
+        <div class="container">
+            <div class="section-header">
+                <mat-icon color="primary">admin_panel_settings</mat-icon>
+                <h3>Role Registration Form</h3>
+            </div>
+
+            <form [formGroup]="roleForm">
+                <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Role Name</mat-label>
+                    <input matInput type="text" placeholder="Role Name" formControlName="roleName" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Description</mat-label>
+                    <input matInput type="text" placeholder="Description" formControlName="description" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Permissions</mat-label>
+                    <mat-select multiple formControlName="permissionIds">
+                        <mat-option *ngFor="let permission of permissions" [value]="permission.permissionId">
+                            {{permission.permissionName}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </form>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="table-section card-wrapper mat-elevation-z3">
+        <div class="table-header-row">
+            <div class="table-title">
+                <mat-icon color="primary">manage_accounts</mat-icon>
+                <h3>Registered Roles</h3>
+            </div>
+
+            <div class="refresh-filter-section">
+                <!-- Assuming you add a refreshData() method in TS -->
+                <button mat-icon-button class="refresh-btn-ui" (click)="refreshData()" matTooltip="Refresh Roles">
+                    <mat-icon>refresh</mat-icon>
+                </button>
+                <mat-form-field appearance="outline" class="filter">
+                    <mat-label>Search Roles...</mat-label>
+                    <!-- Assuming you add an applyFilter($event) method in TS -->
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Ex: Admin, Manager..." #input />
+                    <mat-icon matPrefix color="primary">search</mat-icon>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="responsive-table-container">
+            <table mat-table [dataSource]="roles" matSort>
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="roleId">
+                    <th mat-header-cell *matHeaderCellDef> ID </th>
+                    <td mat-cell *matCellDef="let role">
+                        <span class="sku-text">{{role.roleId}}</span>
+                    </td>
+                </ng-container>
+
+                <!-- Role Name Column -->
+                <ng-container matColumnDef="roleName">
+                    <th mat-header-cell *matHeaderCellDef> Role Name </th>
+                    <td mat-cell *matCellDef="let role">
+                        <span class="bold-text">{{role.roleName}}</span>
+                    </td>
+                </ng-container>
+
+                <!-- Description Column -->
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef> Description </th>
+                    <td mat-cell *matCellDef="let role"> {{role.description}} </td>
+                </ng-container>
+
+                <!-- Permissions Column -->
+                <ng-container matColumnDef="permissions">
+                    <th mat-header-cell *matHeaderCellDef> Permissions </th>
+                    <td mat-cell *matCellDef="let role">
+                        <button mat-stroked-button color="primary" class="view-btn"
+                            (click)="openPermissionsDialog(permissionsTemplate, role)">
+                            <mat-icon>visibility</mat-icon>
+                            View ({{ role.permissionIds?.length || 0 }})
+                        </button>
+                    </td>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef> Actions </th>
+                    <td mat-cell *matCellDef="let role">
+                        <div class="action-buttons-container">
+                            <button mat-icon-button class="action-icon-btn edit-icon"
+                                (click)="editRole(role); showForm = true" matTooltip="Edit Role">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button class="action-icon-btn delete-icon"
+                                (click)="deleteRole(role.roleId)" matTooltip="Delete Role">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <!-- Added 'hoverable-row' class -->
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hoverable-row"></tr>
+            </table>
+        </div>
+
+        <!-- Paginator -->
+        <mat-paginator [pageSizeOptions]="[10, 20, 25, 100]" aria-label="Select page of roles"></mat-paginator>
+    </div>
+</div>
+
+<!-- Permissions Dialog Template -->
+<ng-template #permissionsTemplate let-data>
+    <div class="dialog-header">
+        <h2 mat-dialog-title>Permissions for <strong>{{ data.roleName }}</strong></h2>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <mat-dialog-content class="permissions-dialog-content">
+        <mat-list>
+            <mat-list-item *ngFor="let perm of data.permissions">
+                <mat-icon matListItemIcon color="primary">verified_user</mat-icon>
+                <div matListItemTitle class="permission-item-text">{{ perm }}</div>
+            </mat-list-item>
+        </mat-list>
+    </mat-dialog-content>
+</ng-template>

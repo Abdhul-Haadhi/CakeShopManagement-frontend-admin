@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { StockService } from '../../services/stock/stock.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { DecimalPipe, NgIf, NgClass } from '@angular/common';
 import { AngularMaterailModules } from '../../AngularMeterialModules';
@@ -27,6 +27,7 @@ export class TransactionHistoryComponent implements OnInit {
 
   constructor(private stockService: StockService,
     @Inject(MAT_DIALOG_DATA) public item: any,
+    private dialogRef: MatDialogRef<TransactionHistoryComponent>,
   ) { }
 
 
@@ -53,6 +54,10 @@ export class TransactionHistoryComponent implements OnInit {
       default:
         return 'text-chip-grey';
     }
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 
 }

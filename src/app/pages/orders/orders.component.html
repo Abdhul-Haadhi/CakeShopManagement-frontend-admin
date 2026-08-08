@@ -2,6 +2,11 @@
 
     <mat-toolbar class="heading-bar mat-elevation-z2">
         <span class="heading-text">Placed Orders</span>
+        <span class="example-spacer"></span>
+        <button class="action-btn header-add-btn" mat-flat-button color="accent" routerLink="/admin/orders/new">
+            <mat-icon>add</mat-icon>
+            New Shop Order
+        </button>
     </mat-toolbar>
 
     <table mat-table [dataSource]="orders" class="orders-table mat-elevation-z8">

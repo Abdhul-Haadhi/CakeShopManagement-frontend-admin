@@ -1,0 +1,206 @@
+<div class="page-container">
+
+    <!-- Header Section -->
+    <div class="report-header no-print">
+        <div class="title-section">
+            <h1 class="page-title">Product Inventory & Price Report</h1>
+            <p class="page-subtitle">Track products, categories, pricing ranges, and stock availability status</p>
+        </div>
+        <div class="action-buttons">
+            <button mat-flat-button color="primary" class="pdf-btn" (click)="exportToPDF()">
+                <mat-icon>picture_as_pdf</mat-icon> Export PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Summary Cards Grid -->
+    <div class="summary-grid no-print">
+        <mat-card class="summary-card total">
+            <div class="card-icon"><mat-icon>inventory_2</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">Total Products</span>
+                <span class="card-value">{{totalProducts}}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="summary-card active">
+            <div class="card-icon"><mat-icon>check_circle</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">In Stock</span>
+                <span class="card-value">{{inStockProducts}}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="summary-card pending">
+            <div class="card-icon"><mat-icon>remove_shopping_cart</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">Out of Stock / Inactive</span>
+                <span class="card-value">{{outOfStockProducts}}</span>
+            </div>
+        </mat-card>
+
+        <mat-card class="summary-card categories">
+            <div class="card-icon"><mat-icon>category</mat-icon></div>
+            <div class="card-content">
+                <span class="card-label">Categories Represented</span>
+                <span class="card-value">{{totalCategories}}</span>
+            </div>
+        </mat-card>
+    </div>
+
+    <!-- Filters & Table Section -->
+    <mat-card class="table-card">
+        <div class="table-filters-header no-print">
+            <div class="filter-controls">
+                <mat-form-field appearance="outline" class="filter-field">
+                    <mat-label>Filter By Category</mat-label>
+                    <mat-select [(ngModel)]="selectedCategoryId" (selectionChange)="onFilterChange()">
+                        <mat-option [value]="null">All Categories</mat-option>
+                        <mat-option *ngFor="let cat of categories" [value]="cat.categoryId">
+                            {{ cat.categoryName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <div class="checkbox-wrapper">
+                    <mat-checkbox color="primary" [(ngModel)]="inStockOnlyFilter" (change)="onFilterChange()">
+                        Show In-Stock Only
+                    </mat-checkbox>
+                </div>
+
+                <button mat-stroked-button color="warn" class="reset-btn" (click)="resetFilters()">
+                    Reset Filters
+                </button>
+            </div>
+
+            <mat-form-field appearance="outline" class="search-bar">
+                <mat-label>Search Products</mat-label>
+                <mat-icon matPrefix>search</mat-icon>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Search product name or SKU...">
+            </mat-form-field>
+        </div>
+
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" matSort class="product-table">
+
+                <!-- SKU Column -->
+                <ng-container matColumnDef="productSku">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> SKU </th>
+                    <td mat-cell *matCellDef="let row" class="font-bold"> {{row.productSku}} </td>
+                </ng-container>
+
+                <!-- Product Name Column -->
+                <ng-container matColumnDef="productName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
+                    <td mat-cell *matCellDef="let row">
+                        <div class="product-info">
+                            <strong>{{row.productName}}</strong>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Category Column -->
+                <ng-container matColumnDef="categoryName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Category </th>
+                    <td mat-cell *matCellDef="let row">
+                        <span class="category-badge">{{row.categoryName || 'Unassigned'}}</span>
+                    </td>
+                </ng-container>
+
+                <!-- Selling Price Column -->
+                <ng-container matColumnDef="priceDisplay">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Selling Price </th>
+                    <td mat-cell *matCellDef="let row" class="font-bold price-cell">
+                        {{row.priceDisplay}}
+                    </td>
+                </ng-container>
+
+                <!-- Variants Count Column with Dialog Trigger -->
+                <ng-container matColumnDef="variantCount">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center"> Variants </th>
+                    <td mat-cell *matCellDef="let row" class="text-center">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                            <span class="variant-count-badge">{{row.variantCount}} option(s)</span>
+                            <button mat-icon-button color="primary" (click)="openVariantsDialog(variantsTemplate, row)"
+                                [disabled]="!row.variantCount" matTooltip="View Variants">
+                                <mat-icon>visibility</mat-icon>
+                            </button>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Available Status Column -->
+                <ng-container matColumnDef="availabilityStatus">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-center"> Availability </th>
+                    <td mat-cell *matCellDef="let row" class="text-center">
+                        <span class="status-badge" [ngClass]="{
+                            'badge-instock': row.availabilityStatus === 'In Stock',
+                            'badge-outofstock': row.availabilityStatus === 'Out of Stock',
+                            'badge-inactive': row.availabilityStatus === 'Inactive'
+                        }">
+                            {{row.availabilityStatus}}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <!-- Added Date Column -->
+                <ng-container matColumnDef="addedDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Added Date </th>
+                    <td mat-cell *matCellDef="let row"> {{row.addedDate | date:'mediumDate'}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell no-data-cell" colspan="7">No products found matching the criteria.</td>
+                </tr>
+            </table>
+        </div>
+
+        <mat-paginator [pageSizeOptions]="[10, 25, 50]" aria-label="Select page of products"
+            class="no-print"></mat-paginator>
+    </mat-card>
+</div>
+
+<!-- Inline Variants Dialog Template -->
+<ng-template #variantsTemplate>
+    <div class="dialog-header"
+        style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px;">
+        <h2 mat-dialog-title style="margin: 0;">Variants for <strong>{{ selectedProduct?.productName }}</strong></h2>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <mat-dialog-content>
+        <div *ngIf="isLoadingVariants" style="display: flex; justify-content: center; padding: 20px;">
+            <mat-spinner diameter="35"></mat-spinner>
+        </div>
+
+        <table mat-table [dataSource]="selectedVariants" *ngIf="!isLoadingVariants && selectedVariants.length > 0"
+            class="product-table" style="width: 100%;">
+            <ng-container matColumnDef="variantName">
+                <th mat-header-cell *matHeaderCellDef> Varient Type </th>
+                <td mat-cell *matCellDef="let v"> {{ v.variantName || v.name || v.optionName || 'Standard' }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef> Price </th>
+                <td mat-cell *matCellDef="let v" class="font-bold"> {{ v.price | currency }} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="['variantName', 'price']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['variantName', 'price'];"></tr>
+        </table>
+
+        <div *ngIf="!isLoadingVariants && selectedVariants.length === 0"
+            style="padding: 20px; text-align: center; color: #666;">
+            No variants found for this product.
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" style="margin-top: 15px;">
+        <button mat-flat-button color="primary" mat-dialog-close>Close</button>
+    </mat-dialog-actions>
+</ng-template>

@@ -1,0 +1,294 @@
+/* --- Container & Layout --- */
+.container-bar {
+    padding: 24px;
+    background-color: #f8f9fa;
+    /* Light, neutral background */
+    min-height: calc(100vh - 48px);
+}
+
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+/* --- Toolbar --- */
+.heading-bar {
+    border-radius: 8px;
+    background: linear-gradient(135deg, #034a9c, #012a5b);
+    color: #333333;
+    margin-bottom: 24px;
+    padding: 0 24px;
+    margin-top: -50px;
+}
+
+.heading-text {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: white;
+}
+
+/* --- Buttons --- */
+.action-btn {
+    margin-left: 12px;
+    border-radius: 6px;
+    font-weight: 500;
+
+    mat-icon {
+        margin-right: 4px;
+    }
+}
+
+/* --- Cards (Form & Table) --- */
+.card-wrapper {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+/* --- Form Section --- */
+.section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eeeeee;
+    padding-bottom: 12px;
+
+    mat-icon {
+        margin-right: 12px;
+    }
+
+    h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 500;
+        color: #444444;
+    }
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.form-field {
+    flex: 1 1 calc(33.333% - 16px);
+    min-width: 250px;
+}
+
+/* --- Animation for opening the form --- */
+.animate-fade-in {
+    animation: slideDown 0.3s ease-out forwards;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Table Header (Title & Search) --- */
+.table-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    gap: 16px;
+}
+
+.table-title {
+    display: flex;
+    align-items: center;
+
+    mat-icon {
+        margin-right: 12px;
+    }
+
+    h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 500;
+        color: #444444;
+    }
+}
+
+.refresh-filter-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.refresh-btn-ui {
+    color: #555555;
+    transition: transform 0.2s;
+
+    &:hover {
+        color: #3f51b5;
+        /* Primary color */
+        transform: rotate(180deg);
+        /* Little spin effect on hover */
+    }
+}
+
+.filter {
+    width: 300px;
+    margin-bottom: -1.25em;
+    /* Compensates for mat-form-field default padding */
+}
+
+/* --- Table Styling --- */
+.responsive-table-container {
+    overflow-x: auto;
+    border: 1px solid #eeeeee;
+    border-radius: 8px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th.mat-header-cell {
+    background-color: #f9f9f9;
+    font-weight: 600;
+    color: #555555;
+    font-size: 14px;
+}
+
+.hoverable-row {
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: #f4f6fd;
+        /* Light blue highlight on hover */
+    }
+}
+
+/* --- Typography & Badges in Table --- */
+.sku-text {
+    font-family: monospace;
+    color: #666666;
+    background-color: #f1f1f1;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.bold-text {
+    font-weight: 500;
+    color: #222222;
+}
+
+/* Pill badge for permissions */
+.category-badge {
+    display: inline-block;
+    background-color: #e3f2fd;
+    /* Light blue background */
+    color: #1976d2;
+    /* Darker blue text */
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+/* --- Action Buttons in Table --- */
+.action-buttons-container {
+    display: flex;
+    gap: 8px;
+}
+
+.action-icon-btn {
+    transform: scale(0.9);
+}
+
+.edit-icon {
+    color: #eb7700;
+    background-color: rgba(76, 175, 80, 0.1);
+
+    &:hover {
+        background-color: rgba(76, 175, 80, 0.2);
+    }
+}
+
+.delete-icon {
+    color: #f44336;
+    background-color: rgba(244, 67, 54, 0.1);
+
+    &:hover {
+        background-color: rgba(244, 67, 54, 0.2);
+    }
+}
+
+
+/* --- New View Button --- */
+.view-btn {
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    border-color: #bbdefb;
+    background-color: #f8fafd;
+
+    mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        margin-right: 4px;
+        color: #1976d2;
+    }
+
+    &:hover {
+        background-color: #e3f2fd;
+    }
+}
+
+/* --- Dialog Styling --- */
+.dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eeeeee;
+    margin-bottom: 8px;
+
+    h2 {
+        margin: 0;
+        font-size: 18px;
+        color: #333;
+        padding: 16px 24px;
+
+        strong {
+            color: #1976d2;
+        }
+    }
+}
+
+.permissions-dialog-content {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 0 12px 24px 12px !important;
+
+    /* Clean up mat-list items to look like a neat checklist */
+    mat-list-item {
+        border-bottom: 1px solid #f5f5f5;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        .permission-item-text {
+            font-size: 13px;
+            font-weight: 500;
+            color: #444;
+            letter-spacing: 0.3px;
+        }
+    }
+}

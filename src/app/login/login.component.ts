@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: [null, [Validators.required,Validators.email]],
+      email: [null, [Validators.required, Validators.email]],
       password: [null, [Validators.required]]
     })
   }
@@ -51,11 +51,17 @@ export class LoginComponent implements OnInit {
     this.authService.login(username, password).subscribe({
       next: (response) => {
 
-        console.log("login response: ",response);
-        
+        console.log("login response: ", response);
 
-        this.snackBar.open('Login Success', 'Ok', {duration: 3000});
-        this.router.navigateByUrl('dashboard');
+
+        this.snackBar.open('Login Success', 'Ok', { duration: 3000 });
+        if (UserStorageService.isUserLoggedIn() && UserStorageService.hasPermission("DASHBOARD_MANAGEMENT")) {
+          this.router.navigateByUrl('dashboard');
+        }
+        else{
+          this.router.navigateByUrl('about');
+        }
+        
 
         // if (UserStorageService.isAdminLoggedIn()) {
         //   this.router.navigateByUrl('dashboard');

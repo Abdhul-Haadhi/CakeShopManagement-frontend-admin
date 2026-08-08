@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
 import { EmployeeRegistrationService } from '../../services/employeeRegistration/employee-registration.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RegDialogComponent } from './reg-dialog/reg-dialog.component';
+import { RoleService } from '../../services/role/role.service';
 
 
 @Component({
@@ -54,6 +55,8 @@ export class EmployeeRegistrationComponent implements OnInit {
   // maxDate: Date;
   // minDate: Date;
 
+  roles: any[] = [];
+
 
   dataSource!: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -66,6 +69,7 @@ export class EmployeeRegistrationComponent implements OnInit {
     'email',
     'phone',
     'address',
+    'role',
     'joinDate',
     'actions',
   ];
@@ -75,6 +79,7 @@ export class EmployeeRegistrationComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     private empService: EmployeeRegistrationService,
+    private roleService: RoleService,
     private _dialog: MatDialog,
   ) {
     // this.maxDate = new Date();
@@ -89,6 +94,7 @@ export class EmployeeRegistrationComponent implements OnInit {
       email: new FormControl('', [Validators.required, Validators.email]),
       phone: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$'),]),
       address: new FormControl('', [Validators.required, Validators.maxLength(150),]),
+      roleId: new FormControl('', [Validators.required]),
       // joinDate: new FormControl('', [Validators.required]),
       // password: new FormControl('', [Validators.required]),
     });
@@ -97,11 +103,12 @@ export class EmployeeRegistrationComponent implements OnInit {
 
     const data = history.state.employee;
 
-
     if (data) {
       this.editData(data);
       this.showForm = true;
     }
+
+    this.loadRoles();
 
   }
 
@@ -129,6 +136,14 @@ export class EmployeeRegistrationComponent implements OnInit {
       this.snackBar.open(error.message, 'ERROR', { duration: 3000 });
     }
 
+  }
+
+  loadRoles() {
+    this.roleService.getAllRoles().subscribe({
+      next: (res: any) => {
+        this.roles = res;
+      }
+    });
   }
 
   // formatDate(date: Date): string {
@@ -160,6 +175,7 @@ export class EmployeeRegistrationComponent implements OnInit {
             email: this.EmpRegForm.get('email').value,
             phone: this.EmpRegForm.get('phone').value,
             address: this.EmpRegForm.get('address').value,
+            roleId: this.EmpRegForm.get('roleId').value
             // password: this.EmpRegForm.get('password').value,
             // joinDate: this.formatDate(this.EmpRegForm.get('joinDate')?.value),
           };
@@ -196,6 +212,7 @@ export class EmployeeRegistrationComponent implements OnInit {
           email: this.EmpRegForm.get('email').value,
           phone: this.EmpRegForm.get('phone').value,
           address: this.EmpRegForm.get('address').value,
+          roleId: this.EmpRegForm.get('roleId').value,
           // password: this.EmpRegForm.get('password').value,
           // joinDate: this.formatDate(this.EmpRegForm.get('joinDate')?.value),
         };
@@ -312,7 +329,7 @@ export class EmployeeRegistrationComponent implements OnInit {
     this.isButtonDisabled = false;
     this.submitted = false;
 
-    if(this.mode === 'edit' && this.selectedData){
+    if (this.mode === 'edit' && this.selectedData) {
       this.EmpRegForm.patchValue({
         ...this.selectedData
       })
@@ -339,7 +356,7 @@ export class EmployeeRegistrationComponent implements OnInit {
           employeeId: employee.employeeId,
           employeeName: employee.employeeName,
           email: employee.email,
-          role: 'EMPLOYEE'
+          roleId: employee.roleId
         },
       });
 

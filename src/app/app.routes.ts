@@ -17,6 +17,13 @@ import { SalesReportComponent } from './pages/reports/sales-report/sales-report.
 import { CustomerReportComponent } from './pages/reports/customer-report/customer-report.component';
 import { InventorySummaryReportComponent } from './pages/reports/inventory-summary-report/inventory-summary-report.component';
 import { StockTransactionReportComponent } from './pages/reports/stock-transaction-report/stock-transaction-report.component';
+import { PermissionManagementComponent } from './pages/permission-management/permission-management.component';
+import { RoleManagementComponent } from './pages/role-management/role-management.component';
+import { AboutPageComponent } from './pages/about-page/about-page.component';
+import { EmployeeReportComponent } from './pages/reports/employee-report/employee-report.component';
+import { ProductReportComponent } from './pages/reports/product-report/product-report.component';
+import { NewShopOrderComponent } from './pages/new-shop-order/new-shop-order.component';
+
 
 
 
@@ -37,5 +44,11 @@ export const routes: Routes = [
     { path: "sales-report", component: SalesReportComponent, canActivate: [authGuard] },
     { path: "customer-report", component: CustomerReportComponent, canActivate: [authGuard] },
     { path: "stock-transaction-report", component: StockTransactionReportComponent, canActivate: [authGuard] },
+    { path: "permission", component: PermissionManagementComponent, canActivate: [authGuard] },
+    { path: "role", component: RoleManagementComponent, canActivate: [authGuard] },
+    { path: "about", component: AboutPageComponent, canActivate: [authGuard] },
+    { path: "employee-report", component: EmployeeReportComponent, canActivate: [authGuard] },
+    { path: "product-report", component: ProductReportComponent, canActivate: [authGuard] },
+    { path: "admin/orders/new", component: NewShopOrderComponent, canActivate: [authGuard] },
 
 ];
